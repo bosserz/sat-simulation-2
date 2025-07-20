@@ -89,6 +89,11 @@ function loadQuestion(qid) {
         const passageElement = document.getElementById('passage');
         if (passageElement) {
             passageElement.innerHTML = data.question.passage || '';
+            if (typeof MathJax !== 'undefined') {
+                MathJax.typesetPromise([passageElement]).catch(err => {
+                    console.error('MathJax error:', err);
+                });
+            }
         } else {
             console.error('Passage element not found');
         }
@@ -117,7 +122,13 @@ function loadQuestion(qid) {
             console.error('Question number element not found');
         }
         if (questionTextElement) {
-            questionTextElement.textContent = data.question.question || 'No question text available';
+            // questionTextElement.textContent = data.question.question || 'No question text available';
+            questionTextElement.innerHTML = data.question.question || 'No question text available';
+            if (typeof MathJax !== 'undefined') {
+                MathJax.typesetPromise([questionTextElement]).catch(err => {
+                    console.error('MathJax error:', err);
+                });
+            }
         } else {
             console.error('Question text element not found');
         }
@@ -167,6 +178,7 @@ function loadQuestion(qid) {
                 data.question.options.forEach((option, index) => {
                     const label = document.createElement('label');
                     label.className = 'block mb-2';
+                    
                     const input = document.createElement('input');
                     input.type = 'radio';
                     input.name = 'answer';
@@ -175,10 +187,19 @@ function loadQuestion(qid) {
                     if (data.answer === option) {
                         input.checked = true;
                     }
+
+                    const optionSpan = document.createElement('span');
+                    optionSpan.innerHTML = option;  // Render HTML
+
                     label.appendChild(input);
-                    label.appendChild(document.createTextNode(option));
+                    label.appendChild(optionSpan);
                     optionsDiv.appendChild(label);
                 });
+                if (typeof MathJax !== 'undefined') {
+                    MathJax.typesetPromise([optionsDiv]).catch(err => {
+                        console.error('MathJax error in options:', err);
+                    });
+                }
             } else {
                 console.error('No options available for this question:', data.question);
                 optionsDiv.innerHTML = '<p>No options available.</p>';
