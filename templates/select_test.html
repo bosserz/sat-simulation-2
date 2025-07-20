@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="text-center">
+        <h2 class="text-2xl font-bold mb-4">Select a Practice Test</h2>
+        <form method="POST">
+            <div class="mb-4">
+                <label for="practice_test_id" class="block text-sm font-medium">Practice Test</label>
+                <select id="practice_test_id" name="practice_test_id" class="w-full p-2 border rounded" required>
+                    {% for test_id in practice_tests %}
+                        <option value="{{ test_id }}">Practice Test {{ loop.index }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Start Test</button>
+        </form>
+    </div>
+{% endblock %}

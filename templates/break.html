@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="text-center py-10">
+        <h2 class="text-2xl font-bold mb-4">Break Time</h2>
+        <p class="text-lg mb-6">You have completed the previous section. Take a break before starting the next section: <strong>{{ next_section }}</strong>.</p>
+        <p class="text-gray-600 mb-6">Breaks are typically 5-10 minutes in a real SAT test. When you're ready, click below to continue.</p>
+        <a href="{{ url_for('practice') }}" class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700">Start Next Section</a>
+    </div>
+{% endblock %}

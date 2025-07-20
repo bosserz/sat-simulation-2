@@ -1,14 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAT Bluebook App</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <h1>Welcome to the SAT Bluebook Trainer!</h1>
-    <p>This is your homepage.</p>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="text-center">
+        <h1 class="text-4xl font-bold mb-4">Welcome to SAT Practice App</h1>
+        <p class="text-lg mb-6">Practice for the SAT with timed tests and instant scoring.</p>
+        {% if session.username %}
+            <a href="{{ url_for('select_test') }}" class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700">Select Practice Test</a>
+        {% else %}
+            <a href="{{ url_for('login') }}" class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 mr-4">Login</a>
+            <a href="{{ url_for('register') }}" class="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700">Register</a>
+        {% endif %}
+    </div>
+{% endblock %}

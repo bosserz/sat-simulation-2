@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2 class="text-2xl font-bold mb-4">Test Results</h2>
+    <p class="mb-4">Your total score: {{ score }} / {{ questions|length }}</p>
+    <h3 class="text-xl font-bold mb-2">Section Breakdown</h3>
+    {% for section_idx in range(sections|length) %}
+        <div class="bg-white p-4 mb-4 rounded shadow">
+            <h4 class="font-bold">{{ sections[section_idx].name }}</h4>
+            <p class="mb-2">Score: {{ section_scores[section_idx] }} / {{ questions|selectattr('type', 'equalto', sections[section_idx].type)|selectattr('module', 'equalto', sections[section_idx].module)|list|length }}</p>
+            <h5 class="font-bold mb-2">Review</h5>
+            {% set section_questions = questions|selectattr('type', 'equalto', sections[section_idx].type)|selectattr('module', 'equalto', sections[section_idx].module)|list %}
+            {% for qid in range(section_questions|length) %}
+                <div class="bg-gray-50 p-3 mb-2 rounded">
+                    <p class="font-bold">Question {{ loop.index }}</p>
+                    {% if section_questions[qid].passage %}
+                        <p class="mb-2 italic">{{ section_questions[qid].passage }}</p>
+                    {% endif %}
+                    {% if section_questions[qid].image %}
+                        <img src="{{ url_for('static', filename=section_questions[qid].image) }}" alt="Question Image" class="mb-2 max-w-full h-auto">
+                    {% endif %}
+                    <p class="mb-2">{{ section_questions[qid].question }}</p>
+                    {% if section_questions[qid].equation %}
+                        <div class="mb-2">\[ {{ section_questions[qid].equation }} \]</div>
+                    {% endif %}
+                    <p class="mb-2">Your answer: {{ section_answers[section_idx][qid].answer or 'Not answered' }}</p>
+                    <p class="mb-2">Correct answer: {{ section_questions[qid].correct_answer }}</p>
+                    {% if section_answers[section_idx][qid].answer == section_questions[qid].correct_answer %}
+                        <p class="text-green-600">Correct</p>
+                    {% else %}
+                        <p class="text-red-600">Incorrect</p>
+                    {% endif %}
+                    {% if section_answers[section_idx][qid].marked %}
+                        <p class="text-yellow-600">Marked for Review</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+    <a href="{{ url_for('dashboard') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Back to Dashboard</a>
+{% endblock %}
