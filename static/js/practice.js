@@ -256,16 +256,14 @@ function saveAnswer() {
     const form = document.getElementById('practice-form');
     if (!form) {
         console.error('Practice form not found');
-        return;
+        return Promise.resolve();  // return resolved Promise to prevent blocking
     }
 
     let answer = null;
     const formData = new FormData(form);
-    
-    // Try to get radio input first
+
     answer = formData.get('answer');
 
-    // If not found (fill-in-the-blank), check for text input
     if (!answer) {
         const textInput = form.querySelector('input[type="text"][name="answer"]');
         if (textInput) {
@@ -273,7 +271,7 @@ function saveAnswer() {
         }
     }
 
-    fetch('/practice', {
+    return fetch('/practice', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -294,6 +292,7 @@ function saveAnswer() {
         alert('An error occurred while saving the answer.');
     });
 }
+
 
 
 function submitTest() {
@@ -342,10 +341,10 @@ function updateQuestionStatus() {
             button.classList.add('bg-pink-200');
         }
         
-        button.addEventListener('click', () => {
-            console.log(`Navigating to question ${i} via status grid`);  // Debugging
-            saveAnswer();
-            currentQuestion = i;  // Update currentQuestion locally
+        button.addEventListener('click', async () => {
+            console.log(`Navigating to question ${i} via status grid`);
+            await saveAnswer();
+            currentQuestion = i;
             loadQuestion(i);
             const modal = document.getElementById('question-status-modal');
             if (modal) {
@@ -357,15 +356,14 @@ function updateQuestionStatus() {
     }
 }
 
-document.getElementById('next-button').addEventListener('click', () => {
+document.getElementById('next-button').addEventListener('click', async () => {
     console.log(`Next button clicked: currentQuestion=${currentQuestion}, totalQuestions=${totalQuestions}`);
-    saveAnswer();
+    await saveAnswer();  // wait for answer to save
 
     if (currentQuestion < totalQuestions - 1) {
         currentQuestion += 1;
         loadQuestion(currentQuestion);
     } else {
-        // Show confirmation modal
         const modal = document.getElementById('submit-confirmation-modal');
         if (modal) {
             modal.classList.remove('hidden');
@@ -384,11 +382,11 @@ document.getElementById('cancel-submit').addEventListener('click', () => {
     if (modal) modal.classList.add('hidden');
 });
 
-document.getElementById('back-button').addEventListener('click', () => {
-    console.log(`Back button clicked: currentQuestion=${currentQuestion}`);  // Debugging
+document.getElementById('back-button').addEventListener('click', async () => {
+    console.log(`Back button clicked: currentQuestion=${currentQuestion}`);
     if (currentQuestion > 0) {
-        saveAnswer();
-        currentQuestion -= 1;  // Decrement locally
+        await saveAnswer();
+        currentQuestion -= 1;
         loadQuestion(currentQuestion);
     } else {
         console.log('Back button disabled: already on first question');
