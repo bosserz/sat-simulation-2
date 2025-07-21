@@ -17,7 +17,7 @@ button:hover, a.bg-blue-600:hover, a.bg-green-600:hover {
 }
 
 #passage, #question-container {
-    min-height: 400px;
+    min-height: auto;
 }
 
 #passage {
@@ -83,4 +83,12 @@ label:hover {
 
 .register-form {
     border: none;
+}
+
+.poem {
+    padding-left: 1.5em;
+    white-space: pre-wrap;
+    margin-top: 1.2em;
+    margin-bottom: 1.5em;
+    line-height: 1;
 }
