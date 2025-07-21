@@ -174,11 +174,22 @@ function loadQuestion(qid) {
         const optionsDiv = document.getElementById('options');
         if (optionsDiv) {
             optionsDiv.innerHTML = '';
-            if (data.question.options && Array.isArray(data.question.options)) {
+            if (Array.isArray(data.question.options)) {
+            optionsDiv.innerHTML = '';
+
+            if (data.question.options.length === 0) {
+                // 🧠 Fill-in-the-blank input box
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.name = 'answer';
+                input.className = 'w-full p-2 border border-gray-300 rounded';
+                input.value = data.answer || '';
+                optionsDiv.appendChild(input);
+            } else {
+                // 🧠 Multiple choice radio options
                 data.question.options.forEach((option, index) => {
                     const label = document.createElement('label');
                     label.className = 'block mb-2';
-                    
                     const input = document.createElement('input');
                     input.type = 'radio';
                     input.name = 'answer';
@@ -189,17 +200,19 @@ function loadQuestion(qid) {
                     }
 
                     const optionSpan = document.createElement('span');
-                    optionSpan.innerHTML = option;  // Render HTML
-
+                    optionSpan.innerHTML = option;
                     label.appendChild(input);
                     label.appendChild(optionSpan);
                     optionsDiv.appendChild(label);
                 });
+
+                // 🧠 Render math if needed
                 if (typeof MathJax !== 'undefined') {
                     MathJax.typesetPromise([optionsDiv]).catch(err => {
                         console.error('MathJax error in options:', err);
                     });
                 }
+            }
             } else {
                 console.error('No options available for this question:', data.question);
                 optionsDiv.innerHTML = '<p>No options available.</p>';
@@ -245,9 +258,21 @@ function saveAnswer() {
         console.error('Practice form not found');
         return;
     }
+
+    let answer = null;
     const formData = new FormData(form);
-    const answer = formData.get('answer');
     
+    // Try to get radio input first
+    answer = formData.get('answer');
+
+    // If not found (fill-in-the-blank), check for text input
+    if (!answer) {
+        const textInput = form.querySelector('input[type="text"][name="answer"]');
+        if (textInput) {
+            answer = textInput.value.trim();
+        }
+    }
+
     fetch('/practice', {
         method: 'POST',
         headers: {
@@ -269,6 +294,7 @@ function saveAnswer() {
         alert('An error occurred while saving the answer.');
     });
 }
+
 
 function submitTest() {
     fetch('/practice', {
