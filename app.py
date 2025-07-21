@@ -54,6 +54,27 @@ def get_questions_for_section(section_idx, practice_test_id):
         if q['type'] == section['type'] and q['module'] == section['module']
     ]
 
+# from supabase import create_client
+
+# url = "https://bsmsljvttenrylhaemiz.supabase.co"
+# key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzbXNsanZ0dGVucnlsaGFlbWl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMwMzM4MjIsImV4cCI6MjA2ODYwOTgyMn0.X2wXDbjg7q5JTPV-zlWsdrwZsg61Nwr7mctilG82dZQ"
+# supabase = create_client(url, key)
+
+# def get_questions_for_section(section_idx, practice_test_id):
+#     section = SECTIONS[section_idx]
+#     result = supabase.table("questions") \
+#         .select("*") \
+#         .eq("test", int(practice_test_id)) \
+#         .eq("section_name", section["type"]) \
+#         .eq("module", section["module"]) \
+#         .order("id", desc=False) \
+#         .execute()
+
+    # if result.error:
+    #     raise Exception(result.error.message)
+    
+    # return result.data
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -81,7 +102,49 @@ def select_test():
     
     # List available practice tests
     practice_tests = list(ALL_QUESTIONS.keys())
+    # result = supabase.table("questions").select("test").execute()
+    # practice_tests = sorted(set(q["test"] for q in result.data))
+
     return render_template('select_test.html', practice_tests=practice_tests)
+
+# @app.route('/select_test', methods=['GET', 'POST'])
+# def select_test():
+#     if 'user_id' not in session:
+#         flash('Please log in to select a practice test.')
+#         return redirect(url_for('login'))
+
+#     incomplete_session = TestSession.query.filter_by(user_id=session['user_id'], score=None).first()
+#     if incomplete_session:
+#         flash('Please complete your ongoing test before starting a new one.')
+#         return redirect(url_for('dashboard'))
+
+#     if request.method == 'POST':
+#         practice_test_id = request.form.get('practice_test_id')
+
+#         # ✅ Check if the test exists in Supabase
+#         result = supabase.table("questions") \
+#             .select("id") \
+#             .eq("test", practice_test_id) \
+#             .limit(1) \
+#             .execute()
+
+#         if not result.data:
+#             flash('Invalid practice test selected.')
+#             return redirect(url_for('select_test'))
+
+#         session['new_test'] = True
+#         session['practice_test_id'] = practice_test_id
+#         return redirect(url_for('practice'))
+
+#     # ✅ Load list of available test sets from Supabase
+#     result = supabase.table("questions").select("test").execute()
+#     if not result.data:
+#         flash('Unable to load practice tests.')
+#         return redirect(url_for('dashboard'))
+
+#     practice_tests = sorted(set(q["test"] for q in result.data))
+#     return render_template('select_test.html', practice_tests=practice_tests)
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -299,7 +362,8 @@ def practice():
         
         # Return the next question
         current_question = test_session.current_question
-        section_questions = get_questions_for_section(test_session.current_section, practice_test_id)
+        # section_questions = get_questions_for_section(test_session.current_section, practice_test_id)
+        section_questions = session.get('current_section_questions', [])
         question = section_questions[current_question]
         response = {
             'question': question,
@@ -373,6 +437,9 @@ def results(session_id):
             }
         section_scores[section_idx] = section_score
         section_answers[section_idx] = section_ans
+
+    # result = supabase.table("questions").select("*").eq("test", practice_test_id).order("id").execute()
+    # questions = result.data
     
     return render_template(
         'results.html',
