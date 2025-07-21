@@ -6,25 +6,24 @@ let answers = {};
 function startTimer(duration) {
     let timer = duration;
     const timerDisplay = document.getElementById('timer');
-    if (!timerDisplay) {
-        console.error('Timer element not found');
-        return;
-    }
-    
-    const interval = setInterval(() => {
-        let minutes = Math.floor(timer / 60);
-        let seconds = timer % 60;
-        seconds = seconds < 10 ? '0' + seconds : seconds;
-        timerDisplay.textContent = `${minutes}:${seconds}`;
-        
+    if (!timerDisplay) return;
+
+    clearInterval(window.timerInterval); // Make sure only one interval runs
+
+    window.timerInterval = setInterval(() => {
+        const minutes = Math.floor(timer / 60);
+        const seconds = timer % 60;
+        timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
         timer--;
         if (timer < 0) {
-            clearInterval(interval);
+            clearInterval(window.timerInterval);
             alert('Time is up!');
             submitTest();
         }
     }, 1000);
 }
+
 
 function loadQuestion(qid) {
     console.log(`Loading question ${qid}`);  // Debugging
@@ -356,6 +355,21 @@ function updateQuestionStatus() {
     }
 }
 
+function refreshRemainingTime() {
+    fetch('/get_remaining_time')
+        .then(response => response.json())
+        .then(data => {
+            if (data.remaining_time !== undefined) {
+                clearInterval(window.timerInterval); // Stop current timer
+                startTimer(data.remaining_time);     // Restart with fresh time
+            }
+        })
+        .catch(err => {
+            console.error('Failed to refresh remaining time:', err);
+        });
+}
+
+
 document.getElementById('next-button').addEventListener('click', async () => {
     console.log(`Next button clicked: currentQuestion=${currentQuestion}, totalQuestions=${totalQuestions}`);
     await saveAnswer();  // wait for answer to save
@@ -462,5 +476,12 @@ document.getElementById('close-desmos-modal').addEventListener('click', () => {
     const desmosModal = document.getElementById('desmos-calculator-modal');
     if (desmosModal) {
         desmosModal.classList.add('hidden');
+    }
+});
+
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+        console.log('Tab is active again — refreshing timer');
+        refreshRemainingTime();
     }
 });

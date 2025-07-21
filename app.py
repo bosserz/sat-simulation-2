@@ -168,6 +168,27 @@ def resume_test():
 
     return redirect(url_for('practice'))
 
+@app.route('/get_remaining_time')
+def get_remaining_time():
+    if 'user_id' not in session or 'test_session_id' not in session:
+        return jsonify({'error': 'Not authorized'}), 401
+
+    test_session = TestSession.query.get(session['test_session_id'])
+    if not test_session:
+        return jsonify({'error': 'Session not found'}), 404
+
+    section_duration = SECTIONS[test_session.current_section]['duration']
+    if test_session.section_start_time:
+        elapsed = (datetime.utcnow() - test_session.section_start_time).total_seconds()
+    else:
+        elapsed = 0
+        test_session.section_start_time = datetime.utcnow()
+        db.session.commit()
+
+    remaining = max(0, int(section_duration - elapsed))
+    return jsonify({'remaining_time': remaining})
+
+
 @app.route('/practice', methods=['GET', 'POST'])
 def practice():
     if 'user_id' not in session:
