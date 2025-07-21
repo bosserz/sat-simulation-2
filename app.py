@@ -91,14 +91,14 @@ def register():
         email = request.form['email']
         
         if User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first():
-            flash('Username or email already exists.')
+            flash('Username or email already exists.', 'error')
             return redirect(url_for('register'))
         
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
         new_user = User(username=username, password=hashed_password, email=email)
         db.session.add(new_user)
         db.session.commit()
-        flash('Registration successful! Please log in.')
+        flash('Registration successful! Please log in.', 'success')
         return redirect(url_for('login'))
     
     return render_template('register.html')
