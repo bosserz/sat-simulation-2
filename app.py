@@ -362,8 +362,8 @@ def practice():
         
         # Return the next question
         current_question = test_session.current_question
-        # section_questions = get_questions_for_section(test_session.current_section, practice_test_id)
-        section_questions = session.get('current_section_questions', [])
+        section_questions = get_questions_for_section(test_session.current_section, practice_test_id)
+        # section_questions = session.get('current_section_questions', [])
         question = section_questions[current_question]
         response = {
             'question': question,

@@ -83,6 +83,15 @@ function loadQuestion(qid) {
         } else {
             console.error('Desmos calculator button not found');
         }
+
+        const referenceFormulaButton = document.getElementById('reference-formula');
+        if (referenceFormulaButton) {
+            if (data.section_name.includes('Math')) {
+                referenceFormulaButton.classList.remove('hidden');
+            } else {
+                referenceFormulaButton.classList.add('hidden');
+            }
+        }
         
         // Update passage
         const passageElement = document.getElementById('passage');
@@ -483,5 +492,22 @@ document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
         console.log('Tab is active again — refreshing timer');
         refreshRemainingTime();
+    }
+});
+
+
+// Reference Formula Modal Event Listeners
+document.getElementById('reference-formula').addEventListener('click', () => {
+    console.log('Reference formula button clicked');
+    const refModal = document.getElementById('reference-formula-modal');
+    if (refModal) {
+        refModal.classList.remove('hidden');
+    }
+});
+
+document.getElementById('close-reference-formula').addEventListener('click', () => {
+    const refModal = document.getElementById('reference-formula-modal');
+    if (refModal) {
+        refModal.classList.add('hidden');
     }
 });
