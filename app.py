@@ -54,27 +54,6 @@ def get_questions_for_section(section_idx, practice_test_id):
         if q['type'] == section['type'] and q['module'] == section['module']
     ]
 
-# from supabase import create_client
-
-# url = "https://bsmsljvttenrylhaemiz.supabase.co"
-# key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzbXNsanZ0dGVucnlsaGFlbWl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMwMzM4MjIsImV4cCI6MjA2ODYwOTgyMn0.X2wXDbjg7q5JTPV-zlWsdrwZsg61Nwr7mctilG82dZQ"
-# supabase = create_client(url, key)
-
-# def get_questions_for_section(section_idx, practice_test_id):
-#     section = SECTIONS[section_idx]
-#     result = supabase.table("questions") \
-#         .select("*") \
-#         .eq("test", int(practice_test_id)) \
-#         .eq("section_name", section["type"]) \
-#         .eq("module", section["module"]) \
-#         .order("id", desc=False) \
-#         .execute()
-
-    # if result.error:
-    #     raise Exception(result.error.message)
-    
-    # return result.data
-
 @app.route('/')
 def index():
     return render_template('index.html')
