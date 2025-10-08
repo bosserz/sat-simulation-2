@@ -3,17 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAT Practice App</title>
+    <title>Intsight - SAT Practice</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@100..700&display=swap" rel="stylesheet">
     <!-- MathJax for rendering LaTeX equations -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body class="bg-gray-100 font-sans">
-    <nav class="bg-blue-600 text-white p-4">
+    <nav class="bg-intsight text-white p-4">
         <div class="container mx-auto flex justify-between items-center">
-            <a href="{{ url_for('index') }}" class="text-2xl font-bold">SAT Practice</a>
+            <a href="{{ url_for('index') }}" class="text-2xl font-bold">
+                <img src="{{ url_for('static', filename='intsight-logo-white.png') }}" alt="Intsight Logo">
             <div>
                 {% if session.username %}
                     <span class="mr-4">Hello, {{ session.username }}</span>

@@ -2,10 +2,15 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    font-family: "Anuphan", sans-serif !important;
 }
 
 .container {
     flex: 1;
+}
+
+.bg-intsight {
+    background-color: #002a5c;
 }
 
 nav {
@@ -79,6 +84,10 @@ label:hover {
 
 .flash.error {
   background-color: #f44336; /* Red */
+}
+
+.flash.message {
+    background-color: yellow;
 }
 
 .register-form {
