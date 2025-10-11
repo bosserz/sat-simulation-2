@@ -95,16 +95,82 @@ function loadQuestion(qid) {
         
         // Update passage
         const passageElement = document.getElementById('passage');
-        if (passageElement) {
-            passageElement.innerHTML = data.question.passage || '';
-            if (typeof MathJax !== 'undefined') {
+        const passageParent = passageElement ? passageElement.parentElement : null;
+        const questionContainer = document.getElementById('question-container');
+
+        if (passageElement && passageParent && questionContainer) {
+            const passageHTML = data.question.passage || '';
+            const options = Array.isArray(data.question.options) ? data.question.options : [];
+            const noPassage = !passageHTML || passageHTML.trim() === '';
+            const hasOptions = options.length > 0;
+            const noOptions = options.length === 0;
+
+            // 🔹 Case 1: Passage empty but has options → hide passage + expand question area
+            if (noPassage && hasOptions) {
+                passageParent.style.display = 'none';
+                questionContainer.classList.remove('w-1/2');
+                questionContainer.classList.add('w-full');
+            } 
+            // 🔹 Case 2: No options (student-produced response) → show special directions
+            else if (noOptions) {
+                passageParent.style.display = 'block';
+                questionContainer.classList.remove('w-full');
+                questionContainer.classList.add('w-1/2');
+                passageElement.innerHTML = `
+                    <h3>Student-produced response directions</h3>
+                    <ul>
+                        <li>If you find more than one correct answer, enter only one answer.</li>
+                        <li>You can enter up to 5 characters for a positive answer and up to 6 characters (including the negative sign) for a negative answer.</li>
+                        <li>If your answer is a fraction that doesn't fit in the provided space, enter the decimal equivalent.</li>
+                        <li>If your answer is a decimal that doesn't fit in the provided space, enter it by truncating or rounding at the fourth digit.</li>
+                        <li>If your answer is a mixed number (such as 3½), enter it as an improper fraction (7/2) or its decimal equivalent (3.5).</li>
+                        <li>Don't enter symbols such as a percent sign, comma, or dollar sign.</li>
+                    </ul>
+                    <h4>Examples</h4>
+                    <table border="1" cellspacing="0" cellpadding="8">
+                        <tr>
+                            <th>Answer</th>
+                            <th>Acceptable ways to enter answer</th>
+                            <th>Unacceptable: will NOT receive credit</th>
+                        </tr>
+                        <tr>
+                            <td><b>3.5</b></td>
+                            <td>3.5<br>3.50<br>7/2</td>
+                            <td>31/2<br>3 1/2</td>
+                        </tr>
+                        <tr>
+                            <td><b>2/3</b></td>
+                            <td>2/3<br>.6666<br>.6667<br>0.666<br>0.667</td>
+                            <td>0.66<br>.66<br>0.67<br>.67</td>
+                        </tr>
+                        <tr>
+                            <td><b>-1/3</b></td>
+                            <td>-1/3<br>-.3333<br>-0.333</td>
+                            <td>-.33<br>-0.33</td>
+                        </tr>
+                    </table>
+                `;
+            } 
+            // 🔹 Case 3: Passage exists → show it normally
+            else {
+                passageParent.style.display = 'block';
+                questionContainer.classList.remove('w-full');
+                questionContainer.classList.add('w-1/2');
+                passageElement.innerHTML = passageHTML;
+            }
+
+            // Render MathJax only when passage is not empty and not special directions
+            if (!noPassage && hasOptions && typeof MathJax !== 'undefined') {
                 MathJax.typesetPromise([passageElement]).catch(err => {
                     console.error('MathJax error:', err);
                 });
             }
         } else {
-            console.error('Passage element not found');
+            console.error('Passage or container elements not found');
         }
+
+
+
         
         // Update passage image
         const passageImageElement = document.getElementById('passage-image');
