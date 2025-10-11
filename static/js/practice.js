@@ -109,7 +109,8 @@ function loadQuestion(qid) {
             if (noPassage && hasOptions) {
                 passageParent.style.display = 'none';
                 questionContainer.classList.remove('w-1/2');
-                questionContainer.classList.add('w-full');
+                questionContainer.classList.add('w-3/5');
+                questionContainer.classList.add('mx-auto');
             } 
             // 🔹 Case 2: No options (student-produced response) → show special directions
             else if (noOptions) {

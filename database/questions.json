@@ -1104,7 +1104,7 @@
       "type": "math",
       "module": 2,
       "passage": "",
-      "question": "\\(66x = 66x\\)\n<br>\nHow many solutions does the given equation have?",
+      "question": "\\(66x = 66x\\)<br>\nHow many solutions does the given equation have?",
       "options": ["Exactly one", "Exactly two", "Infinitely many", "Zero"],
       "correct_answer": "Infinitely many",
       "image": "",
