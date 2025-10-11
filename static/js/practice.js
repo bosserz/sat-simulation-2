@@ -117,8 +117,8 @@ function loadQuestion(qid) {
                 questionContainer.classList.remove('w-full');
                 questionContainer.classList.add('w-1/2');
                 passageElement.innerHTML = `
-                    <h3>Student-produced response directions</h3>
-                    <ul>
+                    <h3 class="font-bold">Student-produced response directions</h3>
+                    <ul class="list-disc list-inside mb-4">
                         <li>If you find more than one correct answer, enter only one answer.</li>
                         <li>You can enter up to 5 characters for a positive answer and up to 6 characters (including the negative sign) for a negative answer.</li>
                         <li>If your answer is a fraction that doesn't fit in the provided space, enter the decimal equivalent.</li>
@@ -126,8 +126,8 @@ function loadQuestion(qid) {
                         <li>If your answer is a mixed number (such as 3½), enter it as an improper fraction (7/2) or its decimal equivalent (3.5).</li>
                         <li>Don't enter symbols such as a percent sign, comma, or dollar sign.</li>
                     </ul>
-                    <h4>Examples</h4>
-                    <table border="1" cellspacing="0" cellpadding="8">
+                    <h4 class="font-bold text-center">Examples</h4>
+                    <table border="1" cellspacing="0" cellpadding="8" class="text-center mx-auto explained-table">
                         <tr>
                             <th>Answer</th>
                             <th>Acceptable ways to enter answer</th>
@@ -136,7 +136,7 @@ function loadQuestion(qid) {
                         <tr>
                             <td><b>3.5</b></td>
                             <td>3.5<br>3.50<br>7/2</td>
-                            <td>31/2<br>3 1/2</td>
+                            <td>3 1/2<br>3  1/2</td>
                         </tr>
                         <tr>
                             <td><b>2/3</b></td>

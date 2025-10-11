@@ -93,3 +93,12 @@ label:hover {
 .register-form {
     border: none;
 }
+
+.explained-table th {
+    border-top: 2px solid #dee2e6 !important;
+    border-bottom: 2px solid #dee2e6 !important;
+}
+
+.explained-table td {
+    border-top: 1px solid #dee2e6 !important;
+}
