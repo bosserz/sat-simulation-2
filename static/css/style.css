@@ -26,11 +26,11 @@ button:hover, a.bg-blue-600:hover, a.bg-green-600:hover {
 }
 
 #passage {
-    background-color: #f9fafb;
+    /* background-color: #f9fafb; */
 }
 
 #question-container {
-    background-color: #ffffff;
+    /* background-color: #ffffff; */
 }
 
 input[type="radio"] {

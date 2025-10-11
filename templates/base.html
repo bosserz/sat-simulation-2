@@ -18,7 +18,7 @@
     <nav class="bg-intsight text-white p-4">
         <div class="container mx-auto flex justify-between items-center">
             <a href="{{ url_for('index') }}" class="text-2xl font-bold">
-                <img src="{{ url_for('static', filename='intsight-logo-white.png') }}" alt="Intsight Logo">
+                <img src="{{ url_for('static', filename='intsight-logo-white.png') }}" style="max-width: 160px;" alt="Intsight Logo">
             <div>
                 {% if session.username %}
                     <span class="mr-4">Hello, {{ session.username }}</span>
