@@ -12,18 +12,34 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sat_practice.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)  # Session lasts 1 day
 app.config['SESSION_COOKIE_SECURE'] = False  # Set to True in production with HTTPS
+
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+# Render uses "postgres://", which SQLAlchemy doesn’t like — fix it:
+if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+psycopg2://", 1)
+
+# Set SQLAlchemy configuration
+app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL or "sqlite:///sat_practice.db"
+# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+if DATABASE_URL:
+    app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"connect_args": {"sslmode": "require"}}
+
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 # Models
 class User(db.Model):
+    __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
 
 class TestSession(db.Model):
+    __tablename__ = "test_sessions"
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     practice_test_id = db.Column(db.String(10), nullable=False)  # ID of the practice test (e.g., 'test1', 'test2')
     start_time = db.Column(db.DateTime, nullable=False)
     score = db.Column(db.Integer, nullable=True)
