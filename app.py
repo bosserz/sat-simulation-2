@@ -57,8 +57,8 @@ with open('database/questions.json', 'r') as f:
 # Section configuration
 SECTIONS = [
     {"name": "Section 1: Verbal - Module 1", "type": "verbal", "module": 1, "duration": 1920},  # 32 minutes
-    {"name": "Section 2: Math - Module 1", "type": "math", "module": 1, "duration": 2100},    # 35 minutes
-    {"name": "Section 3: Verbal - Module 2", "type": "verbal", "module": 2, "duration": 1920},  # 32 minutes
+    {"name": "Section 2: Verbal - Module 2", "type": "verbal", "module": 2, "duration": 1920},  # 32 minutes
+    {"name": "Section 3: Math - Module 1", "type": "math", "module": 1, "duration": 2100},    # 35 minutes
     {"name": "Section 4: Math - Module 2", "type": "math", "module": 2, "duration": 2100},    # 35 minutes
 ]
 
