@@ -162,6 +162,11 @@ def register():
     
     return render_template('register.html')
 
+@app.route('/request_account', methods=['GET'])
+def request_account():
+    
+    return render_template('request_account.html')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':

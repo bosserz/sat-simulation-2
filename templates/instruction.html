@@ -8,7 +8,8 @@
             <a href="{{ url_for('select_test') }}" class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700">Select Practice Test</a>
         {% else %}
             <a href="{{ url_for('login') }}" class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 mr-4">Login</a>
-            <a href="{{ url_for('register') }}" class="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700">Register</a>
+            <!-- <a href="{{ url_for('register') }}" class="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700">Register</a> -->
+             <a href="{{ url_for('request_account') }}" class="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700">Request Account</a>
         {% endif %}
     </div>
 {% endblock %}
