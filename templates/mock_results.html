@@ -3,115 +3,6 @@
 {% block content %}
   <h2 class="text-2xl font-bold mb-4">SAT Mock Test Results</h2>
 
-  {# ---- Scoring config ---- #}
-  {% set level_points = {'Easy': 9, 'Medium': 10, 'Hard': 12} %}
-  {# Optional: {'verbal': {1:1.0,2:1.0}, 'math': {1:1.0,2:1.0}} or flat {1:1.0,2:1.0} #}
-  {% set mm = module_multipliers or {} %}
-
-  {% set totals = namespace(verbal=0, math=0) %}
-
-
-  {# ===== VERBAL (combine module 1 & 2) ===== #}
-  {% set verbal_mm = mm.get('verbal') if mm and mm.get('verbal') is not none else {} %}
-  {% set verbal = namespace(m1_raw=0.0, m1_max=0.0, m2_raw=0.0, m2_max=0.0) %}
-
-  {% for i in range(sections|length) %}
-    {% set s = sections[i] %}
-    {% if s.type|lower == 'verbal' %}
-      {% set qs = questions
-        | selectattr('type','equalto', s.type)
-        | selectattr('module','equalto', s.module)
-        | list
-      %}
-      {% for qid in range(qs|length) %}
-        {% set q = qs[qid] %}
-        {% set base = level_points.get(q.level, 10) %}
-        {# Prefer per-section multipliers; fall back to flat dict; else 1.0 #}
-        {% set mult = 1.0 %}
-        {% if verbal_mm %}
-          {% set mult = verbal_mm.get(q.module, 1.0) %}
-        {% elif mm %}
-          {% set mult = mm.get(q.module, 1.0) %}
-        {% endif %}
-
-        {% if q.module == 1 %}
-          {% set verbal.m1_max = verbal.m1_max + (base * mult) %}
-        {% elif q.module == 2 %}
-          {% set verbal.m2_max = verbal.m2_max + (base * mult) %}
-        {% endif %}
-
-        {% set ans = (section_answers and section_answers[i] and section_answers[i][qid] and section_answers[i][qid].answer) or None %}
-        {% if ans is not none and ans == q.correct_answer %}
-          {% if q.module == 1 %}
-            {% set verbal.m1_raw = verbal.m1_raw + (base * mult) %}
-          {% elif q.module == 2 %}
-            {% set verbal.m2_raw = verbal.m2_raw + (base * mult) %}
-          {% endif %}
-        {% endif %}
-      {% endfor %}
-    {% endif %}
-  {% endfor %}
-
-  {% set v_m1 = 0 if verbal.m1_max == 0 else 200 * (verbal.m1_raw / verbal.m1_max) %}
-  {% set v_m2 = 0 if verbal.m2_max == 0 else 400 * (verbal.m2_raw / verbal.m2_max) %}
-  {% if v_m1 > 200 %}{% set v_m1 = 200 %}{% endif %}
-  {% if v_m2 > 400 %}{% set v_m2 = 400 %}{% endif %}
-  {% set totals.verbal = (200 + v_m1 + v_m2) | round(0) %}
-  {% if totals.verbal < 200 %}{% set totals.verbal = 200 %}{% endif %}
-  {% if totals.verbal > 800 %}{% set totals.verbal = 800 %}{% endif %}
-
-  {# ===== MATH (combine module 1 & 2) ===== #}
-  {% set math_mm = mm.get('math') if mm and mm.get('math') is not none else {} %}
-  {% set math = namespace(m1_raw=0.0, m1_max=0.0, m2_raw=0.0, m2_max=0.0) %}
-
-  {% for i in range(sections|length) %}
-    {% set s = sections[i] %}
-    {% if s.type|lower == 'math' %}
-      {% set qs = questions
-        | selectattr('type','equalto', s.type)
-        | selectattr('module','equalto', s.module)
-        | list
-      %}
-      {% for qid in range(qs|length) %}
-        {% set q = qs[qid] %}
-        {% set base = level_points.get(q.level, 10) %}
-        {% set mult = 1.0 %}
-        {% if math_mm %}
-          {% set mult = math_mm.get(q.module, 1.0) %}
-        {% elif mm %}
-          {% set mult = mm.get(q.module, 1.0) %}
-        {% endif %}
-
-        {% if q.module == 1 %}
-          {% set math.m1_max = math.m1_max + (base * mult) %}
-        {% elif q.module == 2 %}
-          {% set math.m2_max = math.m2_max + (base * mult) %}
-        {% endif %}
-
-        {% set ans = (section_answers and section_answers[i] and section_answers[i][qid] and section_answers[i][qid].answer) or None %}
-        {% if ans is not none and ans == q.correct_answer %}
-          {% if q.module == 1 %}
-            {% set math.m1_raw = math.m1_raw + (base * mult) %}
-          {% elif q.module == 2 %}
-            {% set math.m2_raw = math.m2_raw + (base * mult) %}
-          {% endif %}
-        {% endif %}
-      {% endfor %}
-    {% endif %}
-  {% endfor %}
-
-  {% set m_m1 = 0 if math.m1_max == 0 else 200 * (math.m1_raw / math.m1_max) %}
-  {% set m_m2 = 0 if math.m2_max == 0 else 400 * (math.m2_raw / math.m2_max) %}
-  {% if m_m1 > 200 %}{% set m_m1 = 200 %}{% endif %}
-  {% if m_m2 > 400 %}{% set m_m2 = 400 %}{% endif %}
-  {% set totals.math = (200 + m_m1 + m_m2) | round(0) %}
-  {% if totals.math < 200 %}{% set totals.math = 200 %}{% endif %}
-  {% if totals.math > 800 %}{% set totals.math = 800 %}{% endif %}
-
-  {# --- Round section scores to nearest 10 and compute total --- #}
-{% set verbal_score = (totals.verbal | round(-1)) | int %}
-{% set math_score   = (totals.math   | round(-1)) | int %}
-{% set total_score  = verbal_score + math_score %}
 
   {# ===== DISPLAY ===== #}
   <!-- Score Summary -->
@@ -129,6 +20,7 @@
     <p class="text-5xl font-extrabold text-gray-900">{{ math_score }}</p>
   </div>
 </div>
+
 <hr class="my-8 border-gray-300">
 
 

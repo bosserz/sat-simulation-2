@@ -492,6 +492,146 @@ def build_domain_stats(sections, questions, section_answers, practice_test_id):
 
     return domain_stats
 
+# Calculate Score
+from decimal import Decimal, ROUND_HALF_UP, InvalidOperation
+from typing import Any, Union, Iterable, Dict
+
+LEVEL_POINTS = {"Easy": 9, "Medium": 10, "Hard": 12}
+
+def _normalize_numeric(val: Any) -> Decimal | None:
+    """Return Decimal rounded to 4 dp (half up) from string/number like '1/3' or '0.3333'.
+    Returns None if not parseable."""
+    if val is None:
+        return None
+    s = str(val).strip()
+    if not s:
+        return None
+    try:
+        if "/" in s:
+            # fraction a/b
+            num, den = s.split("/", 1)
+            dnum = Decimal(num.strip())
+            dden = Decimal(den.strip())
+            if dden == 0:
+                return None
+            value = dnum / dden
+        else:
+            value = Decimal(s)
+        return value.quantize(Decimal("0.0001"), rounding=ROUND_HALF_UP)
+    except (InvalidOperation, ValueError, ZeroDivisionError):
+        return None
+
+def _is_fill_in_math(q: Dict) -> bool:
+    """Heuristics: math + no options OR explicit flags."""
+    qtype = (q.get("type") or "").lower()
+    if qtype != "math":
+        return False
+    # explicit flags (use any your data may have)
+    if q.get("format") in {"fitb", "fill", "numeric"} or q.get("answer_type") in {"numeric", "number"}:
+        return True
+    # heuristic: no choices -> fill-in
+    opts = q.get("options")
+    return opts in (None, [], "")
+
+def _match_answer(q: Dict, user_ans: Any) -> bool:
+    """Returns True if user answer is correct per rules."""
+    if user_ans is None:
+        return False
+
+    corr = q.get("correct_answer")
+
+    # If correct answers is a list -> any correct counts
+    corr_list: Iterable = corr if isinstance(corr, (list, tuple, set)) else [corr]
+
+    if _is_fill_in_math(q):
+        # numeric compare at 4 dp
+        u = _normalize_numeric(user_ans)
+        if u is None:
+            return False
+        for c in corr_list:
+            c_norm = _normalize_numeric(c)
+            if c_norm is not None and c_norm == u:
+                return True
+        return False
+    else:
+        # string/choice compare (case-sensitive by default; tweak if needed)
+        u = str(user_ans).strip()
+        for c in corr_list:
+            if str(c).strip() == u:
+                return True
+        return False
+
+def compute_section_scores(sections, questions, section_answers, module_multipliers=None):
+    """
+    Returns dict with raw/max per module, scaled per your caps, and rounded section/total.
+    sections: list of dicts; each has type ('verbal'/'math') and module (1/2) in the same order as section_answers
+    questions: flat list of question dicts
+    section_answers: list aligned to sections: section_answers[i][qid]['answer']
+    module_multipliers: {'verbal': {1:1.0,2:1.0}, 'math': {1:1.0,2:1.0}} (optional)
+    """
+    mm = module_multipliers or {}
+    out = {
+        "verbal": {"m1_raw": 0.0, "m1_max": 0.0, "m2_raw": 0.0, "m2_max": 0.0},
+        "math":   {"m1_raw": 0.0, "m1_max": 0.0, "m2_raw": 0.0, "m2_max": 0.0},
+    }
+
+    # Index questions by (type,module) to preserve order
+    by_tm: Dict[tuple, list] = {}
+    for s in sections:
+        key = (s["type"].lower(), s.get("module"))
+        if key not in by_tm:
+            by_tm[key] = [q for q in questions
+                          if (q.get("type","").lower() == key[0]) and (q.get("module") == key[1])]
+
+    for i, s in enumerate(sections):
+        stype = s["type"].lower()
+        smod = s.get("module")
+        qs = by_tm.get((stype, smod), [])
+        answers_i = section_answers[i] if i < len(section_answers) else []
+
+        # pick multipliers map: prefer per-section, else flat
+        per_sec_mm = (mm.get(stype) or {})
+        for qid, q in enumerate(qs):
+            base = LEVEL_POINTS.get(q.get("level"), 10)
+            mult = per_sec_mm.get(q.get("module")) or mm.get(q.get("module"), 1.0) or 1.0
+            # increase maximum
+            if q.get("module") == 1:
+                out[stype]["m1_max"] += base * mult
+            elif q.get("module") == 2:
+                out[stype]["m2_max"] += base * mult
+            # user answer
+            ans = answers_i[qid].get("answer") if qid < len(answers_i) else None
+            if _match_answer(q, ans):
+                if q.get("module") == 1:
+                    out[stype]["m1_raw"] += base * mult
+                elif q.get("module") == 2:
+                    out[stype]["m2_raw"] += base * mult
+
+    def _scaled(d):
+        m1 = 0 if d["m1_max"] == 0 else 200 * (d["m1_raw"] / d["m1_max"])
+        m2 = 0 if d["m2_max"] == 0 else 400 * (d["m2_raw"] / d["m2_max"])
+        m1 = min(m1, 200)
+        m2 = min(m2, 400)
+        s = 200 + m1 + m2
+        return max(200, min(800, round(s)))
+
+    verbal_scaled = _scaled(out["verbal"])
+    math_scaled   = _scaled(out["math"])
+
+    # round sections to nearest 10
+    def round10(x: Union[int, float]) -> int:
+        return int(Decimal(x).quantize(Decimal("1E1"), rounding=ROUND_HALF_UP))
+    verbal_10 = round10(verbal_scaled)
+    math_10   = round10(math_scaled)
+    total_10  = verbal_10 + math_10
+
+    return {
+        "per_section": out,
+        "verbal_score": verbal_10,
+        "math_score": math_10,
+        "total_score": total_10,
+    }
+
 
 @app.route('/mock_results/<int:session_id>')
 def results(session_id):
@@ -537,16 +677,13 @@ def results(session_id):
 
 
     domain_stats = build_domain_stats(SECTIONS, ALL_QUESTIONS, section_answers, practice_test_id)
-
+    scores = compute_section_scores(SECTIONS, ALL_QUESTIONS[practice_test_id], section_answers, module_multipliers)
     
     return render_template(
         'mock_results.html',
-        score=test_session.score,
-        section_scores=section_scores,
-        section_answers=section_answers,
-        sections=SECTIONS,
-        questions=ALL_QUESTIONS[practice_test_id],
-        module_multipliers=module_multipliers,
+        verbal_score=scores["verbal_score"],
+        math_score=scores["math_score"],
+        total_score=scores["total_score"],
         domain_stats=domain_stats
     )
 
