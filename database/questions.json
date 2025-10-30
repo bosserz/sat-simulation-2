@@ -2768,13 +2768,862 @@
         "equation": null
     },
     {
+        "question_id": 9,
+        "type": "verbal",
+        "module": 1,
+        "domain": "Craft and Structure",
+        "skill": "Words in Context",
+        "level": "Medium",
+        "passage": "According to a team of neuroeconomists from the University of Zurich, ease of decision making may be linked to communication between two brain regions, the prefrontal cortex and the parietal cortex. Individuals tend to be more decisive if the information flow between the regions is intensified, whereas they make choices more slowly when information flow is ______.",
+        "question": "Which choice completes the text with the most logical and precise word or phrase?",
+        "options": [
+            "reduced",
+            "evaluated",
+            "determined",
+            "accquired"
+        ],
+        "correct_answer": "reduced",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 10,
+        "type": "verbal",
+        "module": 1,
+        "domain": "Craft and Structure",
+        "skill": "Cross-text Connection",
+        "level": "Easy",
+        "passage": "<p><b>Text 1</b></p>\n<p><u>Imagine you and your friend are trying to decide where to eat lunch.</u> When people try to make joint decisions like this, they often don’t reveal their true preferences. Instead, they say they would be happy with all options because they think this response will help them appear more easygoing and likable to the other person.</p>\n<br>\n<p><b>Text 2</b></p>\n<p>Research shows that people who don’t state their preferences when making a decision with others aren’t more likable in the eyes of others. In fact, stating that you have no preference actually makes the decision more difficult for other people. It can also cause them to feel less happy with their ultimate decision and with you.</p>",
+        "question": "Based on the texts, what response would the author of Text 2 most likely suggest for someone in the situation described in the underlined sentence in Text 1?",
+        "options": [
+            "Cancel the plan to have lunch together.",
+            "Ask where the friend typically likes to eat.",
+            "State a preference about where to eat.",
+            "Change the subject to talk about something else."
+        ],
+        "correct_answer": "State a preference about where to eat.",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 11,
+        "type": "verbal",
+        "module": 1,
+        "domain": "Craft and Structure",
+        "skill": "Cross-text Connection",
+        "level": "Medium",
+        "passage": "<p><b>Text 1</b></p>\n<p>In a study of the benefits of having free time, Marissa Sharif found that the reported sense of life satisfaction tended to plateau when participants had two hours of free time per day and actually began to fall when they had five hours of free time per day. After further research, Sharif concluded that this dip in life satisfaction mainly occurred when individuals spent all their free time unproductively, such as by watching TV or playing games.</p>\n<br>\n<p><b>Text 2</b></p>\n<p>Psychologist James Maddux cautions against suggesting an ideal amount of free time. The human desire for both free time and productivity is universal, but Maddux asserts that individuals have unique needs for life satisfaction. Furthermore, he points out that there is no objective definition for what constitutes productivity; reading a book might be considered a productive activity by some, but idleness by others.</p>",
+        "question": "Based on the texts, how would Maddux (Text 2) most likely respond to the conclusion Sharif (Text 1) reached after her further research?",
+        "options": [
+            "By acknowledging that free time is more likely to enhance life satisfaction when it is spent productively than when it is spent unproductively",
+            "By challenging the reasoning in Text 1, as it has not been proved that productivity commonly contributes to individuals’ life satisfaction",
+            "By warning against making an overly broad assumption, as there is no clear consensus in distinguishing between productive and unproductive activities",
+            "By claiming that the specific activities named in Text 1 are actually examples of productive activities rather than unproductive ones"
+        ],
+        "correct_answer": "By warning against making an overly broad assumption, as there is no clear consensus in distinguishing between productive and unproductive activities",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 13,
+        "type": "verbal",
+        "module": 1,
+        "domain": "Craft and Structure",
+        "skill": "Cross-text Connection",
+        "level": "Easy",
+        "passage": "<p><b>Text 1</b></p>\n<p>For decades, bluegrass musicians have debated whether their genre should exclude influences from mainstream genres such as rock. Many insist that bluegrass is defined by its adherence to the folk music of the US South, out of which bluegrass emerged. Such “purists,” as they are known, regard the recordings of Bill Monroe, which established the bluegrass sound in the 1940s, as a standard against which the genre should still be measured.</p>\n<br>\n<p><b>Text 2</b></p>\n<p>Bluegrass isn’t simply an extension of folk traditions into the era of recorded music. In reality, Bill Monroe created the bluegrass sound in the 1940s by combining Southern folk music with commercial genres that had arisen only a few decades before, such as jazz and the blues. Since bluegrass has always been a mixed genre, contemporary bluegrass musicians should not be forbidden from incorporating into it influences from rock and other mainstream genres.</p>",
+        "question": "Based on the texts, how would the author of Text 2 most likely regard the perspective of bluegrass purists, as described in Text 1?",
+        "options": [
+            "As inconsistent, since bluegrass purists themselves enjoy other musical genres",
+            "As unrealistic, since bluegrass purists have no way of enforcing their musical preferences",
+            "As shortsighted, because bluegrass could enlarge its audience by including influences from mainstream genres",
+            "As illogical, because the purists overlook crucial aspects of how the bluegrass sound first originated."
+        ],
+        "correct_answer": "As illogical, because the purists overlook crucial aspects of how the bluegrass sound first originated.",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 17,
+        "type": "verbal",
+        "module": 1,
+        "domain": "Expression of Ideas",
+        "skill": "Transitions",
+        "level": "Easy",
+        "passage": "In 1942, the 1,500-mile Alaska Highway was constructed in under nine months, largely due to the skilled work of nearly 4,000 African American soldiers from US Army engineering regiments. The soldiers’ contribution was overlooked for decades. ______ in 2017, lawmakers declared October 25 a day of recognition—“Alaska Highway Day”—for the troops who helped build this critical roadway.",
+        "question": "Which choice completes the text with the most logical transition?",
+        "options": [
+            "Lastly,",
+            "Then,",
+            "Similarly,",
+            "For example,"
+        ],
+        "correct_answer": "Then,",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 18,
+        "type": "verbal",
+        "module": 1,
+        "domain": "Expression of Ideas",
+        "skill": "Transitions",
+        "level": "Easy",
+        "passage": "Samuel Coleridge-Taylor was a prominent classical music composer from England who toured the US three times in the early 1900s. The child of a West African father and an English mother, Coleridge-Taylor emphasized his mixed-race ancestry. For example, he referred to himself as Anglo-African. ______ he incorporated the sounds of traditional African music into his classical music compositions.",
+        "question": "Which choice completes the text with the most logical transition?",
+        "options": [
+            "In addition,",
+            "Actually,",
+            "However,",
+            "Regardless,"
+        ],
+        "correct_answer": "In addition,",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 19,
+        "type": "verbal",
+        "module": 1,
+        "domain": "Expression of Ideas",
+        "skill": "Rhetorical Synthesis",
+        "level": "Medium",
+        "passage": "While researching a topic, a student has taken the following notes:\n<ul style=\"list-style-type: circle;\">\n<li>Organisms release cellular material into their environment by shedding substances such as hair or skin.</li>\n<li>The DNA in these substances is known as environmental DNA, or eDNA.</li>\n<li>Researchers collect and analyze eDNA to detect the presence of species that are difficult to observe.</li>\n<li>Geneticist Sara Oyler-McCance’s research team analyzed eDNA in water samples from the Florida Everglades to detect invasive constrictor snake species in the area.</li>\n<li>The study determined a 91% probability of detecting Burmese python eDNA in a given location.</li>\n</ul>",
+        "question": "The student wants to present the study to an audience already familiar with environmental DNA. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+        "options": [
+            "Sara Oyler-McCance’s researchers analyzed eDNA in water samples from the Florida Everglades for evidence of invasive constrictor snakes, which are difficult to observe.",
+            "An analysis of eDNA can detect the presence of invasive species that are difficult to observe, such as constrictor snakes.",
+            "Researchers found Burmese python eDNA, or environmental DNA, in water samples; eDNA is the DNA in released cellular materials, such as shed skin cells.",
+            "Sara Oyler-McCance’s researchers analyzed environmental DNA (eDNA)—that is, DNA from cellular materials released by organisms—in water samples from the Florida Everglades."
+        ],
+        "correct_answer": "Sara Oyler-McCance’s researchers analyzed eDNA in water samples from the Florida Everglades for evidence of invasive constrictor snakes, which are difficult to observe.",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 22,
+        "type": "verbal",
+        "module": 1,
+        "domain": "Expression of Ideas",
+        "skill": "Rhetorical Synthesis",
+        "level": "Easy",
+        "passage": "<div class=\"\"><p>While researching a topic, a student has taken the following notes:</p>\n<ul style=\"list-style-type: circle;\">\n<li>The Philadelphia and Lancaster Turnpike was a road built between 1792 and 1794.</li>\n<li>It was the first private turnpike in the United States.</li>\n<li>It connected the cities of Philadelphia and Lancaster in the state of Pennsylvania.</li>\n<li>It was sixty-two miles long.</li>\n</ul></div>",
+        "question": "The student wants to emphasize the distance covered by the Philadelphia and Lancaster Turnpike. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+        "options": [
+            "The sixty-two-mile-long Philadelphia and Lancaster Turnpike connected the Pennsylvania cities of Philadelphia and Lancaster.",
+            "The Philadelphia and Lancaster Turnpike was the first private turnpike in the United States.",
+            "The Philadelphia and Lancaster Turnpike, which connected two Pennsylvania cities, was built between 1792 and 1794.",
+            "A historic Pennsylvania road, the Philadelphia and Lancaster Turnpike was completed in 1794."
+        ],
+        "correct_answer": "The sixty-two-mile-long Philadelphia and Lancaster Turnpike connected the Pennsylvania cities of Philadelphia and Lancaster.",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 23,
+        "type": "verbal",
+        "module": 1,
+        "domain": "Expression of Ideas",
+        "skill": "Transitions",
+        "level": "Medium",
+        "passage": "When, in 2017, Cambridge University students Lucy Moss and Toby Marlow decided they wanted to develop a musical together, one of their goals was for their female actor friends to have good parts to play. ______ they created the show Six, a retelling of the history of King Henry VIII’s wives in which each of the six queens has a starring role.",
+        "question": "Which choice completes the text with the most logical transition?",
+        "options": [
+            "In other words,",
+            "In summary,",
+            "For example,",
+            "To that end,"
+        ],
+        "correct_answer": "To that end,",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 25,
+        "type": "verbal",
+        "module": 1,
+        "domain": "Expression of Ideas",
+        "skill": "Rhetorical Synthesis",
+        "level": "Medium",
+        "passage": "<div class=\"\"><p>While researching a topic, a student has taken the following notes:</p>\n<ul style=\"list-style-type: circle;\">\n<li>Architect Julian Abele studied Gregorian and neo-Gothic architecture in Europe.</li>\n<li>Abele worked for an architecture firm that was hired in 1924 to design buildings for Duke University’s new campus.</li>\n<li>Most of the buildings on Duke’s campus were designed in the Gregorian or neo-Gothic architectural styles.</li>\n<li>At the time, Abele was not formally credited with designing the buildings.</li>\n<li>Based on the buildings’ architectural styles, historians believe Abele designed most of the campus buildings.</li>\n</ul></div>",
+        "question": "The student wants to specify why historians believe Abele designed most of Duke’s campus buildings. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+        "options": [
+            "Given that most of the buildings on Duke’s campus feature architectural styles that Abele had studied in Europe, historians believe Abele is the one who designed them.",
+            "Though Abele wasn’t formally credited at the time, historians believe he designed most of the buildings on Duke’s campus.",
+            "Most of Duke’s campus buildings, which were designed by a firm Abele worked for, were designed in the Gregorian and neo-Gothic architectural styles.",
+            "Abele, an architect who studied Gregorian and neo-Gothic architecture in Europe, is believed to have designed most of the buildings on Duke’s campus."
+        ],
+        "correct_answer": "Given that most of the buildings on Duke’s campus feature architectural styles that Abele had studied in Europe, historians believe Abele is the one who designed them.",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 27,
+        "type": "verbal",
+        "module": 1,
+        "domain": "Information and Ideas",
+        "skill": "Central Ideas and Details",
+        "level": "Easy",
+        "passage": "<p>NASA’s <em>Cassini</em> probe has detected an unusual wobble in the rotation of Mimas, Saturn’s smallest moon. Using a computer model to study Mimas’s gravitational interactions with Saturn and tidal forces, geophysicist Alyssa Rhoden and colleagues have proposed that this wobble could be due to a liquid ocean moving beneath the moon’s icy surface. The researchers believe other moons should be examined to see if they too might have oceans hidden beneath their surfaces.</p>",
+        "question": "Which choice best states the main idea of the text?",
+        "options": [
+            "Rhoden and colleagues were the first to confirm that several of Saturn’s moons contain hidden oceans.",
+            "Research has failed to identify signs that there is an ocean hidden beneath the surface of Mimas.",
+            "Rhoden and colleagues created a new computer model that identifies moons with hidden oceans without needing to analyze the moons’ rotation. ",
+            "Research has revealed that an oddity in the rotation of Mimas could be explained by an ocean hidden beneath its surface."
+        ],
+        "correct_answer": "Research has revealed that an oddity in the rotation of Mimas could be explained by an ocean hidden beneath its surface.",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 30,
+        "type": "verbal",
+        "module": 1,
+        "domain": "Information and Ideas",
+        "skill": "Inferences",
+        "level": "Easy",
+        "passage": "<p>In the South Pacific, New Caledonian crows use two different kinds of stick tools. One tool is complex. The crows shape a stick from a rare plant into a hook. The other tool is basic. The crows find a stick without a hook on the ground. The hooked tool is harder to get but is much better than the basic tool at removing prey from holes. When studying New Caledonian crows, ecologist Barbara Klump found that they hold the hooked tools in their claws when not using them, or they carefully put them in a safe place. The crows don’t do the same with the basic tools. This suggests to Klump that the <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span></p>",
+        "question": "Which choice most logically completes the text?",
+        "options": [
+            "hooked stick tools are more valuable to the crows than the stick tools without hooks.",
+            "hooked stick tools are easier for most of the crows to hold than the stick tools without hooks.",
+            "crows prefer to share their hooked stick tools but don’t share the stick tools without hooks.",
+            "crows realize that both kinds of stick tools are less effective than their claws are at removing prey from holes."
+        ],
+        "correct_answer": "hooked stick tools are more valuable to the crows than the stick tools without hooks.",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 34,
+        "type": "verbal",
+        "module": 1,
+        "domain": "Information and Ideas",
+        "skill": "Command of Evidence",
+        "level": "Easy",
+        "passage": "<div class=\"text-center\">\n\t<table class=\"gdr table-format\" style=\"border: 1px solid;\">\n\t\t<caption style=\"caption-side: top;\">\n\t\t\t<p style=\"text-align: center;\">Pyramids in Egypt and the Americas\n\t\t\t</p>\n\t\t</caption>\n\t\t<thead>\n\t\t\t<tr>\n\t\t\t\t<th scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Pyramid</th>\n\t\t\t\t<th scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Country</th>\n\t\t\t\t<th scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Height (meters)</th>\n\t\t\t\t<th scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Age (years before present)</th>\n\t\t\t</tr>\n\t\t</thead>\n\t\t<tbody>\n\t\t\t<tr>\n\t\t\t\t<th scope=\"row\" class=\"table-format\" style=\"text-align: left;\">The Great Pyramid</th>\n\t\t\t\t<td class=\"table-format\">Mexico</td>\n\t\t\t\t<td class=\"table-format\" style=\"text-align: center;\">33</td>\n\t\t\t\t<td class=\"table-format\" style=\"text-align: center;\">2,050 to 2,400</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">The Pyramid of Djoser</th>\n\t\t\t\t<td class=\"table-format\">Egypt</td>\n\t\t\t\t<td class=\"table-format\" style=\"text-align: center;\">60</td><td style=\"text-align: center;\">4,600 to 4,700</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">The Pyramid of Sahure</th>\n\t\t\t\t<td class=\"table-format\">Egypt</td><td style=\"text-align: center;\">47</td>\n\t\t\t\t<td class=\"table-format\" style=\"text-align: center;\">4,400 to 4,500</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">El Castillo</th>\n\t\t\t\t<td class=\"table-format\">Belize</td><td style=\"text-align: center;\">40</td>\n\t\t\t\t<td class=\"table-format\" style=\"text-align: center;\">1,100 to 1,400</td>\n\t\t\t</tr>\n\t\t</tbody>\n\t</table>\n<p>A student is writing an essay about four pyramids for a history class and wants to note how long ago each pyramid was built and how tall each pyramid is. Consulting the table, the student finds that el Castillo was built 1,100 to 1,400 years ago and is&nbsp; <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span>&nbsp;</p>\n</div>",
+        "question": "Which choice most effectively uses data from the table to complete the text?",
+        "options": [
+            "33 meters tall.",
+            "47 meters tall.",
+            "40 meters tall.",
+            "60 meters tall."
+        ],
+        "correct_answer": "40 meters tall.",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 35,
+        "type": "verbal",
+        "module": 1,
+        "domain": "Information and Ideas",
+        "skill": "Command of Evidence",
+        "level": "Easy",
+        "passage": "<div class=\"\">\n    <p></p>\n    <table class=\"gdr table-format\" style=\"border: 1px solid;\">\n        <caption style=\"caption-side: top;\">\n            <p style=\"text-align: center;\">Annual Car Production in the United States, 1910–1925</p>\n        </caption>\n        <thead>\n            <tr>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Year</th>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Number of cars produced</th>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Number of companies producing cars</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: center;\">1910</th>\n                <td class=\"table-format\" style=\"text-align: center;\">123,990</td>\n                <td class=\"table-format\" style=\"text-align: center;\">320</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: center;\">1915</th>\n                <td class=\"table-format\" style=\"text-align: center;\">548,139</td>\n                <td class=\"table-format\" style=\"text-align: center;\">224</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: center;\">1920</th>\n                <td class=\"table-format\" style=\"text-align: center;\">1,651,625</td>\n                <td class=\"table-format\" style=\"text-align: center;\">197</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: center;\">1925</th>\n                <td class=\"table-format\" style=\"text-align: center;\">3,185,881</td>\n                <td class=\"table-format\" style=\"text-align: center;\">80</td>\n            </tr>\n        </tbody>\n    </table>\n    <p></p>\n    <p>A student is using the table as part of a social studies class presentation on the US auto industry in the early twentieth century. The student notes that, according to the table, from 1910 to 1925 <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span></p>\n</div>",
+        "question": "Which choice most effectively uses data from the table to complete the statement?",
+        "options": [
+            "the number of cars produced increased but the number of companies producing cars decreased.",
+            "both the number of cars produced and the number of companies producing cars remained unchanged.",
+            "the number of cars produced decreased but the number of companies producing cars remained unchanged.",
+            "both the number of cars produced and the number of companies producing cars increased."
+        ],
+        "correct_answer": "the number of cars produced increased but the number of companies producing cars decreased.",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 36,
+        "type": "verbal",
+        "module": 1,
+        "domain": "Information and Ideas",
+        "skill": "Command of Evidence",
+        "level": "Medium",
+        "passage": "<div class=\"\">\n    <p></p>\n    <table class=\"gdr table-format\" style=\"border: 1px solid;\">\n        <caption style=\"caption-side: top;\">\n            <p style=\"text-align: center;\">Annual Spending by International Tourists in Four Countries (in billions of US dollars)</p>\n        </caption>\n        <thead>\n            <tr>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Country</th>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">2016</th>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">2017</th>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">2018</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">South Korea</th>\n                <td class=\"table-format\" style=\"text-align: center;\">$21.0</td>\n                <td class=\"table-format\" style=\"text-align: center;\">$17.2</td>\n                <td class=\"table-format\" style=\"text-align: center;\">$23.1</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">Japan</th>\n                <td class=\"table-format\" style=\"text-align: center;\">$33.5</td>\n                <td class=\"table-format\" style=\"text-align: center;\">$37.0</td>\n                <td class=\"table-format\" style=\"text-align: center;\">$45.3</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">Thailand</th>\n                <td class=\"table-format\" style=\"text-align: center;\">$48.5</td>\n                <td class=\"table-format\" style=\"text-align: center;\">$57.1</td>\n                <td class=\"table-format\" style=\"text-align: center;\">$61.4</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">Malaysia</th>\n                <td class=\"table-format\" style=\"text-align: center;\">$19.7</td>\n                <td class=\"table-format\" style=\"text-align: center;\">$20.3</td>\n                <td class=\"table-format\" style=\"text-align: center;\">$21.8</td>\n            </tr>\n        </tbody>\n    </table>\n    <p></p>\n    <p>One measure of international tourism is how much money visitors from abroad spend in a country. A student writing a report about tourism in several Asian countries notes that among the countries in the table, most had annual increases in international tourism revenue in 2017 and 2018, but that trend wasn’t universal. For example, <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span></p>\n</div>",
+        "question": "Which choice most effectively uses data from the table to complete the example?",
+        "options": [
+            "in each year shown, the revenue from tourism by residents of those countries was greater than the revenue from international tourism.",
+            "Japan’s international tourism revenue was higher in 2016 than it was in 2018.",
+            "South Korea’s annual international tourism revenue decreased from 2016 to 2017.",
+            "in each year shown, Thailand had higher international tourism income than any of the other countries."
+        ],
+        "correct_answer": "South Korea’s annual international tourism revenue decreased from 2016 to 2017.",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 37,
+        "type": "verbal",
+        "module": 1,
+        "domain": "Information and Ideas",
+        "skill": "Command of Evidence",
+        "level": "Medium",
+        "passage": "<div class=\"\">\n    <table class=\"gdr table-format\" style=\"border: 1px solid;\">\n        <caption style=\"caption-side: top;\">\n            <p style=\"text-align: center;\">Incorporated and Unincorporated Self-Employment Rates in Four Occupational Fields, 2015</p>\n        </caption>\n        <thead>\n            <tr>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Occupational field</th>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Incorporated self-employment rate</th>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Unincorporated self-employment rate</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">Construction and resource extraction</th>\n                <td class=\"table-format\" style=\"text-align: center;\">4.4%</td>\n                <td class=\"table-format\" style=\"text-align: center;\">14.8%</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">Installation, maintenance, and repair</th>\n                <td class=\"table-format\" style=\"text-align: center;\">2.7%</td>\n                <td class=\"table-format\" style=\"text-align: center;\">6.2%</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">Management, business, and financial services</th>\n                <td class=\"table-format\" style=\"text-align: center;\">8.9%</td>\n                <td class=\"table-format\" style=\"text-align: center;\">9.7%</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">Sales and related</th>\n                <td class=\"table-format\" style=\"text-align: center;\">5.8%</td>\n                <td class=\"table-format\" style=\"text-align: center;\">7.8%</td>\n            </tr>\n        </tbody>\n    </table>\n    <p>Self-employed workers—individuals who are not employees of other individuals or businesses but instead earn their income as business owners, independent contractors, or freelance workers—make up an important part of the US labor force. In order to receive legal and tax benefits enjoyed by corporations, self-employed individuals may choose to incorporate their business. A 2015 survey of incorporated and unincorporated self-employment rates in four occupational fields showed that the highest incorporated self-employment rate occurred among people working in <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span></p>\n</div>",
+        "question": "Which choice most effectively uses data from the table to complete the text?",
+        "options": [
+            "sales and related occupations.",
+            "installation, maintenance, and repair occupations. ",
+            "construction and resource extraction occupations.",
+            "management, business, and financial services occupations."
+        ],
+        "correct_answer": "management, business, and financial services occupations.",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 40,
+        "type": "verbal",
+        "module": 1,
+        "domain": "Standard English Conventions",
+        "skill": "Boundaries",
+        "level": "Easy",
+        "passage": "<p>Generations of mystery and horror <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> have been influenced by the dark, gothic stories of celebrated American author Edgar Allan Poe (1809–1849).</p>",
+        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+        "options": [
+            "writers",
+            "writers,",
+            "writers—",
+            "writers;"
+        ],
+        "correct_answer": "writers",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 41,
+        "type": "verbal",
+        "module": 1,
+        "domain": "Standard English Conventions",
+        "skill": "Boundaries",
+        "level": "Easy",
+        "passage": "<p>After the printing press was introduced in 1440, handwritten manuscripts from Europe’s medieval period were often destroyed and the paper used for other purposes. In one instance, pages <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> a collection of Norse tales dating to 1270 were discovered lining a bishop’s miter (hat).</p>",
+        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+        "options": [
+            "from:",
+            "from,",
+            "from",
+            "from—"
+        ],
+        "correct_answer": "from",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 42,
+        "type": "verbal",
+        "module": 1,
+        "domain": "Standard English Conventions",
+        "skill": "Boundaries",
+        "level": "Easy",
+        "passage": "<p>In her large-scale sculpture<em> Casa-Isla</em>, artist Edra Soto included references to her childhood in Puerto Rico. For example, the sculpture’s steel panels have a crisscrossing pattern inspired by the iron gates <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span></p>",
+        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+        "options": [
+            "Soto would see in her neighborhood?",
+            "Soto would see in her neighborhood.",
+            "would Soto see in her neighborhood.",
+            "would Soto see in her neighborhood?"
+        ],
+        "correct_answer": "Soto would see in her neighborhood.",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 44,
+        "type": "verbal",
+        "module": 1,
+        "domain": "Standard English Conventions",
+        "skill": "Boundaries",
+        "level": "Medium",
+        "passage": "<p>Archaeologists have estimated that the pre-Columbian Native American city of Cahokia, located across the Mississippi River from modern-day St. Louis, Missouri, had as many as 20,000 inhabitants in the year 1150 <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> it one of the largest cities in North America at the time.</p>",
+        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+        "options": [
+            "CE making",
+            "CE. Making",
+            "CE, making",
+            "CE; making"
+        ],
+        "correct_answer": "CE, making",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 47,
+        "type": "verbal",
+        "module": 1,
+        "domain": "Standard English Conventions",
+        "skill": "Boundaries",
+        "level": "Hard",
+        "passage": "<p>With some 16,000 in attendance, the Second World Black and African Festival of Arts and <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> or FESTAC ‘77, as the event was more commonly known—became the largest pan-African event on record. FESTAC drew people from around the world to Lagos, Nigeria, for a monthlong celebration of Black and African art, scholarship, and activism.</p>",
+        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+        "options": [
+            "Culture:",
+            "Culture—",
+            "Culture,",
+            "Culture"
+        ],
+        "correct_answer": "Culture—",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 48,
+        "type": "verbal",
+        "module": 1,
+        "domain": "Standard English Conventions",
+        "skill": "Form, Structure, and Sense",
+        "level": "Easy",
+        "passage": "<p>The radiation that <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> during the decay of radioactive atomic nuclei is known as gamma radiation.</p>",
+        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+        "options": [
+            "occurs",
+            "have occurred",
+            "occur",
+            "are occurring"
+        ],
+        "correct_answer": "occurs",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 49,
+        "type": "verbal",
+        "module": 1,
+        "domain": "Standard English Conventions",
+        "skill": "Form, Structure, and Sense",
+        "level": "Easy",
+        "passage": "<p>In 1903, environmentalist John Muir guided President Theodore Roosevelt on a scenic, sprawling trip through California’s Yosemite Valley. Upon returning from the three-day excursion, Roosevelt <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> to conserve the nation’s wilderness areas, a vow he upheld for his remaining six years in office.</p>",
+        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+        "options": [
+            "is vowing",
+            "vowed",
+            "will vow",
+            "vows"
+        ],
+        "correct_answer": "vowed",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 50,
+        "type": "verbal",
+        "module": 1,
+        "domain": "Standard English Conventions",
+        "skill": "Form, Structure, and Sense",
+        "level": "Medium",
+        "passage": "<p>Anthropologist Lívia Barbosa, of the Universidade Federal Fluminense in Brazil, <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> food and sociability in contemporary Brazil—specifically, how foods such as <span lang=\"pt\">cabidela</span> (a rice and rabbit dish) and <span lang=\"pt\">churrasco</span> (a barbeque dish) function as central mechanisms in building social relationships, values, and identities.</p>",
+        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+        "options": [
+            "studies",
+            "are studying",
+            "have studied",
+            "study"
+        ],
+        "correct_answer": "studies",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 55,
+        "type": "math",
+        "module": 1,
+        "domain": "Algebra",
+        "skill": "Linear equations in one variable",
+        "level": "Easy",
+        "passage": null,
+        "question": "If \\( \\frac{x}{8} = 5 \\), what is the value of \\(8x\\)?",
+        "options": [],
+        "correct_answer": 0.2,
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 58,
+        "type": "math",
+        "module": 1,
+        "domain": "Algebra",
+        "skill": "Linear functions",
+        "level": "Easy",
+        "passage": null,
+        "question": "The function \\(f\\) is defined by \\(f(x)=25x+30\\). What is the value of \\(f(x)\\) when \\(x=2\\)?",
+        "options": [
+            50,
+            57,
+            80,
+            110
+        ],
+        "correct_answer": 80,
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 59,
+        "type": "math",
+        "module": 1,
+        "domain": "Algebra",
+        "skill": "Linear functions",
+        "level": "Easy",
+        "passage": null,
+        "question": "For the linear function \\(f\\), the graph of \\(y=f(x)\\)\n in the \\(xy\\)-plane has a slope of \\(2\\)\n and has a \\(y\\)-intercept at \\((0,−5)\\). Which equation defines \\(f\\)?",
+        "options": [
+            "\\(𝑓(𝑥)=12𝑥−5\\)",
+            "\\(𝑓(𝑥)=−\\frac{1}{2}𝑥−5\\)",
+            "\\(𝑓(𝑥)=−2𝑥−5\\)",
+            "\\(𝑓(𝑥)=2𝑥−5\\)"
+        ],
+        "correct_answer": "\\(𝑓(𝑥)=2𝑥−5\\)",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 61,
+        "type": "math",
+        "module": 1,
+        "domain": "Algebra",
+        "skill": "Linear functions",
+        "level": "Medium",
+        "passage": null,
+        "question": "<table class=\"table-format\">\n                <tr>\n                        <th class=\"table-format\">Distance (kilometers)</th>\n                        <th class=\"table-format\">Average time (minutes)</th>\n                </tr>\n                <tr>\n                        <td class=\"table-format\">\\(0.32\\)</td>\n                        <td class=\"table-format\">\\(8\\)</td>\n                </tr>\n                <tr>\n                        <td class=\"table-format\">\\(0.56\\)</td>\n                        <td class=\"table-format\">\\(14\\)</td>\n                </tr>\n                <tr>\n                        <td class=\"table-format\">\\(0.68\\)</td>\n                        <td class=\"table-format\">\\(17\\)</td>\n                </tr>\n</table>\n<p>The table gives the average time \\(𝑡\\), in minutes, it takes Carly to travel a certain distance \\(𝑑\\), in kilometers. Which equation could represent this linear relationship?</p>",
+        "options": [
+            "\\(𝑡=4𝑑\\)",
+            "\\(𝑡=\\frac{1}{25}𝑑\\)",
+            "\\(𝑡=25𝑑\\)",
+            "\\(𝑡=\\frac{1}{4}𝑑\\)"
+        ],
+        "correct_answer": "\\(𝑡=25𝑑\\)",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 63,
+        "type": "math",
+        "module": 1,
+        "domain": "Algebra",
+        "skill": "Linear equations in two variables",
+        "level": "Medium",
+        "passage": null,
+        "question": "Line \\(𝑘\\) is defined by \\(𝑦=−173𝑥+5\\). Line \\(𝑗\\)\n is perpendicular to line \\(𝑘\\) in the \\(xy\\)-plane. What is the slope of line \\(𝑗\\)?",
+        "options": [],
+        "correct_answer": "3/17",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 66,
+        "type": "math",
+        "module": 1,
+        "domain": "Algebra",
+        "skill": "Systems of two linear equations in two variables",
+        "level": "Easy",
+        "passage": null,
+        "question": "<div>\n        <p class=\"text-center\">\\(y=2x+3\\)</p>\n        <p class=\"text-center\">\\(x=1\\)</p>\n        <p>What is the solution \\((x,y)\\) to the given system of equations?</p>\n</div>",
+        "options": [
+            "\\((1,2)\\)",
+            "\\((1,5)\\)",
+            "\\((2,3)\\)",
+            "\\((2,7)\\)"
+        ],
+        "correct_answer": "\\((1,5)\\)",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 67,
+        "type": "math",
+        "module": 1,
+        "domain": "Algebra",
+        "skill": "Systems of two linear equations in two variables",
+        "level": "Easy",
+        "passage": null,
+        "question": "<div>\n        <p class=\"text-center\">\\(y=-3x\\)</p>\n        <p class=\"text-center\">\\(4x+y=15\\)</p>\n        <p>The solution to the given system of equations is \\((x,y)\\). What is the value of \\(x\\)?</p>\n</div>",
+        "options": [
+            1,
+            5,
+            15,
+            45
+        ],
+        "correct_answer": 15,
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 68,
+        "type": "math",
+        "module": 1,
+        "domain": "Algebra",
+        "skill": "Systems of two linear equations in two variables",
+        "level": "Medium",
+        "passage": null,
+        "question": "<div>\n        <p class=\"text-center\">\\(y=\\frac{1}{3}x-14\\)</p>\n        <p class=\"text-center\">\\(y=-x+18\\)</p>\n        <p>The solution to the given system of equations is \\((x,y)\\). What is the value of \\(x\\)?</p>\n</div>",
+        "options": [],
+        "correct_answer": 24,
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 71,
+        "type": "math",
+        "module": 1,
+        "domain": "Advanced Math",
+        "skill": "Equivalent expressions",
+        "level": "Easy",
+        "passage": null,
+        "question": "Which expression is equivalent to \\(23𝑥^3+2𝑥^2+9𝑥\\)?",
+        "options": [
+            "\\(23𝑥(𝑥^2+2𝑥+9)\\)",
+            "\\(9𝑥(23𝑥^3+2𝑥^2+1)\\)",
+            "\\(𝑥(23𝑥^2+2𝑥+9)\\)",
+            "\\(34(𝑥^3+𝑥^2+𝑥)\\)"
+        ],
+        "correct_answer": "\\(𝑥(23𝑥^2+2𝑥+9)\\)",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 74,
+        "type": "math",
+        "module": 1,
+        "domain": "Advanced Math",
+        "skill": "Nonlinear equations in one variable and systems of equations in two variables",
+        "level": "Easy",
+        "passage": null,
+        "question": "Which of the following is a solution to the equation \\(2x^2-4 = x^2\\) ?",
+        "options": [
+            1,
+            2,
+            3,
+            4
+        ],
+        "correct_answer": 2,
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 75,
+        "type": "math",
+        "module": 1,
+        "domain": "Advanced Math",
+        "skill": "Nonlinear equations in one variable and systems of equations in two variables",
+        "level": "Medium",
+        "passage": null,
+        "question": "<div>\n        <p class=\"text-center\">\\(y=x^2+1.7\\)</p>\n        <p class=\"text-center\">\\(y=1.7-x\\)</p>\n        <p>Which graph represents the given system of equations?</p>\n</div>",
+        "options": [
+            "<img src=\"https://storage.cloud.google.com/sat-question-img/nov-2025/math_q75_a.png\">",
+            "<img src=\"https://storage.cloud.google.com/sat-question-img/nov-2025/math_q75_b.png\">",
+            "<img src=\"https://storage.cloud.google.com/sat-question-img/nov-2025/math_q75_c.png\">",
+            "<img src=\"https://storage.cloud.google.com/sat-question-img/nov-2025/math_q75_d.png\">"
+        ],
+        "correct_answer": "<img src=\"https://storage.cloud.google.com/sat-question-img/nov-2025/math_q75_a.png\">",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 79,
+        "type": "math",
+        "module": 1,
+        "domain": "Advanced Math",
+        "skill": "Nonlinear functions",
+        "level": "Easy",
+        "passage": null,
+        "question": "<div>\n        <img src=\"https://storage.cloud.google.com/sat-question-img/nov-2025/math_79.png\">\n        <p>The graph shown models the number of residents of a certain city \\(𝑥\\) years after 2010. How many residents does this model estimate the city had in 2010?</p>\n</div>",
+        "options": [
+            "\\(0\\)",
+            "\\(2,000\\)",
+            "\\(20,000\\)",
+            "\\(25,000\\)"
+        ],
+        "correct_answer": "\\(20,000\\)",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 80,
+        "type": "math",
+        "module": 1,
+        "domain": "Advanced Math",
+        "skill": "Nonlinear functions",
+        "level": "Easy",
+        "passage": null,
+        "question": "<div>\n        <img src=\"https://storage.cloud.google.com/sat-question-img/nov-2025/math_80.png\">\n        <p>What is the \\(x\\)-coordinate of the \\(x\\)-intercept of the graph shown?</p>\n</div>",
+        "options": [],
+        "correct_answer": 6,
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 81,
+        "type": "math",
+        "module": 1,
+        "domain": "Advanced Math",
+        "skill": "Nonlinear functions",
+        "level": "Easy",
+        "passage": null,
+        "question": "The function \\(𝑓(𝑥)=200,000(1.21)^𝑥\\) gives a company’s predicted annual revenue, in dollars, \\(𝑥\\) years after the company started selling light bulbs online, where \\(0< 𝑥 ≤ 10\\). What is the best interpretation of the statement “\\(𝑓(5)\\)\n is approximately equal to \\(518,748\\)” in this context?",
+        "options": [
+            "5 years after the company started selling light bulbs online, its predicted annual revenue is approximately 518,748 dollars.",
+            "5 years after the company started selling light bulbs online, its predicted annual revenue will have increased by a total of approximately 518,748 dollars.",
+            "When the company’s predicted annual revenue is approximately 518,748 dollars, it is 5 times the predicted annual revenue for the previous year.",
+            "When the company’s predicted annual revenue is approximately 518,748\n dollars, it is 5% greater than the predicted annual revenue for the previous year."
+        ],
+        "correct_answer": "5 years after the company started selling light bulbs online, its predicted annual revenue is approximately 518,748 dollars.",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 86,
+        "type": "math",
+        "module": 1,
+        "domain": "Problem-Solving & Data Analysis",
+        "skill": "Ratios, rates, proportional relationships, and units",
+        "level": "Easy",
+        "passage": null,
+        "question": "A fish swam a distance of 5,104 yards. How far did the fish swim, in miles? (1 mile=1,760 yards)\n",
+        "options": [
+            0.3,
+            2.9,
+            3344,
+            6864
+        ],
+        "correct_answer": 2.9,
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 87,
+        "type": "math",
+        "module": 1,
+        "domain": "Problem-Solving & Data Analysis",
+        "skill": "Percentages",
+        "level": "Medium",
+        "passage": null,
+        "question": "The value of \\(𝑧\\) is \\(1.13\\) times \\(100\\). The value of \\(𝑧\\) is what percent greater than \\(100\\)?",
+        "options": [
+            11.3,
+            13,
+            130,
+            213
+        ],
+        "correct_answer": 13,
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 88,
+        "type": "math",
+        "module": 1,
+        "domain": "Problem-Solving & Data Analysis",
+        "skill": "One-variable data: Distributions and measures of center and spread",
+        "level": "Medium",
+        "passage": null,
+        "question": "<div>\n\t<p class=\"text-center\">\\(4,10,18,4,4,5,6,5\\)</p>\n\t<p>What is the median of the data set shown?</p>\n</div>",
+        "options": [
+            4,
+            5,
+            7,
+            14
+        ],
+        "correct_answer": 5,
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 90,
+        "type": "math",
+        "module": 1,
+        "domain": "Problem-Solving & Data Analysis",
+        "skill": "Two-variable data: Models and scatterplots",
+        "level": "Medium",
+        "passage": null,
+        "question": "An inspector begins a day of work with a large sample of shirts that need to be checked for defects. The inspector works at a constant rate throughout the morning. What type of model is best to model the number of shirts remaining to be checked for defects at any given time throughout the morning?",
+        "options": [
+            "A linear model with a positive slope",
+            "A linear model with a negative slope",
+            "An exponential growth model",
+            "An exponential decay model"
+        ],
+        "correct_answer": "A linear model with a negative slope",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 94,
+        "type": "math",
+        "module": 1,
+        "domain": "Geometry & Trigonometry",
+        "skill": "Area and volume",
+        "level": "Easy",
+        "passage": null,
+        "question": "The area of a square is 64 square inches. What is the side length, in inches, of this square?",
+        "options": [
+            8,
+            16,
+            64,
+            128
+        ],
+        "correct_answer": 8,
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 95,
+        "type": "math",
+        "module": 1,
+        "domain": "Geometry & Trigonometry",
+        "skill": "Area and volume",
+        "level": "Medium",
+        "passage": null,
+        "question": "A right circular cylinder has a base diameter of 22\n centimeters and a height of 6 centimeters. What is the volume, in cubic centimeters, of the cylinder?",
+        "options": [
+            "\\(132𝜋\\)",
+            "\\(264𝜋\\)",
+            "\\(726𝜋\\)",
+            "\\(2,904𝜋\\)"
+        ],
+        "correct_answer": "\\(726𝜋\\)",
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 96,
+        "type": "math",
+        "module": 1,
+        "domain": "Geometry & Trigonometry",
+        "skill": "Lines, angles, and triangles",
+        "level": "Medium",
+        "passage": null,
+        "question": "In triangle 𝐽𝐾𝐿, the measures of ∠𝐾\n and ∠𝐿 are each 48°. What is the measure of ∠𝐽\n, in degrees? (Disregard the degree symbol when entering your answer.)\n\n",
+        "options": [],
+        "correct_answer": 84,
+        "image": null,
+        "equation": null
+    },
+    {
+        "question_id": 97,
+        "type": "math",
+        "module": 1,
+        "domain": "Geometry & Trigonometry",
+        "skill": "Right triangles and trigonometry",
+        "level": "Medium",
+        "passage": null,
+        "question": "A right triangle has legs with lengths of 28\n centimeters and 20 centimeters. What is the length of this triangle's hypotenuse, in centimeters?\n",
+        "options": [
+            "\\(8\\sqrt{6}\\)",
+            "\\(4\\sqrt{74}\\)",
+            "\\(48\\)",
+            "\\(1184\\)"
+        ],
+        "correct_answer": "\\(4\\sqrt{74}\\)",
+        "image": null,
+        "equation": null
+    },
+    {
         "question_id": 4,
         "type": "verbal",
         "module": 2,
         "domain": "Craft and Structure",
         "skill": "Words in Context",
         "level": "Medium",
-        "passage": "The following text is adapted from Nathaniel Hawthorne’s 1837 story “Dr. Heidegger’s Experiment.” The main character, a physician, is experimenting with rehydrating a dried flower.\n<br>\nAt first [the rose] lay lightly on the surface of the fluid, appearing to imbibe none of its moisture. Soon, however, <u>a singular</u> change began to be visible. The crushed and dried petals stirred and assumed a deepening tinge of crimson, as if the flower were reviving from a deathlike slumber.",
+        "passage": "<p>The following text is adapted from Nathaniel Hawthorne’s 1837 story “Dr. Heidegger’s Experiment.” The main character, a physician, is experimenting with rehydrating a dried flower.</p>\n<br>\n<p>At first [the rose] lay lightly on the surface of the fluid, appearing to imbibe none of its moisture. Soon, however, <u>a singular</u> change began to be visible. The crushed and dried petals stirred and assumed a deepening tinge of crimson, as if the flower were reviving from a deathlike slumber.</p>",
         "question": "As used in the text, what does the phrase “a singular” most nearly mean?",
         "options": [
             "A lonely",
@@ -2863,63 +3712,6 @@
         "equation": null
     },
     {
-        "question_id": 9,
-        "type": "verbal",
-        "module": 1,
-        "domain": "Craft and Structure",
-        "skill": "Words in Context",
-        "level": "Medium",
-        "passage": "According to a team of neuroeconomists from the University of Zurich, ease of decision making may be linked to communication between two brain regions, the prefrontal cortex and the parietal cortex. Individuals tend to be more decisive if the information flow between the regions is intensified, whereas they make choices more slowly when information flow is ______.",
-        "question": "Which choice completes the text with the most logical and precise word or phrase?",
-        "options": [
-            "reduced",
-            "evaluated",
-            "determined",
-            "accquired"
-        ],
-        "correct_answer": "reduced",
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 10,
-        "type": "verbal",
-        "module": 1,
-        "domain": "Craft and Structure",
-        "skill": "Cross-text Connection",
-        "level": "Easy",
-        "passage": "Text 1\n<br>\n<u>Imagine you and your friend are trying to decide where to eat lunch.</u> When people try to make joint decisions like this, they often don’t reveal their true preferences. Instead, they say they would be happy with all options because they think this response will help them appear more easygoing and likable to the other person.\n<br>\nText 2\n<br>\nResearch shows that people who don’t state their preferences when making a decision with others aren’t more likable in the eyes of others. In fact, stating that you have no preference actually makes the decision more difficult for other people. It can also cause them to feel less happy with their ultimate decision and with you.",
-        "question": "Based on the texts, what response would the author of Text 2 most likely suggest for someone in the situation described in the underlined sentence in Text 1?",
-        "options": [
-            "Cancel the plan to have lunch together.",
-            "Ask where the friend typically likes to eat.",
-            "State a preference about where to eat.",
-            "Change the subject to talk about something else."
-        ],
-        "correct_answer": "State a preference about where to eat.",
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 11,
-        "type": "verbal",
-        "module": 1,
-        "domain": "Craft and Structure",
-        "skill": "Cross-text Connection",
-        "level": "Medium",
-        "passage": "Text 1\n<br>\nIn a study of the benefits of having free time, Marissa Sharif found that the reported sense of life satisfaction tended to plateau when participants had two hours of free time per day and actually began to fall when they had five hours of free time per day. After further research, Sharif concluded that this dip in life satisfaction mainly occurred when individuals spent all their free time unproductively, such as by watching TV or playing games.\n<br>\nText 2\n<br>\nPsychologist James Maddux cautions against suggesting an ideal amount of free time. The human desire for both free time and productivity is universal, but Maddux asserts that individuals have unique needs for life satisfaction. Furthermore, he points out that there is no objective definition for what constitutes productivity; reading a book might be considered a productive activity by some, but idleness by others.",
-        "question": "Based on the texts, how would Maddux (Text 2) most likely respond to the conclusion Sharif (Text 1) reached after her further research?",
-        "options": [
-            "By acknowledging that free time is more likely to enhance life satisfaction when it is spent productively than when it is spent unproductively",
-            "By challenging the reasoning in Text 1, as it has not been proved that productivity commonly contributes to individuals’ life satisfaction",
-            "By warning against making an overly broad assumption, as there is no clear consensus in distinguishing between productive and unproductive activities",
-            "By claiming that the specific activities named in Text 1 are actually examples of productive activities rather than unproductive ones"
-        ],
-        "correct_answer": "By warning against making an overly broad assumption, as there is no clear consensus in distinguishing between productive and unproductive activities",
-        "image": null,
-        "equation": null
-    },
-    {
         "question_id": 12,
         "type": "verbal",
         "module": 2,
@@ -2935,25 +3727,6 @@
             "They would claim that cosmogenic nuclide dating is reliable in the context of the Sterkfontein Caves because it is applied to the fossils directly."
         ],
         "correct_answer": "They would argue that their techniques are better suited than other methods to the unique challenges posed by the Sterkfontein Caves.",
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 13,
-        "type": "verbal",
-        "module": 1,
-        "domain": "Craft and Structure",
-        "skill": "Cross-text Connection",
-        "level": "Easy",
-        "passage": "Text 1\n<br>\nFor decades, bluegrass musicians have debated whether their genre should exclude influences from mainstream genres such as rock. Many insist that bluegrass is defined by its adherence to the folk music of the US South, out of which bluegrass emerged. Such “purists,” as they are known, regard the recordings of Bill Monroe, which established the bluegrass sound in the 1940s, as a standard against which the genre should still be measured.\n<br>\nText 2\n<br>\nBluegrass isn’t simply an extension of folk traditions into the era of recorded music. In reality, Bill Monroe created the bluegrass sound in the 1940s by combining Southern folk music with commercial genres that had arisen only a few decades before, such as jazz and the blues. Since bluegrass has always been a mixed genre, contemporary bluegrass musicians should not be forbidden from incorporating into it influences from rock and other mainstream genres.",
-        "question": "Based on the texts, how would the author of Text 2 most likely regard the perspective of bluegrass purists, as described in Text 1?",
-        "options": [
-            "As inconsistent, since bluegrass purists themselves enjoy other musical genres",
-            "As unrealistic, since bluegrass purists have no way of enforcing their musical preferences",
-            "As shortsighted, because bluegrass could enlarge its audience by including influences from mainstream genres",
-            "As illogical, because the purists overlook crucial aspects of how the bluegrass sound first originated."
-        ],
-        "correct_answer": "As illogical, because the purists overlook crucial aspects of how the bluegrass sound first originated.",
         "image": null,
         "equation": null
     },
@@ -3002,7 +3775,7 @@
         "domain": "Expression of Ideas",
         "skill": "Rhetorical Synthesis",
         "level": "Hard",
-        "passage": "While researching a topic, a student has taken the following notes:\n<ul>\n<li>As engineered structures, many bird nests are uniquely flexible yet cohesive.</li>\n<li>A research team led by Yashraj Bhosale wanted to better understand the mechanics behind these structural properties.</li>\n<li>Bhosale’s team used laboratory models that simulated the arrangement of flexible sticks into nest-like structures.</li>\n<li>The researchers analyzed the points where sticks touched one another.</li>\n<li>When pressure was applied to the model nests, the number of contact points between the sticks increased, making the structures stiffer.</li>\n</ul>",
+        "passage": "While researching a topic, a student has taken the following notes:\n<ul style=\"list-style-type: circle;\">\n<li>As engineered structures, many bird nests are uniquely flexible yet cohesive.</li>\n<li>A research team led by Yashraj Bhosale wanted to better understand the mechanics behind these structural properties.</li>\n<li>Bhosale’s team used laboratory models that simulated the arrangement of flexible sticks into nest-like structures.</li>\n<li>The researchers analyzed the points where sticks touched one another.</li>\n<li>When pressure was applied to the model nests, the number of contact points between the sticks increased, making the structures stiffer.</li>\n</ul>",
         "question": "The student wants to present the primary aim of the research study. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
         "options": [
             "Bhosale’s team wanted to better understand the mechanics behind bird nests’ uniquely flexible yet cohesive structural properties.",
@@ -3015,70 +3788,13 @@
         "equation": null
     },
     {
-        "question_id": 17,
-        "type": "verbal",
-        "module": 1,
-        "domain": "Expression of Ideas",
-        "skill": "Transitions",
-        "level": "Easy",
-        "passage": "In 1942, the 1,500-mile Alaska Highway was constructed in under nine months, largely due to the skilled work of nearly 4,000 African American soldiers from US Army engineering regiments. The soldiers’ contribution was overlooked for decades. ______ in 2017, lawmakers declared October 25 a day of recognition—“Alaska Highway Day”—for the troops who helped build this critical roadway.",
-        "question": "Which choice completes the text with the most logical transition?",
-        "options": [
-            "Lastly,",
-            "Then,",
-            "Similarly,",
-            "For example,"
-        ],
-        "correct_answer": "Then,",
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 18,
-        "type": "verbal",
-        "module": 1,
-        "domain": "Expression of Ideas",
-        "skill": "Transitions",
-        "level": "Easy",
-        "passage": "Samuel Coleridge-Taylor was a prominent classical music composer from England who toured the US three times in the early 1900s. The child of a West African father and an English mother, Coleridge-Taylor emphasized his mixed-race ancestry. For example, he referred to himself as Anglo-African. ______ he incorporated the sounds of traditional African music into his classical music compositions.",
-        "question": "Which choice completes the text with the most logical transition?",
-        "options": [
-            "In addition,",
-            "Actually,",
-            "However,",
-            "Regardless,"
-        ],
-        "correct_answer": "In addition,",
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 19,
-        "type": "verbal",
-        "module": 1,
-        "domain": "Expression of Ideas",
-        "skill": "Rhetorical Synthesis",
-        "level": "Medium",
-        "passage": "While researching a topic, a student has taken the following notes:\n<ul>\n<li>Organisms release cellular material into their environment by shedding substances such as hair or skin.</li>\n<li>The DNA in these substances is known as environmental DNA, or eDNA.</li>\n<li>Researchers collect and analyze eDNA to detect the presence of species that are difficult to observe.</li>\n<li>Geneticist Sara Oyler-McCance’s research team analyzed eDNA in water samples from the Florida Everglades to detect invasive constrictor snake species in the area.</li>\n<li>The study determined a 91% probability of detecting Burmese python eDNA in a given location.</li>\n</ul>",
-        "question": "The student wants to present the study to an audience already familiar with environmental DNA. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-        "options": [
-            "Sara Oyler-McCance’s researchers analyzed eDNA in water samples from the Florida Everglades for evidence of invasive constrictor snakes, which are difficult to observe.",
-            "An analysis of eDNA can detect the presence of invasive species that are difficult to observe, such as constrictor snakes.",
-            "Researchers found Burmese python eDNA, or environmental DNA, in water samples; eDNA is the DNA in released cellular materials, such as shed skin cells.",
-            "Sara Oyler-McCance’s researchers analyzed environmental DNA (eDNA)—that is, DNA from cellular materials released by organisms—in water samples from the Florida Everglades."
-        ],
-        "correct_answer": "Sara Oyler-McCance’s researchers analyzed eDNA in water samples from the Florida Everglades for evidence of invasive constrictor snakes, which are difficult to observe.",
-        "image": null,
-        "equation": null
-    },
-    {
         "question_id": 20,
         "type": "verbal",
         "module": 2,
         "domain": "Expression of Ideas",
         "skill": "Rhetorical Synthesis",
         "level": "Medium",
-        "passage": "<div class=\"\"><p>While researching a topic, a student has taken the following notes:</p>\n<ul>\n<li>Sam Maloof (1916–2009) was an American woodworker and furniture designer.</li>\n<li>He was the son of Lebanese immigrants.</li>\n<li>He received a “genius grant” from the John D. and Catherine T. MacArthur Foundation in 1985.</li>\n<li>The Museum of Fine Arts in Boston, Massachusetts, owns a rocking chair that Maloof made from walnut wood.</li>\n<li>The armrests and the seat of the chair are sleek and contoured, and the back consists of seven spindle-like slats.</li>\n</ul></div>",
+        "passage": "<div class=\"\"><p>While researching a topic, a student has taken the following notes:</p>\n<ul style=\"list-style-type: circle;\">\n<li>Sam Maloof (1916–2009) was an American woodworker and furniture designer.</li>\n<li>He was the son of Lebanese immigrants.</li>\n<li>He received a “genius grant” from the John D. and Catherine T. MacArthur Foundation in 1985.</li>\n<li>The Museum of Fine Arts in Boston, Massachusetts, owns a rocking chair that Maloof made from walnut wood.</li>\n<li>The armrests and the seat of the chair are sleek and contoured, and the back consists of seven spindle-like slats.</li>\n</ul></div>",
         "question": "The student wants to describe the rocking chair to an audience unfamiliar with Sam Maloof. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
         "options": [
             "With its sleek, contoured armrests and seat, the walnut rocking chair in Boston’s Museum of Fine Arts is just one piece of furniture created by American woodworker Sam Maloof.",
@@ -3097,7 +3813,7 @@
         "domain": "Expression of Ideas",
         "skill": "Rhetorical Synthesis",
         "level": "Medium",
-        "passage": "<div class=\"\"><p>While researching a topic, a student has taken the following notes:</p>\n<ul>\n<li>Species belonging to the Orchidaceae (orchid) family can be found in both tropical and temperate environments.</li>\n<li>Orchidaceae species diversity has not been well studied in temperate forests, such as those in Oaxaca, Mexico.</li>\n<li>Arelee Estefanía Muñoz-Hernández led a study to determine how many different Orchidaceae species are present in the forests of Oaxaca.</li>\n<li>Muñoz-Hernández and her team collected orchids each month for a year at a site in Oaxaca.</li>\n<li>Seventy-four Orchidaceae species were present at the site.</li>\n</ul></div>",
+        "passage": "<div class=\"\"><p>While researching a topic, a student has taken the following notes:</p>\n<ul style=\"list-style-type: circle;\">\n<li>Species belonging to the Orchidaceae (orchid) family can be found in both tropical and temperate environments.</li>\n<li>Orchidaceae species diversity has not been well studied in temperate forests, such as those in Oaxaca, Mexico.</li>\n<li>Arelee Estefanía Muñoz-Hernández led a study to determine how many different Orchidaceae species are present in the forests of Oaxaca.</li>\n<li>Muñoz-Hernández and her team collected orchids each month for a year at a site in Oaxaca.</li>\n<li>Seventy-four Orchidaceae species were present at the site.</li>\n</ul></div>",
         "question": "The student wants to present the study and its findings. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
         "options": [
             "A study led by Arelee Estefanía Muñoz-Hernández identified a total of 74 Orchidaceae species in the temperate forests of Oaxaca, Mexico. ",
@@ -3106,44 +3822,6 @@
             "Arelee Estefanía Muñoz-Hernández and her team wanted to know how many different Orchidaceae species are present in the forests of Oaxaca, Mexico, so they conducted a study to collect orchids."
         ],
         "correct_answer": "A study led by Arelee Estefanía Muñoz-Hernández identified a total of 74 Orchidaceae species in the temperate forests of Oaxaca, Mexico. ",
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 22,
-        "type": "verbal",
-        "module": 1,
-        "domain": "Expression of Ideas",
-        "skill": "Rhetorical Synthesis",
-        "level": "Easy",
-        "passage": "<div class=\"\"><p>While researching a topic, a student has taken the following notes:</p>\n<ul>\n<li>The Philadelphia and Lancaster Turnpike was a road built between 1792 and 1794.</li>\n<li>It was the first private turnpike in the United States.</li>\n<li>It connected the cities of Philadelphia and Lancaster in the state of Pennsylvania.</li>\n<li>It was sixty-two miles long.</li>\n</ul></div>",
-        "question": "The student wants to emphasize the distance covered by the Philadelphia and Lancaster Turnpike. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-        "options": [
-            "The sixty-two-mile-long Philadelphia and Lancaster Turnpike connected the Pennsylvania cities of Philadelphia and Lancaster.",
-            "The Philadelphia and Lancaster Turnpike was the first private turnpike in the United States.",
-            "The Philadelphia and Lancaster Turnpike, which connected two Pennsylvania cities, was built between 1792 and 1794.",
-            "A historic Pennsylvania road, the Philadelphia and Lancaster Turnpike was completed in 1794."
-        ],
-        "correct_answer": "The sixty-two-mile-long Philadelphia and Lancaster Turnpike connected the Pennsylvania cities of Philadelphia and Lancaster.",
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 23,
-        "type": "verbal",
-        "module": 1,
-        "domain": "Expression of Ideas",
-        "skill": "Transitions",
-        "level": "Medium",
-        "passage": "When, in 2017, Cambridge University students Lucy Moss and Toby Marlow decided they wanted to develop a musical together, one of their goals was for their female actor friends to have good parts to play. ______ they created the show Six, a retelling of the history of King Henry VIII’s wives in which each of the six queens has a starring role.",
-        "question": "Which choice completes the text with the most logical transition?",
-        "options": [
-            "In other words,",
-            "In summary,",
-            "For example,",
-            "To that end,"
-        ],
-        "correct_answer": "To that end,",
         "image": null,
         "equation": null
     },
@@ -3167,25 +3845,6 @@
         "equation": null
     },
     {
-        "question_id": 25,
-        "type": "verbal",
-        "module": 1,
-        "domain": "Expression of Ideas",
-        "skill": "Rhetorical Synthesis",
-        "level": "Medium",
-        "passage": "<div class=\"\"><p>While researching a topic, a student has taken the following notes:</p>\n<ul>\n<li>Architect Julian Abele studied Gregorian and neo-Gothic architecture in Europe.</li>\n<li>Abele worked for an architecture firm that was hired in 1924 to design buildings for Duke University’s new campus.</li>\n<li>Most of the buildings on Duke’s campus were designed in the Gregorian or neo-Gothic architectural styles.</li>\n<li>At the time, Abele was not formally credited with designing the buildings.</li>\n<li>Based on the buildings’ architectural styles, historians believe Abele designed most of the campus buildings.</li>\n</ul></div>",
-        "question": "The student wants to specify why historians believe Abele designed most of Duke’s campus buildings. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-        "options": [
-            "Given that most of the buildings on Duke’s campus feature architectural styles that Abele had studied in Europe, historians believe Abele is the one who designed them.",
-            "Though Abele wasn’t formally credited at the time, historians believe he designed most of the buildings on Duke’s campus.",
-            "Most of Duke’s campus buildings, which were designed by a firm Abele worked for, were designed in the Gregorian and neo-Gothic architectural styles.",
-            "Abele, an architect who studied Gregorian and neo-Gothic architecture in Europe, is believed to have designed most of the buildings on Duke’s campus."
-        ],
-        "correct_answer": "Given that most of the buildings on Duke’s campus feature architectural styles that Abele had studied in Europe, historians believe Abele is the one who designed them.",
-        "image": null,
-        "equation": null
-    },
-    {
         "question_id": 26,
         "type": "verbal",
         "module": 2,
@@ -3201,25 +3860,6 @@
             "However,"
         ],
         "correct_answer": "Fittingly,",
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 27,
-        "type": "verbal",
-        "module": 1,
-        "domain": "Information and Ideas",
-        "skill": "Central Ideas and Details",
-        "level": "Easy",
-        "passage": "<p>NASA’s <em>Cassini</em> probe has detected an unusual wobble in the rotation of Mimas, Saturn’s smallest moon. Using a computer model to study Mimas’s gravitational interactions with Saturn and tidal forces, geophysicist Alyssa Rhoden and colleagues have proposed that this wobble could be due to a liquid ocean moving beneath the moon’s icy surface. The researchers believe other moons should be examined to see if they too might have oceans hidden beneath their surfaces.</p>",
-        "question": "Which choice best states the main idea of the text?",
-        "options": [
-            "Rhoden and colleagues were the first to confirm that several of Saturn’s moons contain hidden oceans.",
-            "Research has failed to identify signs that there is an ocean hidden beneath the surface of Mimas.",
-            "Rhoden and colleagues created a new computer model that identifies moons with hidden oceans without needing to analyze the moons’ rotation. ",
-            "Research has revealed that an oddity in the rotation of Mimas could be explained by an ocean hidden beneath its surface."
-        ],
-        "correct_answer": "Research has revealed that an oddity in the rotation of Mimas could be explained by an ocean hidden beneath its surface.",
         "image": null,
         "equation": null
     },
@@ -3258,25 +3898,6 @@
             "Although negative disconfirmation has often been studied, little is known about the cognitive mechanisms shaping users’ reactions to it in the context of new technology adoption."
         ],
         "correct_answer": "Research suggests that users with high expectations for a new technology can feel content with that technology even after experiencing negative disconfirmation.",
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 30,
-        "type": "verbal",
-        "module": 1,
-        "domain": "Information and Ideas",
-        "skill": "Inferences",
-        "level": "Easy",
-        "passage": "<p>In the South Pacific, New Caledonian crows use two different kinds of stick tools. One tool is complex. The crows shape a stick from a rare plant into a hook. The other tool is basic. The crows find a stick without a hook on the ground. The hooked tool is harder to get but is much better than the basic tool at removing prey from holes. When studying New Caledonian crows, ecologist Barbara Klump found that they hold the hooked tools in their claws when not using them, or they carefully put them in a safe place. The crows don’t do the same with the basic tools. This suggests to Klump that the <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span></p>",
-        "question": "Which choice most logically completes the text?",
-        "options": [
-            "hooked stick tools are more valuable to the crows than the stick tools without hooks.",
-            "hooked stick tools are easier for most of the crows to hold than the stick tools without hooks.",
-            "crows prefer to share their hooked stick tools but don’t share the stick tools without hooks.",
-            "crows realize that both kinds of stick tools are less effective than their claws are at removing prey from holes."
-        ],
-        "correct_answer": "hooked stick tools are more valuable to the crows than the stick tools without hooks.",
         "image": null,
         "equation": null
     },
@@ -3338,82 +3959,6 @@
         "equation": null
     },
     {
-        "question_id": 34,
-        "type": "verbal",
-        "module": 1,
-        "domain": "Information and Ideas",
-        "skill": "Command of Evidence",
-        "level": "Easy",
-        "passage": "<div class=\"\"><p></p><figure class=\"table\"><table class=\"gdr\"><caption style=\"caption-side: top;\"><p style=\"text-align: center;\">Pyramids in Egypt and the Americas</p></caption><thead><tr><th scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Pyramid</th><th scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Country</th><th scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Height (meters)</th><th scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Age (years before present)</th></tr></thead><tbody><tr><th scope=\"row\" style=\"text-align: left;\">The Great Pyramid</th><td>Mexico</td><td style=\"text-align: center;\">33</td><td style=\"text-align: center;\">2,050 to 2,400</td></tr><tr><th scope=\"row\" style=\"text-align: left;\">The Pyramid of Djoser</th><td>Egypt</td><td style=\"text-align: center;\">60</td><td style=\"text-align: center;\">4,600 to 4,700</td></tr><tr><th scope=\"row\" style=\"text-align: left;\">The Pyramid of Sahure</th><td>Egypt</td><td style=\"text-align: center;\">47</td><td style=\"text-align: center;\">4,400 to 4,500</td></tr><tr><th scope=\"row\" style=\"text-align: left;\">El Castillo</th><td>Belize</td><td style=\"text-align: center;\">40</td><td style=\"text-align: center;\">1,100 to 1,400</td></tr></tbody></table></figure><p></p>\n<p>A student is writing an essay about four pyramids for a history class and wants to note how long ago each pyramid was built and how tall each pyramid is. Consulting the table, the student finds that el Castillo was built 1,100 to 1,400 years ago and is&nbsp; <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span>&nbsp;</p></div>",
-        "question": "Which choice most effectively uses data from the table to complete the text?",
-        "options": [
-            "33 meters tall.",
-            "47 meters tall.",
-            "40 meters tall.",
-            "60 meters tall."
-        ],
-        "correct_answer": "40 meters tall.",
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 35,
-        "type": "verbal",
-        "module": 1,
-        "domain": "Information and Ideas",
-        "skill": "Command of Evidence",
-        "level": "Easy",
-        "passage": "<div class=\"\"><p></p><figure class=\"table\"><table class=\"gdr\"><caption style=\"caption-side: top;\"><p style=\"text-align: center;\">Annual Car Production in the United States, 1910–1925</p></caption><thead><tr><th scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Year</th><th scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Number of cars produced</th><th scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Number of companies producing cars</th></tr></thead><tbody><tr><th scope=\"row\" style=\"text-align: center;\">1910</th><td style=\"text-align: center;\">123,990</td><td style=\"text-align: center;\">320</td></tr><tr><th scope=\"row\" style=\"text-align: center;\">1915</th><td style=\"text-align: center;\">548,139</td><td style=\"text-align: center;\">224</td></tr><tr><th scope=\"row\" style=\"text-align: center;\">1920</th><td style=\"text-align: center;\">1,651,625</td><td style=\"text-align: center;\">197</td></tr><tr><th scope=\"row\" style=\"text-align: center;\">1925</th><td style=\"text-align: center;\">3,185,881</td><td style=\"text-align: center;\">80</td></tr></tbody></table></figure><p></p>\n<p>A student is using the table as part of a social studies class presentation on the US auto industry in the early twentieth century. The student notes that, according to the table, from 1910 to 1925 <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span></p></div>",
-        "question": "Which choice most effectively uses data from the table to complete the statement?",
-        "options": [
-            "the number of cars produced increased but the number of companies producing cars decreased.",
-            "both the number of cars produced and the number of companies producing cars remained unchanged.",
-            "the number of cars produced decreased but the number of companies producing cars remained unchanged.",
-            "both the number of cars produced and the number of companies producing cars increased."
-        ],
-        "correct_answer": "the number of cars produced increased but the number of companies producing cars decreased.",
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 36,
-        "type": "verbal",
-        "module": 1,
-        "domain": "Information and Ideas",
-        "skill": "Command of Evidence",
-        "level": "Medium",
-        "passage": "<div class=\"\"><p></p><figure class=\"table\"><table class=\"gdr\"><caption style=\"caption-side: top;\"><p style=\"text-align: center;\">Annual Spending by International Tourists in Four Countries (in billions of US dollars)</p></caption><thead><tr><th scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Country</th><th scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">2016</th><th scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">2017</th><th scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">2018</th></tr></thead><tbody><tr><th scope=\"row\" style=\"text-align: left;\">South Korea</th><td style=\"text-align: center;\">$21.0</td><td style=\"text-align: center;\">$17.2</td><td style=\"text-align: center;\">$23.1</td></tr><tr><th scope=\"row\" style=\"text-align: left;\">Japan</th><td style=\"text-align: center;\">$33.5</td><td style=\"text-align: center;\">$37.0</td><td style=\"text-align: center;\">$45.3</td></tr><tr><th scope=\"row\" style=\"text-align: left;\">Thailand</th><td style=\"text-align: center;\">$48.5</td><td style=\"text-align: center;\">$57.1</td><td style=\"text-align: center;\">$61.4</td></tr><tr><th scope=\"row\" style=\"text-align: left;\">Malaysia</th><td style=\"text-align: center;\">$19.7</td><td style=\"text-align: center;\">$20.3</td><td style=\"text-align: center;\">$21.8</td></tr></tbody></table></figure><p></p>\n<p>One measure of international tourism is how much money visitors from abroad spend in a country. A student writing a report about tourism in several Asian countries notes that among the countries in the table, most had annual increases in international tourism revenue in 2017 and 2018, but that trend wasn’t universal. For example, <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span></p></div>",
-        "question": "Which choice most effectively uses data from the table to complete the example?",
-        "options": [
-            "in each year shown, the revenue from tourism by residents of those countries was greater than the revenue from international tourism.",
-            "Japan’s international tourism revenue was higher in 2016 than it was in 2018.",
-            "South Korea’s annual international tourism revenue decreased from 2016 to 2017.",
-            "in each year shown, Thailand had higher international tourism income than any of the other countries."
-        ],
-        "correct_answer": "South Korea’s annual international tourism revenue decreased from 2016 to 2017.",
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 37,
-        "type": "verbal",
-        "module": 1,
-        "domain": "Information and Ideas",
-        "skill": "Command of Evidence",
-        "level": "Medium",
-        "passage": "<div class=\"\"><p></p><figure class=\"table\"><table class=\"gdr\"><caption style=\"caption-side: top;\"><p style=\"text-align: center;\">Incorporated and Unincorporated Self-Employment Rates in Four Occupational Fields, 2015</p></caption><thead><tr><th scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Occupational field</th><th scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Incorporated self-employment rate</th><th scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Unincorporated self-employment rate</th></tr></thead><tbody><tr><th scope=\"row\" style=\"text-align: left;\">Construction and resource extraction</th><td style=\"text-align: center;\">4.4%</td><td style=\"text-align: center;\">14.8%</td></tr><tr><th scope=\"row\" style=\"text-align: left;\">Installation, maintenance, and repair</th><td style=\"text-align: center;\">2.7%</td><td style=\"text-align: center;\">6.2%</td></tr><tr><th scope=\"row\" style=\"text-align: left;\">Management, business, and financial services</th><td style=\"text-align: center;\">8.9%</td><td style=\"text-align: center;\">9.7%</td></tr><tr><th scope=\"row\" style=\"text-align: left;\">Sales and related</th><td style=\"text-align: center;\">5.8%</td><td style=\"text-align: center;\">7.8%</td></tr></tbody></table></figure><p></p>\n<p>Self-employed workers—individuals who are not employees of other individuals or businesses but instead earn their income as business owners, independent contractors, or freelance workers—make up an important part of the US labor force. In order to receive legal and tax benefits enjoyed by corporations, self-employed individuals may choose to incorporate their business. A 2015 survey of incorporated and unincorporated self-employment rates in four occupational fields showed that the highest incorporated self-employment rate occurred among people working in <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span></p></div>",
-        "question": "Which choice most effectively uses data from the table to complete the text?",
-        "options": [
-            "sales and related occupations.",
-            "installation, maintenance, and repair occupations. ",
-            "construction and resource extraction occupations.",
-            "management, business, and financial services occupations."
-        ],
-        "correct_answer": "management, business, and financial services occupations.",
-        "image": null,
-        "equation": null
-    },
-    {
         "question_id": 38,
         "type": "verbal",
         "module": 2,
@@ -3439,7 +3984,7 @@
         "domain": "Information and Ideas",
         "skill": "Command of Evidence",
         "level": "Hard",
-        "passage": "<div class=\"\"><p></p><figure class=\"table\"><table class=\"gdr\"><caption style=\"caption-side: top;\"><p style=\"text-align: center;\">Effects of Mycorrhizal Fungi on 3 Plant Species</p></caption><thead><tr><th scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Plant species</th><th scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Mycorrhizal host</th><th scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Average mass of plants grown in soil containing mycorrhizal fungi (in grams)</th><th scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Average mass of plants grown in soil treated to kill fungi (in grams)</th></tr></thead><tbody><tr><th scope=\"row\" style=\"text-align: left;\">Corn</th><td>yes</td><td style=\"text-align: center;\">15.1</td><td style=\"text-align: center;\">3.8</td></tr><tr><th scope=\"row\" style=\"text-align: left;\">Marigold</th><td>yes</td><td style=\"text-align: center;\">10.2</td><td style=\"text-align: center;\">2.4</td></tr><tr><th scope=\"row\" style=\"text-align: left;\">Broccoli</th><td>no</td><td style=\"text-align: center;\">7.5</td><td style=\"text-align: center;\">7</td></tr></tbody></table></figure><p></p>\n<p>Mycorrhizal fungi in soil benefits many plants, substantially increasing the mass of some. A student conducted an experiment to illustrate this effect. The student chose three plant species for the experiment, including two that are mycorrhizal hosts (species known to benefit from mycorrhizal fungi) and one nonmycorrhizal species (a species that doesn’t benefit from and may even be harmed by mycorrhizal fungi). The student then grew several plants from each species both in soil containing mycorrhizal fungi and in soil that had been treated to kill mycorrhizal and other fungi. After several weeks, the student measured the plants’ average mass and was surprised to discover that <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span></p></div>",
+        "passage": "<div class=\"\"><p></p><table class=\"gdr\" style=\"border: 1px solid;\"><caption style=\"caption-side: top;\"><p style=\"text-align: center;\">Effects of Mycorrhizal Fungi on 3 Plant Species</p></caption><thead><tr><th scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Plant species</th><th scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Mycorrhizal host</th><th scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Average mass of plants grown in soil containing mycorrhizal fungi (in grams)</th><th scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Average mass of plants grown in soil treated to kill fungi (in grams)</th></tr></thead><tbody><tr><th scope=\"row\" style=\"text-align: left;\">Corn</th><td>yes</td><td style=\"text-align: center;\">15.1</td><td style=\"text-align: center;\">3.8</td></tr><tr><th scope=\"row\" style=\"text-align: left;\">Marigold</th><td>yes</td><td style=\"text-align: center;\">10.2</td><td style=\"text-align: center;\">2.4</td></tr><tr><th scope=\"row\" style=\"text-align: left;\">Broccoli</th><td>no</td><td style=\"text-align: center;\">7.5</td><td style=\"text-align: center;\">7</td></tr></tbody></table><p></p>\n<p>Mycorrhizal fungi in soil benefits many plants, substantially increasing the mass of some. A student conducted an experiment to illustrate this effect. The student chose three plant species for the experiment, including two that are mycorrhizal hosts (species known to benefit from mycorrhizal fungi) and one nonmycorrhizal species (a species that doesn’t benefit from and may even be harmed by mycorrhizal fungi). The student then grew several plants from each species both in soil containing mycorrhizal fungi and in soil that had been treated to kill mycorrhizal and other fungi. After several weeks, the student measured the plants’ average mass and was surprised to discover that <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span></p></div>",
         "question": "Which choice most effectively uses data from the table to complete the statement?",
         "options": [
             "broccoli grown in soil containing mycorrhizal fungi had a slightly higher average mass than broccoli grown in soil that had been treated to kill fungi.",
@@ -3448,63 +3993,6 @@
             "corn had the highest average mass of all three species grown in soil that had been treated to kill fungi, while marigolds had the lowest."
         ],
         "correct_answer": "broccoli grown in soil containing mycorrhizal fungi had a slightly higher average mass than broccoli grown in soil that had been treated to kill fungi.",
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 40,
-        "type": "verbal",
-        "module": 1,
-        "domain": "Standard English Conventions",
-        "skill": "Boundaries",
-        "level": "Easy",
-        "passage": "<p>Generations of mystery and horror <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> have been influenced by the dark, gothic stories of celebrated American author Edgar Allan Poe (1809–1849).</p>",
-        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
-        "options": [
-            "writers",
-            "writers,",
-            "writers—",
-            "writers;"
-        ],
-        "correct_answer": "writers",
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 41,
-        "type": "verbal",
-        "module": 1,
-        "domain": "Standard English Conventions",
-        "skill": "Boundaries",
-        "level": "Easy",
-        "passage": "<p>After the printing press was introduced in 1440, handwritten manuscripts from Europe’s medieval period were often destroyed and the paper used for other purposes. In one instance, pages <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> a collection of Norse tales dating to 1270 were discovered lining a bishop’s miter (hat).</p>",
-        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
-        "options": [
-            "from:",
-            "from,",
-            "from",
-            "from—"
-        ],
-        "correct_answer": "from",
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 42,
-        "type": "verbal",
-        "module": 1,
-        "domain": "Standard English Conventions",
-        "skill": "Boundaries",
-        "level": "Easy",
-        "passage": "<p>In her large-scale sculpture<em> Casa-Isla</em>, artist Edra Soto included references to her childhood in Puerto Rico. For example, the sculpture’s steel panels have a crisscrossing pattern inspired by the iron gates <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span></p>",
-        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
-        "options": [
-            "Soto would see in her neighborhood?",
-            "Soto would see in her neighborhood.",
-            "would Soto see in her neighborhood.",
-            "would Soto see in her neighborhood?"
-        ],
-        "correct_answer": "Soto would see in her neighborhood.",
         "image": null,
         "equation": null
     },
@@ -3524,25 +4012,6 @@
             "waterways and the fact that"
         ],
         "correct_answer": "waterways and the fact that",
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 44,
-        "type": "verbal",
-        "module": 1,
-        "domain": "Standard English Conventions",
-        "skill": "Boundaries",
-        "level": "Medium",
-        "passage": "<p>Archaeologists have estimated that the pre-Columbian Native American city of Cahokia, located across the Mississippi River from modern-day St. Louis, Missouri, had as many as 20,000 inhabitants in the year 1150 <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> it one of the largest cities in North America at the time.</p>",
-        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
-        "options": [
-            "CE making",
-            "CE. Making",
-            "CE, making",
-            "CE; making"
-        ],
-        "correct_answer": "CE, making",
         "image": null,
         "equation": null
     },
@@ -3581,82 +4050,6 @@
             "tenets, developed"
         ],
         "correct_answer": "tenets. Developed",
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 47,
-        "type": "verbal",
-        "module": 1,
-        "domain": "Standard English Conventions",
-        "skill": "Boundaries",
-        "level": "Hard",
-        "passage": "<p>With some 16,000 in attendance, the Second World Black and African Festival of Arts and <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> or FESTAC ‘77, as the event was more commonly known—became the largest pan-African event on record. FESTAC drew people from around the world to Lagos, Nigeria, for a monthlong celebration of Black and African art, scholarship, and activism.</p>",
-        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
-        "options": [
-            "Culture:",
-            "Culture—",
-            "Culture,",
-            "Culture"
-        ],
-        "correct_answer": "Culture—",
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 48,
-        "type": "verbal",
-        "module": 1,
-        "domain": "Standard English Conventions",
-        "skill": "Form, Structure, and Sense",
-        "level": "Easy",
-        "passage": "<p>The radiation that <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> during the decay of radioactive atomic nuclei is known as gamma radiation.</p>",
-        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
-        "options": [
-            "occurs",
-            "have occurred",
-            "occur",
-            "are occurring"
-        ],
-        "correct_answer": "occurs",
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 49,
-        "type": "verbal",
-        "module": 1,
-        "domain": "Standard English Conventions",
-        "skill": "Form, Structure, and Sense",
-        "level": "Easy",
-        "passage": "<p>In 1903, environmentalist John Muir guided President Theodore Roosevelt on a scenic, sprawling trip through California’s Yosemite Valley. Upon returning from the three-day excursion, Roosevelt <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> to conserve the nation’s wilderness areas, a vow he upheld for his remaining six years in office.</p>",
-        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
-        "options": [
-            "is vowing",
-            "vowed",
-            "will vow",
-            "vows"
-        ],
-        "correct_answer": "vowed",
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 50,
-        "type": "verbal",
-        "module": 1,
-        "domain": "Standard English Conventions",
-        "skill": "Form, Structure, and Sense",
-        "level": "Medium",
-        "passage": "<p>Anthropologist Lívia Barbosa, of the Universidade Federal Fluminense in Brazil, <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> food and sociability in contemporary Brazil—specifically, how foods such as <span lang=\"pt\">cabidela</span> (a rice and rabbit dish) and <span lang=\"pt\">churrasco</span> (a barbeque dish) function as central mechanisms in building social relationships, values, and identities.</p>",
-        "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
-        "options": [
-            "studies",
-            "are studying",
-            "have studied",
-            "study"
-        ],
-        "correct_answer": "studies",
         "image": null,
         "equation": null
     },
@@ -3737,20 +4130,6 @@
         "equation": null
     },
     {
-        "question_id": 55,
-        "type": "math",
-        "module": 1,
-        "domain": "Algebra",
-        "skill": "Linear equations in one variable",
-        "level": "Easy",
-        "passage": null,
-        "question": "If \\( \\frac{x}{8} = 5 \\), what is the value of \\(8x\\)?",
-        "options": [],
-        "correct_answer": 0.2,
-        "image": null,
-        "equation": null
-    },
-    {
         "question_id": 56,
         "type": "math",
         "module": 2,
@@ -3758,7 +4137,7 @@
         "skill": "Linear equations in one variable",
         "level": "Medium",
         "passage": null,
-        "question": "\\( 13(x+6)−12(x+6)=−8 \\)\n<br>\nWhat value of (\\x\\) is the solution to the given equation?",
+        "question": "\\( 13(x+6)−12(x+6)=−8 \\)\n<br>\nWhat value of \\(x\\) is the solution to the given equation?",
         "options": [],
         "correct_answer": 42,
         "image": null,
@@ -3784,44 +4163,6 @@
         "equation": null
     },
     {
-        "question_id": 58,
-        "type": "math",
-        "module": 1,
-        "domain": "Algebra",
-        "skill": "Linear functions",
-        "level": "Easy",
-        "passage": null,
-        "question": "The function \\(f\\) is defined by \\(f(x)=25x+30\\). What is the value of \\(f(x)\\) when \\(x=2\\)?",
-        "options": [
-            50,
-            57,
-            80,
-            110
-        ],
-        "correct_answer": 80,
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 59,
-        "type": "math",
-        "module": 1,
-        "domain": "Algebra",
-        "skill": "Linear functions",
-        "level": "Easy",
-        "passage": null,
-        "question": "For the linear function \\(f\\), the graph of \\(y=f(x)\\)\n in the \\(xy\\)-plane has a slope of \\(2\\)\n and has a \\(y\\)-intercept at \\((0,−5)\\). Which equation defines \\(f\\)?",
-        "options": [
-            "\\(𝑓(𝑥)=12𝑥−5\\)",
-            "\\(𝑓(𝑥)=−\\frac{1}{2}𝑥−5\\)",
-            "\\(𝑓(𝑥)=−2𝑥−5\\)",
-            "\\(𝑓(𝑥)=2𝑥−5\\)"
-        ],
-        "correct_answer": "\\(𝑓(𝑥)=2𝑥−5\\)",
-        "image": null,
-        "equation": null
-    },
-    {
         "question_id": 60,
         "type": "math",
         "module": 2,
@@ -3841,25 +4182,6 @@
         "equation": null
     },
     {
-        "question_id": 61,
-        "type": "math",
-        "module": 1,
-        "domain": "Algebra",
-        "skill": "Linear functions",
-        "level": "Medium",
-        "passage": null,
-        "question": "<table border=\"1\">\n        <tbody>\n                <tr>\n                        <th>Distance (kilometers)</th>\n                        <th>Average time (minutes)</th>\n                </tr>\n                <tr>\n                        <td>\\(0.32\\)</td>\n                        <td>\\(8\\)</td>\n                </tr>\n                <tr>\n                        <td>\\(0.56\\)</td>\n                        <td>\\(14\\)</td>\n                </tr>\n                <tr>\n                        <td>\\(0.68\\)</td>\n                        <td>\\(17\\)</td>\n                </tr>\n        </tbody>\n</table>\n<p>The table gives the average time \\(𝑡\\), in minutes, it takes Carly to travel a certain distance \\(𝑑\\), in kilometers. Which equation could represent this linear relationship?</p>",
-        "options": [
-            "\\(𝑡=4𝑑\\)",
-            "\\(𝑡=\\frac{1}{25}𝑑\\)",
-            "\\(𝑡=25𝑑\\)",
-            "\\(𝑡=\\frac{1}{4}𝑑\\)"
-        ],
-        "correct_answer": "\\(𝑡=25𝑑\\)",
-        "image": null,
-        "equation": null
-    },
-    {
         "question_id": 62,
         "type": "math",
         "module": 2,
@@ -3867,7 +4189,7 @@
         "skill": "Linear functions",
         "level": "Hard",
         "passage": null,
-        "question": "<p>\n        Energy per Gram of Typical Macronutrient\n</p>\n<table border=\"1\">\n        <tbody>\n                <tr>\n                        <th>Macronutrient</th>\n                        <th>Food calories</th>\n                        <th>Kilojoules</th>\n                </tr>\n                <tr>\n                        <td>Protein</td>\n                        <td>\\(4.0\\)</td>\n                        <td>\\(16.7\\)</td>\n                </tr>\n                <tr>\n                        <td>Fat</td>\n                        <td>\\(9.0\\)</td>\n                        <td>\\(37.7\\)</td>\n                </tr>\n                <tr>\n                        <td>Carbohydrate</td>\n                        <td>\\(4.0\\)</td>\n                        <td>\\(16.7\\)</td>\n                </tr>\n        </tbody>\n</table>\n<p>\n        The table above gives the typical amounts of energy per gram, expressed in both food calories and kilojoules, of the three macronutrients in food. If \\(x\\) food calories is equivalent to \\(k\\) kilojoules, of the following, which best represents the relationship between \\(x\\) and \\(k\\) ?\n</p>",
+        "question": "<div class=\"text-center\">\n<p>\n        Energy per Gram of Typical Macronutrient\n</p>\n<table class=\"table-format\">\n        <tbody>\n                <tr>\n                        <th class=\"table-format\">Macronutrient</th>\n                        <th class=\"table-format\">Food calories</th>\n                        <th class=\"table-format\">Kilojoules</th>\n                </tr>\n                <tr>\n                        <td class=\"table-format\">Protein</td>\n                        <td class=\"table-format\">\\(4.0\\)</td>\n                        <td class=\"table-format\">\\(16.7\\)</td>\n                </tr>\n                <tr>\n                        <td class=\"table-format\">Fat</td>\n                        <td class=\"table-format\">\\(9.0\\)</td>\n                        <td class=\"table-format\">\\(37.7\\)</td>\n                </tr>\n                <tr>\n                        <td class=\"table-format\">Carbohydrate</td>\n                        <td class=\"table-format\">\\(4.0\\)</td>\n                        <td class=\"table-format\">\\(16.7\\)</td>\n                </tr>\n        </tbody>\n</table>\n</div>\n<p>\n        The table above gives the typical amounts of energy per gram, expressed in both food calories and kilojoules, of the three macronutrients in food. If \\(x\\) food calories is equivalent to \\(k\\) kilojoules, of the following, which best represents the relationship between \\(x\\) and \\(k\\) ?\n</p>",
         "options": [
             "\\(k=0.24x\\)",
             "\\(k=4.2x\\)",
@@ -3875,20 +4197,6 @@
             "\\(xk=4.2\\)"
         ],
         "correct_answer": "\\(k=4.2x\\)",
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 63,
-        "type": "math",
-        "module": 1,
-        "domain": "Algebra",
-        "skill": "Linear equations in two variables",
-        "level": "Medium",
-        "passage": null,
-        "question": "Line \\(𝑘\\) is defined by \\(𝑦=−173𝑥+5\\). Line \\(𝑗\\)\n is perpendicular to line \\(𝑘\\) in the \\(xy\\)-plane. What is the slope of line \\(𝑗\\)?",
-        "options": [],
-        "correct_answer": "3/17",
         "image": null,
         "equation": null
     },
@@ -3919,61 +4227,9 @@
         "skill": "Linear equations in two variables",
         "level": "Hard",
         "passage": null,
-        "question": "<div>\n        <img src=\"{{ url_for('static', filename='images/math_66.png') }}\">\n        <p>\n                The points plotted in the coordinate plane above represent the possible numbers of wallflowers and cornflowers that someone can buy at the Garden Store in order to spend exactly $24.00 total on the two types of flowers. The price of each wallflower is the same and the price of each cornflower is the same. What is the price, in dollars, of 1 cornflower?\n        </p>\n</div>",
+        "question": "<div>\n        <img src=\"https://storage.cloud.google.com/sat-question-img/nov-2025/math_66.png\">\n        <p>\n                The points plotted in the coordinate plane above represent the possible numbers of wallflowers and cornflowers that someone can buy at the Garden Store in order to spend exactly $24.00 total on the two types of flowers. The price of each wallflower is the same and the price of each cornflower is the same. What is the price, in dollars, of 1 cornflower?\n        </p>\n</div>",
         "options": [],
         "correct_answer": 1.5,
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 66,
-        "type": "math",
-        "module": 1,
-        "domain": "Algebra",
-        "skill": "Systems of two linear equations in two variables",
-        "level": "Easy",
-        "passage": null,
-        "question": "<div>\n        <p class=\"text-center\">\\(y=2x+3\\)</p>\n        <p class=\"text-center\">\\(x=1\\)</p>\n        <p>What is the solution \\((x,y)\\) to the given system of equations?</p>\n</div>",
-        "options": [
-            "\\((1,2)\\)",
-            "\\((1,5)\\)",
-            "\\((2,3)\\)",
-            "\\((2,7)\\)"
-        ],
-        "correct_answer": "\\((1,5)\\)",
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 67,
-        "type": "math",
-        "module": 1,
-        "domain": "Algebra",
-        "skill": "Systems of two linear equations in two variables",
-        "level": "Easy",
-        "passage": null,
-        "question": "<div>\n        <p class=\"text-center\">\\(y=-3x\\)</p>\n        <p class=\"text-center\">\\(4x+y=15\\)</p>\n        <p>The solution to the given system of equations is \\((x,y)\\). What is the value of \\(x\\)?</p>\n</div>",
-        "options": [
-            1,
-            5,
-            15,
-            45
-        ],
-        "correct_answer": 15,
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 68,
-        "type": "math",
-        "module": 1,
-        "domain": "Algebra",
-        "skill": "Systems of two linear equations in two variables",
-        "level": "Medium",
-        "passage": null,
-        "question": "<div>\n        <p class=\"text-center\">\\(y=\\frac{1}{3}x-14\\)</p>\n        <p class=\"text-center\">\\(y=-x+18\\)</p>\n        <p>The solution to the given system of equations is \\((x,y)\\). What is the value of \\(x\\)?</p>\n</div>",
-        "options": [],
-        "correct_answer": 24,
         "image": null,
         "equation": null
     },
@@ -4016,25 +4272,6 @@
         "equation": null
     },
     {
-        "question_id": 71,
-        "type": "math",
-        "module": 1,
-        "domain": "Advanced Math",
-        "skill": "Equivalent expressions",
-        "level": "Easy",
-        "passage": null,
-        "question": "Which expression is equivalent to \\(23𝑥^3+2𝑥^2+9𝑥\\)?",
-        "options": [
-            "\\(23𝑥(𝑥^2+2𝑥+9)\\)",
-            "\\(9𝑥(23𝑥^3+2𝑥^2+1)\\)",
-            "\\(𝑥(23𝑥^2+2𝑥+9)\\)",
-            "\\(34(𝑥^3+𝑥^2+𝑥)\\)"
-        ],
-        "correct_answer": "\\(𝑥(23𝑥^2+2𝑥+9)\\)",
-        "image": null,
-        "equation": null
-    },
-    {
         "question_id": 72,
         "type": "math",
         "module": 2,
@@ -4069,44 +4306,6 @@
             40
         ],
         "correct_answer": 24,
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 74,
-        "type": "math",
-        "module": 1,
-        "domain": "Advanced Math",
-        "skill": "Nonlinear equations in one variable and systems of equations in two variables",
-        "level": "Easy",
-        "passage": null,
-        "question": "Which of the following is a solution to the equation \\(2x^2-4 = x^2\\) ?",
-        "options": [
-            1,
-            2,
-            3,
-            4
-        ],
-        "correct_answer": 2,
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 75,
-        "type": "math",
-        "module": 1,
-        "domain": "Advanced Math",
-        "skill": "Nonlinear equations in one variable and systems of equations in two variables",
-        "level": "Medium",
-        "passage": null,
-        "question": "<div>\n        <p class=\"text-center\">\\(y=x^2+1.7\\)</p>\n        <p class=\"text-center\">\\(y=1.7-x\\)</p>\n        <p>Which graph represents the given system of equations?</p>\n</div>",
-        "options": [
-            "<img src=\"{{ url_for('static', filename='images/math_q75_a.png') }}\">",
-            "<img src=\"{{ url_for('static', filename='images/math_q75_b.png') }}\">",
-            "<img src=\"{{ url_for('static', filename='images/math_q75_c.png') }}\">",
-            "<img src=\"{{ url_for('static', filename='images/math_q75_d.png') }}\">"
-        ],
-        "correct_answer": "<img src=\"{{ url_for('static', filename='images/math_q75_a.png') }}\">",
         "image": null,
         "equation": null
     },
@@ -4159,58 +4358,6 @@
             63
         ],
         "correct_answer": -6,
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 79,
-        "type": "math",
-        "module": 1,
-        "domain": "Advanced Math",
-        "skill": "Nonlinear functions",
-        "level": "Easy",
-        "passage": null,
-        "question": "<div>\n\t<img src=\"{{ url_for('static', filename='images/math_79.png') }}\">\n\t<p>The graph shown models the number of residents of a certain city \\(𝑥\\) years after 2010. How many residents does this model estimate the city had in 2010?</p>\n</div>",
-        "options": [
-            "\\(0\\)",
-            "\\(2000\\)",
-            "\\(20000\\)",
-            "\\(25000\\)"
-        ],
-        "correct_answer": "\\(20000\\)",
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 80,
-        "type": "math",
-        "module": 1,
-        "domain": "Advanced Math",
-        "skill": "Nonlinear functions",
-        "level": "Easy",
-        "passage": null,
-        "question": "<div>\n\t<img src=\"{{ url_for('static', filename='images/math_80.png') }}\">\n\t<p>What is the \\(x\\)-coordinate of the \\(x\\)-intercept of the graph shown?</p>\n</div>",
-        "options": [],
-        "correct_answer": 6,
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 81,
-        "type": "math",
-        "module": 1,
-        "domain": "Advanced Math",
-        "skill": "Nonlinear functions",
-        "level": "Easy",
-        "passage": null,
-        "question": "The function \\(𝑓(𝑥)=200,000(1.21)^𝑥\\) gives a company’s predicted annual revenue, in dollars, \\(𝑥\\) years after the company started selling light bulbs online, where \\(0< 𝑥 ≤ 10\\). What is the best interpretation of the statement “\\(𝑓(5)\\)\n is approximately equal to \\(518,748\\)” in this context?",
-        "options": [
-            "5 years after the company started selling light bulbs online, its predicted annual revenue is approximately 518,748 dollars.",
-            "5 years after the company started selling light bulbs online, its predicted annual revenue will have increased by a total of approximately 518,748 dollars.",
-            "When the company’s predicted annual revenue is approximately 518,748 dollars, it is 5 times the predicted annual revenue for the previous year.",
-            "When the company’s predicted annual revenue is approximately 518,748\n dollars, it is 5% greater than the predicted annual revenue for the previous year."
-        ],
-        "correct_answer": "5 years after the company started selling light bulbs online, its predicted annual revenue is approximately 518,748 dollars.",
         "image": null,
         "equation": null
     },
@@ -4281,63 +4428,6 @@
         "equation": null
     },
     {
-        "question_id": 86,
-        "type": "math",
-        "module": 1,
-        "domain": "Problem-Solving & Data Analysis",
-        "skill": "Ratios, rates, proportional relationships, and units",
-        "level": "Easy",
-        "passage": null,
-        "question": "A fish swam a distance of 5,104 yards. How far did the fish swim, in miles? (1 mile=1,760 yards)\n",
-        "options": [
-            0.3,
-            2.9,
-            3344,
-            6864
-        ],
-        "correct_answer": 2.9,
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 87,
-        "type": "math",
-        "module": 1,
-        "domain": "Problem-Solving & Data Analysis",
-        "skill": "Percentages",
-        "level": "Medium",
-        "passage": null,
-        "question": "The value of \\(𝑧\\) is \\(1.13\\) times \\(100\\). The value of \\(𝑧\\) is what percent greater than \\(100\\)?",
-        "options": [
-            11.3,
-            13,
-            130,
-            213
-        ],
-        "correct_answer": 13,
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 88,
-        "type": "math",
-        "module": 1,
-        "domain": "Problem-Solving & Data Analysis",
-        "skill": "One-variable data: Distributions and measures of center and spread",
-        "level": "Medium",
-        "passage": null,
-        "question": "<div>\n\t<p class=\"text-center\">\\(4,10,18,4,4,5,6,5\\)</p>\n\t<p>What is the median of the data set shown?</p>\n</div>",
-        "options": [
-            4,
-            5,
-            7,
-            14
-        ],
-        "correct_answer": 5,
-        "image": null,
-        "equation": null
-    },
-    {
         "question_id": 89,
         "type": "math",
         "module": 2,
@@ -4353,25 +4443,6 @@
             15.25
         ],
         "correct_answer": 15.25,
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 90,
-        "type": "math",
-        "module": 1,
-        "domain": "Problem-Solving & Data Analysis",
-        "skill": "Two-variable data: Models and scatterplots",
-        "level": "Medium",
-        "passage": null,
-        "question": "An inspector begins a day of work with a large sample of shirts that need to be checked for defects. The inspector works at a constant rate throughout the morning. What type of model is best to model the number of shirts remaining to be checked for defects at any given time throughout the morning?",
-        "options": [
-            "A linear model with a positive slope",
-            "A linear model with a negative slope",
-            "An exponential growth model",
-            "An exponential decay model"
-        ],
-        "correct_answer": "A linear model with a negative slope",
         "image": null,
         "equation": null
     },
@@ -4429,77 +4500,6 @@
             "1 and 3 only"
         ],
         "correct_answer": "\"None\"",
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 94,
-        "type": "math",
-        "module": 1,
-        "domain": "Geometry & Trigonometry",
-        "skill": "Area and volume",
-        "level": "Easy",
-        "passage": null,
-        "question": "The area of a square is 64 square inches. What is the side length, in inches, of this square?",
-        "options": [
-            8,
-            16,
-            64,
-            128
-        ],
-        "correct_answer": 8,
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 95,
-        "type": "math",
-        "module": 1,
-        "domain": "Geometry & Trigonometry",
-        "skill": "Area and volume",
-        "level": "Medium",
-        "passage": null,
-        "question": "A right circular cylinder has a base diameter of 22\n centimeters and a height of 6 centimeters. What is the volume, in cubic centimeters, of the cylinder?",
-        "options": [
-            "\\(132𝜋\\)",
-            "\\(264𝜋\\)",
-            "\\(726𝜋\\)",
-            "\\(2,904𝜋\\)"
-        ],
-        "correct_answer": "\\(726𝜋\\)",
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 96,
-        "type": "math",
-        "module": 1,
-        "domain": "Geometry & Trigonometry",
-        "skill": "Lines, angles, and triangles",
-        "level": "Medium",
-        "passage": null,
-        "question": "In triangle 𝐽𝐾𝐿, the measures of ∠𝐾\n and ∠𝐿 are each 48°. What is the measure of ∠𝐽\n, in degrees? (Disregard the degree symbol when entering your answer.)\n\n",
-        "options": [],
-        "correct_answer": 84,
-        "image": null,
-        "equation": null
-    },
-    {
-        "question_id": 97,
-        "type": "math",
-        "module": 1,
-        "domain": "Geometry & Trigonometry",
-        "skill": "Right triangles and trigonometry",
-        "level": "Medium",
-        "passage": null,
-        "question": "A right triangle has legs with lengths of 28\n centimeters and 20 centimeters. What is the length of this triangle's hypotenuse, in centimeters?\n",
-        "options": [
-            "\\(8\\sqrt{6}\\)",
-            "\\(4\\sqrt{74}\\)",
-            "\\(48\\)",
-            "\\(1184\\)"
-        ],
-        "correct_answer": "\\(4\\sqrt{74}\\)",
         "image": null,
         "equation": null
     },
