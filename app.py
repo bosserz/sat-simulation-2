@@ -400,7 +400,100 @@ def break_page():
     session['new_test'] = False  # Ensure new_test flag is reset
     return render_template('break.html', next_section=SECTIONS[test_session.current_section]['name'])
 
-@app.route('/results/<int:session_id>')
+# @app.route('/results/<int:session_id>')
+# def results(session_id):
+#     if 'user_id' not in session:
+#         flash('Please log in to view results.')
+#         return redirect(url_for('login'))
+    
+#     test_session = TestSession.query.get_or_404(session_id)
+#     if test_session.user_id != session['user_id']:
+#         flash('Unauthorized access.')
+#         return redirect(url_for('dashboard'))
+    
+#     practice_test_id = test_session.practice_test_id
+#     answers = json.loads(test_session.answers)
+#     marked = json.loads(test_session.marked_for_review)
+    
+#     # Calculate section scores
+#     section_scores = {}
+#     section_answers = {}
+#     for section_idx in range(len(SECTIONS)):
+#         section_questions = get_questions_for_section(section_idx, practice_test_id)
+#         section_score = 0
+#         section_ans = {}
+#         for qid in range(len(section_questions)):
+#             answer_key = f"{section_idx}_{qid}"
+#             ans = answers.get(answer_key)
+#             if ans and section_questions[qid]['correct_answer'] == ans:
+#                 section_score += 1
+#             section_ans[qid] = {
+#                 'answer': ans,
+#                 'marked': marked.get(answer_key, False)
+#             }
+#         section_scores[section_idx] = section_score
+#         section_answers[section_idx] = section_ans
+
+#     # result = supabase.table("questions").select("*").eq("test", practice_test_id).order("id").execute()
+#     # questions = result.data
+    
+#     return render_template(
+#         'results.html',
+#         score=test_session.score,
+#         section_scores=section_scores,
+#         section_answers=section_answers,
+#         sections=SECTIONS,
+#         questions=ALL_QUESTIONS[practice_test_id]
+#     )
+
+from collections import defaultdict
+
+def build_domain_stats(sections, questions, section_answers, practice_test_id):
+    """
+    Returns:
+      {
+        'verbal': {'Craft and Structure': {'correct': 5, 'total': 7}, ...},
+        'math':   {'Algebra': {'correct': 3, 'total': 5}, ...}
+      }
+    """
+    # Map: (type, module) -> list of its questions (in display order)
+    sect_qs = {}
+    for s in sections:
+        key = (s['type'].lower(), s.get('module'))
+        qs = [q for q in questions[practice_test_id] if q['type'].lower() == s['type'].lower() and q.get('module') == s.get('module')]
+        sect_qs[key] = qs
+
+    # Tally per section-type per domain
+    domain_stats = {
+        'verbal': defaultdict(lambda: {'correct': 0, 'total': 0}),
+        'math':   defaultdict(lambda: {'correct': 0, 'total': 0}),
+    }
+
+    # Iterate sections in order so answers align: section_answers[i][qid]
+    for i, s in enumerate(sections):
+        s_type = s['type'].lower()
+        key = (s_type, s.get('module'))
+        qs = sect_qs.get(key, [])
+        answers_i = section_answers[i] if i < len(section_answers) else []
+
+        for qid, q in enumerate(qs):
+            dom = q.get('domain', 'Other')
+            domain_stats[s_type][dom]['total'] += 1
+
+            ans = None
+            if qid < len(answers_i):
+                ans = answers_i[qid].get('answer')
+            if ans is not None and ans == q.get('correct_answer'):
+                domain_stats[s_type][dom]['correct'] += 1
+
+    # Convert defaultdicts to normal dicts
+    for k in ('verbal', 'math'):
+        domain_stats[k] = dict(domain_stats[k])
+
+    return domain_stats
+
+
+@app.route('/mock_results/<int:session_id>')
 def results(session_id):
     if 'user_id' not in session:
         flash('Please log in to view results.')
@@ -436,14 +529,25 @@ def results(session_id):
 
     # result = supabase.table("questions").select("*").eq("test", practice_test_id).order("id").execute()
     # questions = result.data
+
+    module_multipliers = {
+        'verbal': {1: 1.0, 2: 1.66},
+        'math':   {1: 0.79, 2: 1.345},
+    }
+
+
+    domain_stats = build_domain_stats(SECTIONS, ALL_QUESTIONS, section_answers, practice_test_id)
+
     
     return render_template(
-        'results.html',
+        'mock_results.html',
         score=test_session.score,
         section_scores=section_scores,
         section_answers=section_answers,
         sections=SECTIONS,
-        questions=ALL_QUESTIONS[practice_test_id]
+        questions=ALL_QUESTIONS[practice_test_id],
+        module_multipliers=module_multipliers,
+        domain_stats=domain_stats
     )
 
 if __name__ == '__main__':
