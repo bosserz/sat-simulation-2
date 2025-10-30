@@ -102,3 +102,7 @@ label:hover {
 .explained-table td {
     border-top: 1px solid #dee2e6 !important;
 }
+
+.text-small {
+    font-size: 0.875rem; /* 14px */
+}
