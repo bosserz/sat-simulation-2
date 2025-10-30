@@ -22,7 +22,7 @@
                 <tr class="bg-gray-200">
                     <th class="p-2 text-left">Practice Test</th>
                     <th class="p-2 text-left">Date</th>
-                    <th class="p-2 text-left">Score</th>
+                    <!-- <th class="p-2 text-left">Score</th> -->
                     <th class="p-2 text-left">Actions</th>
                 </tr>
             </thead>
@@ -31,7 +31,7 @@
                     <tr>
                         <td class="p-2">{{ session.practice_test_id }}</td>
                         <td class="p-2">{{ session.start_time.strftime('%Y-%m-%d %H:%M') }}</td>
-                        <td class="p-2">{{ session.score }} / {{ questions|length }}</td>
+                        <!-- <td class="p-2">{{ session.score }} / {{ questions|length }}</td> -->
                         <td class="p-2">
                             <a href="{{ url_for('results', session_id=session.id) }}" class="text-blue-600 hover:underline">View Results</a>
                         </td>
