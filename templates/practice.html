@@ -62,6 +62,31 @@
         </div>
     </div>
 
+    <!-- ✅ End-of-Module Review Modal -->
+    <div id="end-of-module-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-1/2">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="end-modal-section-title" class="text-lg font-bold">Check Your Work Before Continuing</h3>
+                <button id="close-end-modal" class="text-2xl">×</button>
+            </div>
+            <div class="flex mb-4">
+                <span class="inline-block w-4 h-4 bg-green-200 mr-2"></span>
+                <span class="mr-4">Answered</span>
+                <span class="inline-block w-4 h-4 bg-pink-200 mr-2"></span>
+                <span class="mr-4">Unanswered</span>
+                <span class="inline-block w-4 h-4 bg-yellow-200 mr-2"></span>
+                <span>For Review</span>
+            </div>
+            <div id="end-module-question-grid" class="grid grid-cols-7 gap-2 mb-6"></div>
+            <div class="flex justify-end">
+                <button id="submit-end-module" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    Submit & Continue
+                </button>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Desmos Calculator Modal -->
     <div id="desmos-calculator-modal" class="fixed inset-10 flex items-start justify-start hidden">
         <div class="bg-white p-6 rounded-lg shadow-lg w-1/2 h-full">

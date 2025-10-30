@@ -446,114 +446,213 @@ function refreshRemainingTime() {
 }
 
 
-document.getElementById('next-button').addEventListener('click', async () => {
-    console.log(`Next button clicked: currentQuestion=${currentQuestion}, totalQuestions=${totalQuestions}`);
-    await saveAnswer();  // wait for answer to save
+function updateEndModuleStatus() {
+  const grid = document.getElementById('end-module-question-grid');
+  const title = document.getElementById('end-modal-section-title');
 
-    if (currentQuestion < totalQuestions - 1) {
-        currentQuestion += 1;
-        loadQuestion(currentQuestion);
+  if (title) {
+    const sectionTitle = document.getElementById('section-title');
+    title.textContent = sectionTitle
+      ? `Check Your Work: ${sectionTitle.textContent}`
+      : "Check Your Work Before Continuing";
+  }
+
+  if (!grid) {
+    console.error('❌ end-module-question-grid not found');
+    return;
+  }
+
+  grid.innerHTML = '';
+
+  for (let i = 0; i < totalQuestions; i++) {
+    const btn = document.createElement('button');
+    btn.textContent = i + 1;
+    btn.className = 'w-10 h-10 rounded-lg';
+
+    if (markedForReview[i]) {
+      btn.classList.add('bg-yellow-200');
+    } else if (answers[i]) {
+      btn.classList.add('bg-green-200');
     } else {
-        const modal = document.getElementById('submit-confirmation-modal');
-        if (modal) {
-            modal.classList.remove('hidden');
-        }
+      btn.classList.add('bg-pink-200');
     }
-});
 
-document.getElementById('confirm-submit').addEventListener('click', () => {
-    const modal = document.getElementById('submit-confirmation-modal');
-    if (modal) modal.classList.add('hidden');
-    submitTest();  // Actually submit
-});
+    btn.addEventListener('click', async () => {
+      await saveAnswer();
+      currentQuestion = i;
+      loadQuestion(i);
+      const modal = document.getElementById('end-of-module-modal');
+      if (modal) modal.classList.add('hidden');
+    });
 
-document.getElementById('cancel-submit').addEventListener('click', () => {
-    const modal = document.getElementById('submit-confirmation-modal');
-    if (modal) modal.classList.add('hidden');
-});
+    grid.appendChild(btn);
+  }
+}
 
-document.getElementById('back-button').addEventListener('click', async () => {
-    console.log(`Back button clicked: currentQuestion=${currentQuestion}`);
-    if (currentQuestion > 0) {
-        await saveAnswer();
-        currentQuestion -= 1;
-        loadQuestion(currentQuestion);
+
+// ---------- safe event binding helper ----------
+function on(id, event, handler) {
+  const el = document.getElementById(id);
+  if (!el) {
+    console.warn(`Element #${id} not found; skipped binding ${event}`);
+    return;
+  }
+  el.addEventListener(event, handler);
+}
+// ----------------------------------------------
+
+// Next button
+on('next-button', 'click', async () => {
+  console.log(`Next clicked: current=${currentQuestion}, total=${totalQuestions}`);
+
+  await saveAnswer();
+
+  totalQuestions = Number(totalQuestions) || 0;
+
+  // Not yet last question → load next
+  if (currentQuestion < totalQuestions - 1) {
+    currentQuestion++;
+    loadQuestion(currentQuestion);
+    return;
+  }
+
+  // ✅ Last question case
+  if (currentQuestion === totalQuestions - 1) {
+    console.log("✅ Last question reached, opening End-of-Module modal");
+    updateEndModuleStatus();
+
+    const modal = document.getElementById('end-of-module-modal');
+    if (modal) {
+      modal.classList.remove('hidden');   // remove Tailwind's hidden
+      modal.style.display = 'flex';       // ensure it's visible
+      console.log("Modal displayed successfully");
     } else {
-        console.log('Back button disabled: already on first question');
+      console.error("❌ end-of-module-modal not found in DOM");
+      alert("End-of-Module modal not found!");
     }
+  }
 });
 
-document.getElementById('mark-for-review').addEventListener('click', () => {
-    const markButton = document.getElementById('mark-for-review');
-    if (!markButton) {
-        console.error('Mark for review button not found');
-        return;
-    }
 
-    // Toggle the marked state and update button text immediately
+
+// End-of-Module modal controls
+on('close-end-modal', 'click', () => {
+  const modal = document.getElementById('end-of-module-modal');
+  if (modal) modal.classList.add('hidden');
+});
+
+on('submit-end-module', 'click', async () => {
+  try {
+    const modal = document.getElementById('end-of-module-modal');
+    if (modal) modal.classList.add('hidden');
+    await saveAnswer();
+    submitTest();  // move to next section
+  } catch (err) {
+    console.error('Submit from end-of-module modal failed:', err);
+    alert('Failed to submit. Please try again.');
+  }
+});
+
+// Optional legacy submit-from-review (only if that button exists)
+on('submit-from-review', 'click', async () => {
+  try {
+    const btn = document.getElementById('submit-from-review');
+    if (btn) btn.disabled = true;
+    await saveAnswer();
+    const modal = document.getElementById('question-status-modal');
+    if (modal) modal.classList.add('hidden');
+    submitTest();
+  } catch (e) {
+    console.error('Submit from review failed:', e);
+    const btn = document.getElementById('submit-from-review');
+    if (btn) btn.disabled = false;
+    alert('Failed to submit. Please try again.');
+  }
+});
+
+// Back
+on('back-button', 'click', async () => {
+  console.log(`Back button clicked: currentQuestion=${currentQuestion}`);
+  if (currentQuestion > 0) {
+    await saveAnswer();
+    currentQuestion -= 1;
+    loadQuestion(currentQuestion);
+  } else {
+    console.log('Back button disabled: already on first question');
+  }
+});
+
+// Mark for review
+on('mark-for-review', 'click', () => {
+  const markButton = document.getElementById('mark-for-review');
+  if (!markButton) {
+    console.error('Mark for review button not found');
+    return;
+  }
+
+  markedForReview[currentQuestion] = !markedForReview[currentQuestion];
+  markButton.textContent = markedForReview[currentQuestion] ? 'Unmark' : 'Mark for Review';
+
+  fetch('/practice', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ current_question: currentQuestion, mark_for_review: markedForReview[currentQuestion] }),
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.error) {
+      alert(data.error);
+      window.location.href = '/login';
+      return;
+    }
+    updateQuestionStatus();
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('An error occurred while marking the question.');
+    // revert
     markedForReview[currentQuestion] = !markedForReview[currentQuestion];
     markButton.textContent = markedForReview[currentQuestion] ? 'Unmark' : 'Mark for Review';
-
-    fetch('/practice', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ current_question: currentQuestion, mark_for_review: markedForReview[currentQuestion] }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.error) {
-            alert(data.error);
-            window.location.href = '/login';
-            return;
-        }
-        updateQuestionStatus();
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while marking the question.');
-        // Revert the button text if the request fails
-        markedForReview[currentQuestion] = !markedForReview[currentQuestion];
-        markButton.textContent = markedForReview[currentQuestion] ? 'Unmark' : 'Mark for Review';
-    });
+  });
 });
 
-// document.getElementById('annotate').addEventListener('click', () => {
-//     alert('Annotate feature not implemented.');
-// });
-
-document.getElementById('question-progress').addEventListener('click', () => {
-    updateQuestionStatus();
-    const modal = document.getElementById('question-status-modal');
-    if (modal) {
-        modal.classList.remove('hidden');
-    }
+// Question progress (Review) modal
+on('question-progress', 'click', () => {
+  updateQuestionStatus();
+  const modal = document.getElementById('question-status-modal');
+  if (modal) modal.classList.remove('hidden');
 });
 
-document.getElementById('close-modal').addEventListener('click', () => {
-    const modal = document.getElementById('question-status-modal');
-    if (modal) {
-        modal.classList.add('hidden');
-    }
+on('close-modal', 'click', () => {
+  const modal = document.getElementById('question-status-modal');
+  if (modal) modal.classList.add('hidden');
 });
 
-// Desmos Calculator Modal Event Listeners
-document.getElementById('desmos-calculator').addEventListener('click', () => {
-    console.log('Desmos calculator button clicked');  // Debugging
-    const desmosModal = document.getElementById('desmos-calculator-modal');
-    if (desmosModal) {
-        desmosModal.classList.remove('hidden');
-    }
+// Desmos modal
+on('desmos-calculator', 'click', () => {
+  console.log('Desmos calculator button clicked');
+  const m = document.getElementById('desmos-calculator-modal');
+  if (m) m.classList.remove('hidden');
+});
+on('close-desmos-modal', 'click', () => {
+  console.log('Close Desmos modal clicked');
+  const m = document.getElementById('desmos-calculator-modal');
+  if (m) m.classList.add('hidden');
 });
 
-document.getElementById('close-desmos-modal').addEventListener('click', () => {
-    console.log('Close Desmos modal clicked');  // Debugging
-    const desmosModal = document.getElementById('desmos-calculator-modal');
-    if (desmosModal) {
-        desmosModal.classList.add('hidden');
-    }
+// Reference formula modal
+on('reference-formula', 'click', () => {
+  console.log('Reference formula button clicked');
+  const m = document.getElementById('reference-formula-modal');
+  if (m) m.classList.remove('hidden');
 });
+on('close-reference-formula', 'click', () => {
+  const m = document.getElementById('reference-formula-modal');
+  if (m) m.classList.add('hidden');
+});
+
+// Keep your existing visibilitychange handler as-is
+
 
 document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
