@@ -253,13 +253,48 @@ function loadQuestion(qid) {
             optionsDiv.innerHTML = '';
 
             if (data.question.options.length === 0) {
-                // 🧠 Fill-in-the-blank input box
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.name = 'answer';
-                input.className = 'w-full p-2 border border-gray-300 rounded';
-                input.value = data.answer || '';
-                optionsDiv.appendChild(input);
+            // 🧠 Fill-in-the-blank input box
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = 'answer';
+            input.className = 'w-full p-2 border border-gray-300 rounded';
+            input.value = data.answer || '';
+
+            // ✅ Allow only digits, '/', and '.'
+            input.setAttribute('inputmode', 'decimal');           // mobile numeric keyboard
+            input.setAttribute('pattern', '[0-9./]*');            // form validation on submit
+            input.setAttribute('title', "Only numbers, '/', and '.' are allowed");
+
+            const allowed = /^[0-9./]*$/;
+
+            // Block bad keystrokes but allow control keys
+            input.addEventListener('keydown', (e) => {
+                const ctrlKeys = ['Backspace','Delete','ArrowLeft','ArrowRight','Home','End','Tab','Enter'];
+                if (ctrlKeys.includes(e.key) || (e.ctrlKey || e.metaKey)) return;
+                if (!/[0-9/.]/.test(e.key)) e.preventDefault();
+            });
+
+            // Clean pasted/IME text
+            const sanitize = (el) => { el.value = el.value.replace(/[^0-9./]/g, ''); };
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const text = (e.clipboardData || window.clipboardData).getData('text');
+                const cleaned = text.replace(/[^0-9./]/g, '');
+                document.execCommand('insertText', false, cleaned);
+            });
+            input.addEventListener('input', () => {
+                if (!allowed.test(input.value)) sanitize(input);
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                e.preventDefault();
+                const nextBtn = document.getElementById('next-button');
+                if (nextBtn) nextBtn.click();
+                }
+            });
+
+            optionsDiv.appendChild(input);
             } else {
                 // 🧠 Multiple choice radio options
                 data.question.options.forEach((option, index) => {
