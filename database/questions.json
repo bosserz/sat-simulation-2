@@ -2717,7 +2717,7 @@
         "domain": "Craft and Structure",
         "skill": "Words in Context",
         "level": "Easy",
-        "passage": "Artist Marilyn Dingle’s intricate, coiled baskets are ______ sweetgrass and palmetto palm. Following a Gullah technique that originated in West Africa, Dingle skillfully winds a thin palm frond around a bunch of sweetgrass with the help of a “sewing bone” to create the basket’s signature look that no factory can reproduce.",
+        "passage": "Artist Marilyn Dingle’s intricate, coiled baskets are <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> sweetgrass and palmetto palm. Following a Gullah technique that originated in West Africa, Dingle skillfully winds a thin palm frond around a bunch of sweetgrass with the help of a “sewing bone” to create the basket’s signature look that no factory can reproduce.",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "indicated by",
@@ -2736,7 +2736,7 @@
         "domain": "Craft and Structure",
         "skill": "Words in Context",
         "level": "Easy",
-        "passage": "The invention in 1958 of the integrated circuit (or microchip) radically altered the semiconductor industry. In fact, some historians argue that it fundamentally ______ the industry by enabling it to take advantage of mass production methods for the first time.",
+        "passage": "The invention in 1958 of the integrated circuit (or microchip) radically altered the semiconductor industry. In fact, some historians argue that it fundamentally <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> the industry by enabling it to take advantage of mass production methods for the first time.",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "overwhelmed",
@@ -2755,7 +2755,7 @@
         "domain": "Craft and Structure",
         "skill": "Words in Context",
         "level": "Easy",
-        "passage": "Botanist Al Kovaleski has pointed out that maple trees already thrive in a wide variety of climates and thus may ______ changes in climate better than some other tree species do. The alterations maples may undergo in response to a changing climate are likely to be relatively small and easily achieved. ",
+        "passage": "Botanist Al Kovaleski has pointed out that maple trees already thrive in a wide variety of climates and thus may <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> changes in climate better than some other tree species do. The alterations maples may undergo in response to a changing climate are likely to be relatively small and easily achieved. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "relocate from",
@@ -2774,7 +2774,7 @@
         "domain": "Craft and Structure",
         "skill": "Words in Context",
         "level": "Medium",
-        "passage": "According to a team of neuroeconomists from the University of Zurich, ease of decision making may be linked to communication between two brain regions, the prefrontal cortex and the parietal cortex. Individuals tend to be more decisive if the information flow between the regions is intensified, whereas they make choices more slowly when information flow is ______.",
+        "passage": "According to a team of neuroeconomists from the University of Zurich, ease of decision making may be linked to communication between two brain regions, the prefrontal cortex and the parietal cortex. Individuals tend to be more decisive if the information flow between the regions is intensified, whereas they make choices more slowly when information flow is <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span>.",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "reduced",
@@ -2850,7 +2850,7 @@
         "domain": "Expression of Ideas",
         "skill": "Transitions",
         "level": "Easy",
-        "passage": "In 1942, the 1,500-mile Alaska Highway was constructed in under nine months, largely due to the skilled work of nearly 4,000 African American soldiers from US Army engineering regiments. The soldiers’ contribution was overlooked for decades. ______ in 2017, lawmakers declared October 25 a day of recognition—“Alaska Highway Day”—for the troops who helped build this critical roadway.",
+        "passage": "In 1942, the 1,500-mile Alaska Highway was constructed in under nine months, largely due to the skilled work of nearly 4,000 African American soldiers from US Army engineering regiments. The soldiers’ contribution was overlooked for decades. <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> in 2017, lawmakers declared October 25 a day of recognition—“Alaska Highway Day”—for the troops who helped build this critical roadway.",
         "question": "Which choice completes the text with the most logical transition?",
         "options": [
             "Lastly,",
@@ -2869,7 +2869,7 @@
         "domain": "Expression of Ideas",
         "skill": "Transitions",
         "level": "Easy",
-        "passage": "Samuel Coleridge-Taylor was a prominent classical music composer from England who toured the US three times in the early 1900s. The child of a West African father and an English mother, Coleridge-Taylor emphasized his mixed-race ancestry. For example, he referred to himself as Anglo-African. ______ he incorporated the sounds of traditional African music into his classical music compositions.",
+        "passage": "Samuel Coleridge-Taylor was a prominent classical music composer from England who toured the US three times in the early 1900s. The child of a West African father and an English mother, Coleridge-Taylor emphasized his mixed-race ancestry. For example, he referred to himself as Anglo-African. <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> he incorporated the sounds of traditional African music into his classical music compositions.",
         "question": "Which choice completes the text with the most logical transition?",
         "options": [
             "In addition,",
@@ -2926,7 +2926,7 @@
         "domain": "Expression of Ideas",
         "skill": "Transitions",
         "level": "Medium",
-        "passage": "When, in 2017, Cambridge University students Lucy Moss and Toby Marlow decided they wanted to develop a musical together, one of their goals was for their female actor friends to have good parts to play. ______ they created the show Six, a retelling of the history of King Henry VIII’s wives in which each of the six queens has a starring role.",
+        "passage": "When, in 2017, Cambridge University students Lucy Moss and Toby Marlow decided they wanted to develop a musical together, one of their goals was for their female actor friends to have good parts to play. <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> they created the show Six, a retelling of the history of King Henry VIII’s wives in which each of the six queens has a starring role.",
         "question": "Which choice completes the text with the most logical transition?",
         "options": [
             "In other words,",
@@ -2983,7 +2983,7 @@
         "domain": "Information and Ideas",
         "skill": "Inferences",
         "level": "Easy",
-        "passage": "<p>In the South Pacific, New Caledonian crows use two different kinds of stick tools. One tool is complex. The crows shape a stick from a rare plant into a hook. The other tool is basic. The crows find a stick without a hook on the ground. The hooked tool is harder to get but is much better than the basic tool at removing prey from holes. When studying New Caledonian crows, ecologist Barbara Klump found that they hold the hooked tools in their claws when not using them, or they carefully put them in a safe place. The crows don’t do the same with the basic tools. This suggests to Klump that the <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span></p>",
+        "passage": "<p>In the South Pacific, New Caledonian crows use two different kinds of stick tools. One tool is complex. The crows shape a stick from a rare plant into a hook. The other tool is basic. The crows find a stick without a hook on the ground. The hooked tool is harder to get but is much better than the basic tool at removing prey from holes. When studying New Caledonian crows, ecologist Barbara Klump found that they hold the hooked tools in their claws when not using them, or they carefully put them in a safe place. The crows don’t do the same with the basic tools. This suggests to Klump that the <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span></p>",
         "question": "Which choice most logically completes the text?",
         "options": [
             "hooked stick tools are more valuable to the crows than the stick tools without hooks.",
@@ -3002,7 +3002,7 @@
         "domain": "Information and Ideas",
         "skill": "Command of Evidence",
         "level": "Easy",
-        "passage": "<div class=\"text-center\">\n\t<table class=\"gdr table-format\" style=\"border: 1px solid;\">\n\t\t<caption style=\"caption-side: top;\">\n\t\t\t<p style=\"text-align: center;\">Pyramids in Egypt and the Americas\n\t\t\t</p>\n\t\t</caption>\n\t\t<thead>\n\t\t\t<tr>\n\t\t\t\t<th scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Pyramid</th>\n\t\t\t\t<th scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Country</th>\n\t\t\t\t<th scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Height (meters)</th>\n\t\t\t\t<th scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Age (years before present)</th>\n\t\t\t</tr>\n\t\t</thead>\n\t\t<tbody>\n\t\t\t<tr>\n\t\t\t\t<th scope=\"row\" class=\"table-format\" style=\"text-align: left;\">The Great Pyramid</th>\n\t\t\t\t<td class=\"table-format\">Mexico</td>\n\t\t\t\t<td class=\"table-format\" style=\"text-align: center;\">33</td>\n\t\t\t\t<td class=\"table-format\" style=\"text-align: center;\">2,050 to 2,400</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">The Pyramid of Djoser</th>\n\t\t\t\t<td class=\"table-format\">Egypt</td>\n\t\t\t\t<td class=\"table-format\" style=\"text-align: center;\">60</td><td style=\"text-align: center;\">4,600 to 4,700</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">The Pyramid of Sahure</th>\n\t\t\t\t<td class=\"table-format\">Egypt</td><td style=\"text-align: center;\">47</td>\n\t\t\t\t<td class=\"table-format\" style=\"text-align: center;\">4,400 to 4,500</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">El Castillo</th>\n\t\t\t\t<td class=\"table-format\">Belize</td><td style=\"text-align: center;\">40</td>\n\t\t\t\t<td class=\"table-format\" style=\"text-align: center;\">1,100 to 1,400</td>\n\t\t\t</tr>\n\t\t</tbody>\n\t</table>\n<p>A student is writing an essay about four pyramids for a history class and wants to note how long ago each pyramid was built and how tall each pyramid is. Consulting the table, the student finds that el Castillo was built 1,100 to 1,400 years ago and is&nbsp; <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span>&nbsp;</p>\n</div>",
+        "passage": "<div class=\"text-center\">\n        <table class=\"gdr table-format\" style=\"border: 1px solid;\">\n                <caption style=\"caption-side: top;\">\n                        <p style=\"text-align: center;\">Pyramids in Egypt and the Americas\n                        </p>\n                </caption>\n                <thead>\n                        <tr>\n                                <th class=\"table-format\" scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Pyramid</th>\n                                <th class=\"table-format\" scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Country</th>\n                                <th class=\"table-format\" scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Height (meters)</th>\n                                <th class=\"table-format\" scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Age (years before present)</th>\n                        </tr>\n                </thead>\n                <tbody>\n                        <tr>\n                                <th scope=\"row\" class=\"table-format\" style=\"text-align: left;\">The Great Pyramid</th>\n                                <td class=\"table-format\">Mexico</td>\n                                <td class=\"table-format\" style=\"text-align: center;\">33</td>\n                                <td class=\"table-format\" style=\"text-align: center;\">2,050 to 2,400</td>\n                        </tr>\n                        <tr>\n                                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">The Pyramid of Djoser</th>\n                                <td class=\"table-format\">Egypt</td>\n                                <td class=\"table-format\" style=\"text-align: center;\">60</td><td style=\"text-align: center;\">4,600 to 4,700</td>\n                        </tr>\n                        <tr>\n                                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">The Pyramid of Sahure</th>\n                                <td class=\"table-format\">Egypt</td><td style=\"text-align: center;\">47</td>\n                                <td class=\"table-format\" style=\"text-align: center;\">4,400 to 4,500</td>\n                        </tr>\n                        <tr>\n                                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">El Castillo</th>\n                                <td class=\"table-format\">Belize</td><td style=\"text-align: center;\">40</td>\n                                <td class=\"table-format\" style=\"text-align: center;\">1,100 to 1,400</td>\n                        </tr>\n                </tbody>\n        </table>\n</div>\n<p>A student is writing an essay about four pyramids for a history class and wants to note how long ago each pyramid was built and how tall each pyramid is. Consulting the table, the student finds that el Castillo was built 1,100 to 1,400 years ago and is&nbsp; <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span>&nbsp;</p>\n",
         "question": "Which choice most effectively uses data from the table to complete the text?",
         "options": [
             "33 meters tall.",
@@ -3021,7 +3021,7 @@
         "domain": "Information and Ideas",
         "skill": "Command of Evidence",
         "level": "Easy",
-        "passage": "<div class=\"\">\n    <p></p>\n    <table class=\"gdr table-format\" style=\"border: 1px solid;\">\n        <caption style=\"caption-side: top;\">\n            <p style=\"text-align: center;\">Annual Car Production in the United States, 1910–1925</p>\n        </caption>\n        <thead>\n            <tr>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Year</th>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Number of cars produced</th>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Number of companies producing cars</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: center;\">1910</th>\n                <td class=\"table-format\" style=\"text-align: center;\">123,990</td>\n                <td class=\"table-format\" style=\"text-align: center;\">320</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: center;\">1915</th>\n                <td class=\"table-format\" style=\"text-align: center;\">548,139</td>\n                <td class=\"table-format\" style=\"text-align: center;\">224</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: center;\">1920</th>\n                <td class=\"table-format\" style=\"text-align: center;\">1,651,625</td>\n                <td class=\"table-format\" style=\"text-align: center;\">197</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: center;\">1925</th>\n                <td class=\"table-format\" style=\"text-align: center;\">3,185,881</td>\n                <td class=\"table-format\" style=\"text-align: center;\">80</td>\n            </tr>\n        </tbody>\n    </table>\n    <p></p>\n    <p>A student is using the table as part of a social studies class presentation on the US auto industry in the early twentieth century. The student notes that, according to the table, from 1910 to 1925 <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span></p>\n</div>",
+        "passage": "<div class=\"\">\n    <div class=\"text-center\">\n    <table class=\"gdr table-format\" style=\"border: 1px solid;\">\n        <caption style=\"caption-side: top;\">\n            <p style=\"text-align: center;\">Annual Car Production in the United States, 1910–1925</p>\n        </caption>\n        <thead>\n            <tr>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Year</th>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Number of cars produced</th>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Number of companies producing cars</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: center;\">1910</th>\n                <td class=\"table-format\" style=\"text-align: center;\">123,990</td>\n                <td class=\"table-format\" style=\"text-align: center;\">320</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: center;\">1915</th>\n                <td class=\"table-format\" style=\"text-align: center;\">548,139</td>\n                <td class=\"table-format\" style=\"text-align: center;\">224</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: center;\">1920</th>\n                <td class=\"table-format\" style=\"text-align: center;\">1,651,625</td>\n                <td class=\"table-format\" style=\"text-align: center;\">197</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: center;\">1925</th>\n                <td class=\"table-format\" style=\"text-align: center;\">3,185,881</td>\n                <td class=\"table-format\" style=\"text-align: center;\">80</td>\n            </tr>\n        </tbody>\n    </table>\n    </div>\n    <p>A student is using the table as part of a social studies class presentation on the US auto industry in the early twentieth century. The student notes that, according to the table, from 1910 to 1925 <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span></p>\n</div>",
         "question": "Which choice most effectively uses data from the table to complete the statement?",
         "options": [
             "the number of cars produced increased but the number of companies producing cars decreased.",
@@ -3040,7 +3040,7 @@
         "domain": "Information and Ideas",
         "skill": "Command of Evidence",
         "level": "Medium",
-        "passage": "<div class=\"\">\n    <p></p>\n    <table class=\"gdr table-format\" style=\"border: 1px solid;\">\n        <caption style=\"caption-side: top;\">\n            <p style=\"text-align: center;\">Annual Spending by International Tourists in Four Countries (in billions of US dollars)</p>\n        </caption>\n        <thead>\n            <tr>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Country</th>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">2016</th>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">2017</th>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">2018</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">South Korea</th>\n                <td class=\"table-format\" style=\"text-align: center;\">$21.0</td>\n                <td class=\"table-format\" style=\"text-align: center;\">$17.2</td>\n                <td class=\"table-format\" style=\"text-align: center;\">$23.1</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">Japan</th>\n                <td class=\"table-format\" style=\"text-align: center;\">$33.5</td>\n                <td class=\"table-format\" style=\"text-align: center;\">$37.0</td>\n                <td class=\"table-format\" style=\"text-align: center;\">$45.3</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">Thailand</th>\n                <td class=\"table-format\" style=\"text-align: center;\">$48.5</td>\n                <td class=\"table-format\" style=\"text-align: center;\">$57.1</td>\n                <td class=\"table-format\" style=\"text-align: center;\">$61.4</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">Malaysia</th>\n                <td class=\"table-format\" style=\"text-align: center;\">$19.7</td>\n                <td class=\"table-format\" style=\"text-align: center;\">$20.3</td>\n                <td class=\"table-format\" style=\"text-align: center;\">$21.8</td>\n            </tr>\n        </tbody>\n    </table>\n    <p></p>\n    <p>One measure of international tourism is how much money visitors from abroad spend in a country. A student writing a report about tourism in several Asian countries notes that among the countries in the table, most had annual increases in international tourism revenue in 2017 and 2018, but that trend wasn’t universal. For example, <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span></p>\n</div>",
+        "passage": "<div class=\"\">\n<div class=\"text-center\">    \n       <table class=\"gdr table-format\" style=\"border: 1px solid;\">\n        <caption style=\"caption-side: top;\">\n            <p style=\"text-align: center;\">Annual Spending by International Tourists in Four Countries (in billions of US dollars)</p>\n        </caption>\n        <thead>\n            <tr>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Country</th>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">2016</th>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">2017</th>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">2018</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">South Korea</th>\n                <td class=\"table-format\" style=\"text-align: center;\">$21.0</td>\n                <td class=\"table-format\" style=\"text-align: center;\">$17.2</td>\n                <td class=\"table-format\" style=\"text-align: center;\">$23.1</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">Japan</th>\n                <td class=\"table-format\" style=\"text-align: center;\">$33.5</td>\n                <td class=\"table-format\" style=\"text-align: center;\">$37.0</td>\n                <td class=\"table-format\" style=\"text-align: center;\">$45.3</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">Thailand</th>\n                <td class=\"table-format\" style=\"text-align: center;\">$48.5</td>\n                <td class=\"table-format\" style=\"text-align: center;\">$57.1</td>\n                <td class=\"table-format\" style=\"text-align: center;\">$61.4</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">Malaysia</th>\n                <td class=\"table-format\" style=\"text-align: center;\">$19.7</td>\n                <td class=\"table-format\" style=\"text-align: center;\">$20.3</td>\n                <td class=\"table-format\" style=\"text-align: center;\">$21.8</td>\n            </tr>\n        </tbody>\n    </table>\n</div>\n    <p>One measure of international tourism is how much money visitors from abroad spend in a country. A student writing a report about tourism in several Asian countries notes that among the countries in the table, most had annual increases in international tourism revenue in 2017 and 2018, but that trend wasn’t universal. For example, <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span></p>\n</div>",
         "question": "Which choice most effectively uses data from the table to complete the example?",
         "options": [
             "in each year shown, the revenue from tourism by residents of those countries was greater than the revenue from international tourism.",
@@ -3059,7 +3059,7 @@
         "domain": "Information and Ideas",
         "skill": "Command of Evidence",
         "level": "Medium",
-        "passage": "<div class=\"\">\n    <table class=\"gdr table-format\" style=\"border: 1px solid;\">\n        <caption style=\"caption-side: top;\">\n            <p style=\"text-align: center;\">Incorporated and Unincorporated Self-Employment Rates in Four Occupational Fields, 2015</p>\n        </caption>\n        <thead>\n            <tr>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Occupational field</th>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Incorporated self-employment rate</th>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Unincorporated self-employment rate</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">Construction and resource extraction</th>\n                <td class=\"table-format\" style=\"text-align: center;\">4.4%</td>\n                <td class=\"table-format\" style=\"text-align: center;\">14.8%</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">Installation, maintenance, and repair</th>\n                <td class=\"table-format\" style=\"text-align: center;\">2.7%</td>\n                <td class=\"table-format\" style=\"text-align: center;\">6.2%</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">Management, business, and financial services</th>\n                <td class=\"table-format\" style=\"text-align: center;\">8.9%</td>\n                <td class=\"table-format\" style=\"text-align: center;\">9.7%</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">Sales and related</th>\n                <td class=\"table-format\" style=\"text-align: center;\">5.8%</td>\n                <td class=\"table-format\" style=\"text-align: center;\">7.8%</td>\n            </tr>\n        </tbody>\n    </table>\n    <p>Self-employed workers—individuals who are not employees of other individuals or businesses but instead earn their income as business owners, independent contractors, or freelance workers—make up an important part of the US labor force. In order to receive legal and tax benefits enjoyed by corporations, self-employed individuals may choose to incorporate their business. A 2015 survey of incorporated and unincorporated self-employment rates in four occupational fields showed that the highest incorporated self-employment rate occurred among people working in <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span></p>\n</div>",
+        "passage": "<div class=\"\">\n<div class=\"text-center\">\n    <table class=\"gdr table-format\" style=\"border: 1px solid;\">\n        <caption style=\"caption-side: top;\">\n            <p style=\"text-align: center;\">Incorporated and Unincorporated Self-Employment Rates in Four Occupational Fields, 2015</p>\n        </caption>\n        <thead>\n            <tr>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Occupational field</th>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Incorporated self-employment rate</th>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center;vertical-align: bottom;\">Unincorporated self-employment rate</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">Construction and resource extraction</th>\n                <td class=\"table-format\" style=\"text-align: center;\">4.4%</td>\n                <td class=\"table-format\" style=\"text-align: center;\">14.8%</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">Installation, maintenance, and repair</th>\n                <td class=\"table-format\" style=\"text-align: center;\">2.7%</td>\n                <td class=\"table-format\" style=\"text-align: center;\">6.2%</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">Management, business, and financial services</th>\n                <td class=\"table-format\" style=\"text-align: center;\">8.9%</td>\n                <td class=\"table-format\" style=\"text-align: center;\">9.7%</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">Sales and related</th>\n                <td class=\"table-format\" style=\"text-align: center;\">5.8%</td>\n                <td class=\"table-format\" style=\"text-align: center;\">7.8%</td>\n            </tr>\n        </tbody>\n    </table>\n</div>\n    <p>Self-employed workers—individuals who are not employees of other individuals or businesses but instead earn their income as business owners, independent contractors, or freelance workers—make up an important part of the US labor force. In order to receive legal and tax benefits enjoyed by corporations, self-employed individuals may choose to incorporate their business. A 2015 survey of incorporated and unincorporated self-employment rates in four occupational fields showed that the highest incorporated self-employment rate occurred among people working in <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span></p>\n</div>",
         "question": "Which choice most effectively uses data from the table to complete the text?",
         "options": [
             "sales and related occupations.",
@@ -3078,7 +3078,7 @@
         "domain": "Standard English Conventions",
         "skill": "Boundaries",
         "level": "Easy",
-        "passage": "<p>Generations of mystery and horror <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> have been influenced by the dark, gothic stories of celebrated American author Edgar Allan Poe (1809–1849).</p>",
+        "passage": "<p>Generations of mystery and horror <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> have been influenced by the dark, gothic stories of celebrated American author Edgar Allan Poe (1809–1849).</p>",
         "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
             "writers",
@@ -3097,7 +3097,7 @@
         "domain": "Standard English Conventions",
         "skill": "Boundaries",
         "level": "Easy",
-        "passage": "<p>After the printing press was introduced in 1440, handwritten manuscripts from Europe’s medieval period were often destroyed and the paper used for other purposes. In one instance, pages <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> a collection of Norse tales dating to 1270 were discovered lining a bishop’s miter (hat).</p>",
+        "passage": "<p>After the printing press was introduced in 1440, handwritten manuscripts from Europe’s medieval period were often destroyed and the paper used for other purposes. In one instance, pages <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> a collection of Norse tales dating to 1270 were discovered lining a bishop’s miter (hat).</p>",
         "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
             "from:",
@@ -3116,7 +3116,7 @@
         "domain": "Standard English Conventions",
         "skill": "Boundaries",
         "level": "Easy",
-        "passage": "<p>In her large-scale sculpture<em> Casa-Isla</em>, artist Edra Soto included references to her childhood in Puerto Rico. For example, the sculpture’s steel panels have a crisscrossing pattern inspired by the iron gates <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span></p>",
+        "passage": "<p>In her large-scale sculpture<em> Casa-Isla</em>, artist Edra Soto included references to her childhood in Puerto Rico. For example, the sculpture’s steel panels have a crisscrossing pattern inspired by the iron gates <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span></p>",
         "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
             "Soto would see in her neighborhood?",
@@ -3135,7 +3135,7 @@
         "domain": "Standard English Conventions",
         "skill": "Boundaries",
         "level": "Medium",
-        "passage": "<p>Archaeologists have estimated that the pre-Columbian Native American city of Cahokia, located across the Mississippi River from modern-day St. Louis, Missouri, had as many as 20,000 inhabitants in the year 1150 <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> it one of the largest cities in North America at the time.</p>",
+        "passage": "<p>Archaeologists have estimated that the pre-Columbian Native American city of Cahokia, located across the Mississippi River from modern-day St. Louis, Missouri, had as many as 20,000 inhabitants in the year 1150 <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> it one of the largest cities in North America at the time.</p>",
         "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
             "CE making",
@@ -3154,7 +3154,7 @@
         "domain": "Standard English Conventions",
         "skill": "Boundaries",
         "level": "Hard",
-        "passage": "<p>With some 16,000 in attendance, the Second World Black and African Festival of Arts and <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> or FESTAC ‘77, as the event was more commonly known—became the largest pan-African event on record. FESTAC drew people from around the world to Lagos, Nigeria, for a monthlong celebration of Black and African art, scholarship, and activism.</p>",
+        "passage": "<p>With some 16,000 in attendance, the Second World Black and African Festival of Arts and <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> or FESTAC ‘77, as the event was more commonly known—became the largest pan-African event on record. FESTAC drew people from around the world to Lagos, Nigeria, for a monthlong celebration of Black and African art, scholarship, and activism.</p>",
         "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
             "Culture:",
@@ -3173,7 +3173,7 @@
         "domain": "Standard English Conventions",
         "skill": "Form, Structure, and Sense",
         "level": "Easy",
-        "passage": "<p>The radiation that <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> during the decay of radioactive atomic nuclei is known as gamma radiation.</p>",
+        "passage": "<p>The radiation that <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> during the decay of radioactive atomic nuclei is known as gamma radiation.</p>",
         "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
             "occurs",
@@ -3192,7 +3192,7 @@
         "domain": "Standard English Conventions",
         "skill": "Form, Structure, and Sense",
         "level": "Easy",
-        "passage": "<p>In 1903, environmentalist John Muir guided President Theodore Roosevelt on a scenic, sprawling trip through California’s Yosemite Valley. Upon returning from the three-day excursion, Roosevelt <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> to conserve the nation’s wilderness areas, a vow he upheld for his remaining six years in office.</p>",
+        "passage": "<p>In 1903, environmentalist John Muir guided President Theodore Roosevelt on a scenic, sprawling trip through California’s Yosemite Valley. Upon returning from the three-day excursion, Roosevelt <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> to conserve the nation’s wilderness areas, a vow he upheld for his remaining six years in office.</p>",
         "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
             "is vowing",
@@ -3211,7 +3211,7 @@
         "domain": "Standard English Conventions",
         "skill": "Form, Structure, and Sense",
         "level": "Medium",
-        "passage": "<p>Anthropologist Lívia Barbosa, of the Universidade Federal Fluminense in Brazil, <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> food and sociability in contemporary Brazil—specifically, how foods such as <span lang=\"pt\">cabidela</span> (a rice and rabbit dish) and <span lang=\"pt\">churrasco</span> (a barbeque dish) function as central mechanisms in building social relationships, values, and identities.</p>",
+        "passage": "<p>Anthropologist Lívia Barbosa, of the Universidade Federal Fluminense in Brazil, <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> food and sociability in contemporary Brazil—specifically, how foods such as <span lang=\"pt\">cabidela</span> (a rice and rabbit dish) and <span lang=\"pt\">churrasco</span> (a barbeque dish) function as central mechanisms in building social relationships, values, and identities.</p>",
         "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
             "studies",
@@ -3283,7 +3283,7 @@
         "skill": "Linear functions",
         "level": "Medium",
         "passage": null,
-        "question": "<table class=\"table-format\">\n                <tr>\n                        <th class=\"table-format\">Distance (kilometers)</th>\n                        <th class=\"table-format\">Average time (minutes)</th>\n                </tr>\n                <tr>\n                        <td class=\"table-format\">\\(0.32\\)</td>\n                        <td class=\"table-format\">\\(8\\)</td>\n                </tr>\n                <tr>\n                        <td class=\"table-format\">\\(0.56\\)</td>\n                        <td class=\"table-format\">\\(14\\)</td>\n                </tr>\n                <tr>\n                        <td class=\"table-format\">\\(0.68\\)</td>\n                        <td class=\"table-format\">\\(17\\)</td>\n                </tr>\n</table>\n<p>The table gives the average time \\(𝑡\\), in minutes, it takes Carly to travel a certain distance \\(𝑑\\), in kilometers. Which equation could represent this linear relationship?</p>",
+        "question": "<div class=\"text-center\">\n<table class=\"table-format\">\n                <tr>\n                        <th class=\"table-format\">Distance (kilometers)</th>\n                        <th class=\"table-format\">Average time (minutes)</th>\n                </tr>\n                <tr>\n                        <td class=\"table-format\">\\(0.32\\)</td>\n                        <td class=\"table-format\">\\(8\\)</td>\n                </tr>\n                <tr>\n                        <td class=\"table-format\">\\(0.56\\)</td>\n                        <td class=\"table-format\">\\(14\\)</td>\n                </tr>\n                <tr>\n                        <td class=\"table-format\">\\(0.68\\)</td>\n                        <td class=\"table-format\">\\(17\\)</td>\n                </tr>\n</table>\n</div>\n<p>The table gives the average time \\(𝑡\\), in minutes, it takes Carly to travel a certain distance \\(𝑑\\), in kilometers. Which equation could represent this linear relationship?</p>",
         "options": [
             "\\(𝑡=4𝑑\\)",
             "\\(𝑡=\\frac{1}{25}𝑑\\)",
@@ -3642,7 +3642,7 @@
         "domain": "Craft and Structure",
         "skill": "Words in Context",
         "level": "Hard",
-        "passage": "Rejecting the premise that the literary magazine Ebony and Topaz (1927) should present a unified vision of Black American identity, editor Charles S. Johnson fostered his contributors’ diverse perspectives by promoting their authorial autonomy. Johnson’s self-effacement diverged from the editorial stances of W.E.B. Du Bois and Alain Locke, whose decisions for their publications were more ______.",
+        "passage": "Rejecting the premise that the literary magazine Ebony and Topaz (1927) should present a unified vision of Black American identity, editor Charles S. Johnson fostered his contributors’ diverse perspectives by promoting their authorial autonomy. Johnson’s self-effacement diverged from the editorial stances of W.E.B. Du Bois and Alain Locke, whose decisions for their publications were more <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span>.",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "proficient",
@@ -3699,7 +3699,7 @@
         "domain": "Craft and Structure",
         "skill": "Words in Context",
         "level": "Medium",
-        "passage": "Drivers who strongly believe that the toll they must pay to use the Lewis and Clark Bridge, which spans the Ohio River to connect Indiana and Kentucky, is currently too high are unlikely to be ______ a proposal to increase the toll. Advocates for a higher toll are likely to have more success if they instead direct their arguments toward a more persuadable segment of the population. ",
+        "passage": "Drivers who strongly believe that the toll they must pay to use the Lewis and Clark Bridge, which spans the Ohio River to connect Indiana and Kentucky, is currently too high are unlikely to be <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> a proposal to increase the toll. Advocates for a higher toll are likely to have more success if they instead direct their arguments toward a more persuadable segment of the population. ",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "receptive to",
@@ -3737,7 +3737,7 @@
         "domain": "Craft and Structure",
         "skill": "Words in Context",
         "level": "Medium",
-        "passage": "Handedness, a preferential use of either the right or left hand, typically is easy to observe in humans. Because this trait is present but less ______ in many other animals, animal-behavior researchers often employ tasks specially designed to reveal individual animals’ preferences for a certain hand or paw.",
+        "passage": "Handedness, a preferential use of either the right or left hand, typically is easy to observe in humans. Because this trait is present but less <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> in many other animals, animal-behavior researchers often employ tasks specially designed to reveal individual animals’ preferences for a certain hand or paw.",
         "question": "Which choice completes the text with the most logical and precise word or phrase?",
         "options": [
             "recognizable",
@@ -3756,7 +3756,7 @@
         "domain": "Expression of Ideas",
         "skill": "Transitions",
         "level": "Hard",
-        "passage": "The prime meridian, the global indicator of zero degrees longitude established in 1884, was originally determined using astronomically derived coordinates. ______ as decades passed, new calculations would reveal increasingly precise coordinates, yet the prime meridian remained unchanged; it wasn’t until the 1980s that, spurred by improved geodetic data, the prime meridian was officially moved—roughly one hundred meters east.",
+        "passage": "The prime meridian, the global indicator of zero degrees longitude established in 1884, was originally determined using astronomically derived coordinates. <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> as decades passed, new calculations would reveal increasingly precise coordinates, yet the prime meridian remained unchanged; it wasn’t until the 1980s that, spurred by improved geodetic data, the prime meridian was officially moved—roughly one hundred meters east.",
         "question": "Which choice completes the text with the most logical transition?",
         "options": [
             "Specifically,",
@@ -3832,7 +3832,7 @@
         "domain": "Expression of Ideas",
         "skill": "Transitions",
         "level": "Medium",
-        "passage": "Establishing Coordinated Universal Time (UTC) is no easy task. Each month, readings of a single second from atomic clocks around the world are taken and sent to the International Bureau of Weights and Measures (BIPM) in France. ______ BIPM metrologists perform the meticulous work of assembling these minutely disparate readings into a globally shared time standard.",
+        "passage": "Establishing Coordinated Universal Time (UTC) is no easy task. Each month, readings of a single second from atomic clocks around the world are taken and sent to the International Bureau of Weights and Measures (BIPM) in France. <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> BIPM metrologists perform the meticulous work of assembling these minutely disparate readings into a globally shared time standard.",
         "question": "Which choice completes the text with the most logical transition?",
         "options": [
             "There,",
@@ -3851,7 +3851,7 @@
         "domain": "Expression of Ideas",
         "skill": "Transitions",
         "level": "Hard",
-        "passage": "To perform a quad axel, a figure skater must leap into the air and complete four and a half rotations before landing, an extreme feat. ______ in 2022, when 17-year-old Ilia Malinin landed the first quad axel—considered the most difficult quad jump—in a high-level competition, the audience was left awestruck.",
+        "passage": "To perform a quad axel, a figure skater must leap into the air and complete four and a half rotations before landing, an extreme feat. <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> in 2022, when 17-year-old Ilia Malinin landed the first quad axel—considered the most difficult quad jump—in a high-level competition, the audience was left awestruck.",
         "question": "Which choice completes the text with the most logical transition?",
         "options": [
             "Moreover,",
@@ -3908,7 +3908,7 @@
         "domain": "Information and Ideas",
         "skill": "Inferences",
         "level": "Medium",
-        "passage": "<p>Although military veterans make up a small proportion of the total population of the United States, they occupy a significantly higher proportion of the jobs in the civilian government. One possible explanation for this disproportionate representation is that military service familiarizes people with certain organizational structures that are also reflected in the civilian government bureaucracy, and this familiarity thus <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span></p>",
+        "passage": "<p>Although military veterans make up a small proportion of the total population of the United States, they occupy a significantly higher proportion of the jobs in the civilian government. One possible explanation for this disproportionate representation is that military service familiarizes people with certain organizational structures that are also reflected in the civilian government bureaucracy, and this familiarity thus <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span></p>",
         "question": "Which choice most logically completes the text?",
         "options": [
             "makes civilian government jobs especially appealing to military veterans.",
@@ -3927,7 +3927,7 @@
         "domain": "Information and Ideas",
         "skill": "Inferences",
         "level": "Medium",
-        "passage": "<p><em>Euphorbia esula</em> (leafy spurge) is a Eurasian plant that has become invasive in North America, where it displaces native vegetation and sickens cattle. <em>E. esula</em> can be controlled with chemical herbicides, but that approach can also kill harmless plants nearby. Recent research on introducing engineered DNA into plant species to inhibit their reproduction may offer a path toward exclusively targeting <em>E. esula</em>, consequently <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span></p>",
+        "passage": "<p><em>Euphorbia esula</em> (leafy spurge) is a Eurasian plant that has become invasive in North America, where it displaces native vegetation and sickens cattle. <em>E. esula</em> can be controlled with chemical herbicides, but that approach can also kill harmless plants nearby. Recent research on introducing engineered DNA into plant species to inhibit their reproduction may offer a path toward exclusively targeting <em>E. esula</em>, consequently <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span></p>",
         "question": "Which choice most logically completes the text?",
         "options": [
             "<p>making individual <em>E. esula</em> plants more susceptible to existing chemical herbicides.</p>",
@@ -3946,7 +3946,7 @@
         "domain": "Information and Ideas",
         "skill": "Inferences",
         "level": "Hard",
-        "passage": "<p>Tides can deposit large quantities of dead vegetation within a salt marsh, smothering healthy plants and leaving a salt panne—a depression devoid of plants that tends to trap standing water—in the marsh’s interior. Ecologist Kathryn Beheshti and colleagues found that burrowing crabs living within these pannes improve drainage by loosening the soil, leading the pannes to shrink as marsh plants move back in. At salt marsh edges, however, crab-induced soil loosening can promote marsh loss by accelerating erosion, suggesting that the burrowing action of crabs <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> &nbsp; &nbsp;</p>",
+        "passage": "<p>Tides can deposit large quantities of dead vegetation within a salt marsh, smothering healthy plants and leaving a salt panne—a depression devoid of plants that tends to trap standing water—in the marsh’s interior. Ecologist Kathryn Beheshti and colleagues found that burrowing crabs living within these pannes improve drainage by loosening the soil, leading the pannes to shrink as marsh plants move back in. At salt marsh edges, however, crab-induced soil loosening can promote marsh loss by accelerating erosion, suggesting that the burrowing action of crabs <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> &nbsp; &nbsp;</p>",
         "question": "Which choice most logically completes the text?",
         "options": [
             "can be beneficial to marshes with small pannes but can be harmful to marshes with large pannes.",
@@ -3984,7 +3984,7 @@
         "domain": "Information and Ideas",
         "skill": "Command of Evidence",
         "level": "Hard",
-        "passage": "<div class=\"\"><p></p><table class=\"gdr\" style=\"border: 1px solid;\"><caption style=\"caption-side: top;\"><p style=\"text-align: center;\">Effects of Mycorrhizal Fungi on 3 Plant Species</p></caption><thead><tr><th scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Plant species</th><th scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Mycorrhizal host</th><th scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Average mass of plants grown in soil containing mycorrhizal fungi (in grams)</th><th scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Average mass of plants grown in soil treated to kill fungi (in grams)</th></tr></thead><tbody><tr><th scope=\"row\" style=\"text-align: left;\">Corn</th><td>yes</td><td style=\"text-align: center;\">15.1</td><td style=\"text-align: center;\">3.8</td></tr><tr><th scope=\"row\" style=\"text-align: left;\">Marigold</th><td>yes</td><td style=\"text-align: center;\">10.2</td><td style=\"text-align: center;\">2.4</td></tr><tr><th scope=\"row\" style=\"text-align: left;\">Broccoli</th><td>no</td><td style=\"text-align: center;\">7.5</td><td style=\"text-align: center;\">7</td></tr></tbody></table><p></p>\n<p>Mycorrhizal fungi in soil benefits many plants, substantially increasing the mass of some. A student conducted an experiment to illustrate this effect. The student chose three plant species for the experiment, including two that are mycorrhizal hosts (species known to benefit from mycorrhizal fungi) and one nonmycorrhizal species (a species that doesn’t benefit from and may even be harmed by mycorrhizal fungi). The student then grew several plants from each species both in soil containing mycorrhizal fungi and in soil that had been treated to kill mycorrhizal and other fungi. After several weeks, the student measured the plants’ average mass and was surprised to discover that <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span></p></div>",
+        "passage": "<div class=\"\">\n    \n    <div class=\"text-center\">\n            <table class=\"table-format\" style=\"border: 1px solid;\">\n        <caption style=\"caption-side: top;\">\n            <p style=\"text-align: center;\">Effects of Mycorrhizal Fungi on 3 Plant Species</p>\n        </caption>\n        <thead>\n            <tr>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Plant species</th>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Mycorrhizal host</th>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Average mass of plants grown in soil containing mycorrhizal fungi (in grams)</th>\n                <th class=\"table-format\" scope=\"col\" style=\"text-align: center; vertical-align: bottom;\">Average mass of plants grown in soil treated to kill fungi (in grams)</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">Corn</th>\n                <td class=\"table-format\">yes</td>\n                <td class=\"table-format\" style=\"text-align: center;\">15.1</td>\n                <td class=\"table-format\" style=\"text-align: center;\">3.8</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">Marigold</th>\n                <td class=\"table-format\">yes</td>\n                <td class=\"table-format\" style=\"text-align: center;\">10.2</td>\n                <td class=\"table-format\" style=\"text-align: center;\">2.4</td>\n            </tr>\n            <tr>\n                <th class=\"table-format\" scope=\"row\" style=\"text-align: left;\">Broccoli</th>\n                <td class=\"table-format\">no</td>\n                <td class=\"table-format\" style=\"text-align: center;\">7.5</td>\n                <td class=\"table-format\" style=\"text-align: center;\">7</td>\n            </tr>\n        </tbody>\n    </table>\n    </div>\n    \n    <p>Mycorrhizal fungi in soil benefits many plants, substantially increasing the mass of some. A student conducted an experiment to illustrate this effect. The student chose three plant species for the experiment, including two that are mycorrhizal hosts (species known to benefit from mycorrhizal fungi) and one nonmycorrhizal species (a species that doesn’t benefit from and may even be harmed by mycorrhizal fungi). The student then grew several plants from each species both in soil containing mycorrhizal fungi and in soil that had been treated to kill mycorrhizal and other fungi. After several weeks, the student measured the plants’ average mass and was surprised to discover that <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span></p>\n</div>",
         "question": "Which choice most effectively uses data from the table to complete the statement?",
         "options": [
             "broccoli grown in soil containing mycorrhizal fungi had a slightly higher average mass than broccoli grown in soil that had been treated to kill fungi.",
@@ -4003,7 +4003,7 @@
         "domain": "Standard English Conventions",
         "skill": "Boundaries",
         "level": "Medium",
-        "passage": "<p>Gathering accurate data on water flow in the United States is challenging because of the country’s millions of miles of <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> the volume and speed of water at any given location can vary drastically over time.</p>",
+        "passage": "<p>Gathering accurate data on water flow in the United States is challenging because of the country’s millions of miles of <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> the volume and speed of water at any given location can vary drastically over time.</p>",
         "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
             "waterways and the fact that,",
@@ -4022,7 +4022,7 @@
         "domain": "Standard English Conventions",
         "skill": "Boundaries",
         "level": "Medium",
-        "passage": "<p>The city of Pompeii, which was buried in ash following the eruption of Mount Vesuvius in 79 CE, continues to be studied by archaeologists. Unfortunately, as <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> attest, archaeological excavations have disrupted ash deposits at the site, causing valuable information about the eruption to be lost. &nbsp; &nbsp;</p>",
+        "passage": "<p>The city of Pompeii, which was buried in ash following the eruption of Mount Vesuvius in 79 CE, continues to be studied by archaeologists. Unfortunately, as <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> attest, archaeological excavations have disrupted ash deposits at the site, causing valuable information about the eruption to be lost. &nbsp; &nbsp;</p>",
         "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
             "researchers, Roberto Scandone and Christopher Kilburn,",
@@ -4041,7 +4041,7 @@
         "domain": "Standard English Conventions",
         "skill": "Boundaries",
         "level": "Hard",
-        "passage": "<p>The pedagogy of the Suzuki method is rooted in several central <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> by Japanese violinist Shinichi Suzuki, who sought to parallel the linguistic learning environment, the method emphasizes playing instruments from a very young age and teaches students as young as three to play simple classical pieces such as “March in G.”</p>",
+        "passage": "<p>The pedagogy of the Suzuki method is rooted in several central <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> by Japanese violinist Shinichi Suzuki, who sought to parallel the linguistic learning environment, the method emphasizes playing instruments from a very young age and teaches students as young as three to play simple classical pieces such as “March in G.”</p>",
         "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
             "tenets. Developed",
@@ -4060,7 +4060,7 @@
         "domain": "Standard English Conventions",
         "skill": "Form, Structure, and Sense",
         "level": "Medium",
-        "passage": "<p>The Proto-Nilotic language, common ancestor of fifty-five African languages with similar linguistic properties, <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> like all protolanguages, hypothetical: there’s no direct evidence these ancestral languages actually existed.</p>",
+        "passage": "<p>The Proto-Nilotic language, common ancestor of fifty-five African languages with similar linguistic properties, <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> like all protolanguages, hypothetical: there’s no direct evidence these ancestral languages actually existed.</p>",
         "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
             "is,",
@@ -4079,7 +4079,7 @@
         "domain": "Standard English Conventions",
         "skill": "Form, Structure, and Sense",
         "level": "Medium",
-        "passage": "<p>Oyster mushrooms typically get their nutrients from the damp logs on which they grow, but the fungi are also carnivorous, with the ability to kill and consume microscopic worms known as nematodes. As researcher Yen-Ping Hsueh has shown, the mushrooms release a toxin that is deadly to nematodes that <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> in contact with it.</p>",
+        "passage": "<p>Oyster mushrooms typically get their nutrients from the damp logs on which they grow, but the fungi are also carnivorous, with the ability to kill and consume microscopic worms known as nematodes. As researcher Yen-Ping Hsueh has shown, the mushrooms release a toxin that is deadly to nematodes that <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> in contact with it.</p>",
         "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
             "has come",
@@ -4098,7 +4098,7 @@
         "domain": "Standard English Conventions",
         "skill": "Form, Structure, and Sense",
         "level": "Hard",
-        "passage": "<p>In the late nineteenth and early twentieth centuries, automobiles were commonly referred to as horseless carriages after the older technology they still resembled. Known as the Brass Era, this period in automotive design is remembered for its grandeur and artistry, its vehicles <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> by collectors for their ornate detailing and gleaming brass fittings.</p>",
+        "passage": "<p>In the late nineteenth and early twentieth centuries, automobiles were commonly referred to as horseless carriages after the older technology they still resembled. Known as the Brass Era, this period in automotive design is remembered for its grandeur and artistry, its vehicles <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> by collectors for their ornate detailing and gleaming brass fittings.</p>",
         "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
             "are highly prized",
@@ -4117,7 +4117,7 @@
         "domain": "Standard English Conventions",
         "skill": "Form, Structure, and Sense",
         "level": "Hard",
-        "passage": "<p>The ghazal, a poetic form originating in seventh-century Arabic poetry, has an intricate structure. The twentieth-century Kashmiri American poet Agha Shahid Ali explains that each one of a ghazal’s couplets, while adhering to the patterns of rhyme (<span lang=\"ar\"><em>qafia</em></span>) and refrain (<span lang=\"ar\"><em>radif</em></span>) established in the poem’s opening lines (<span lang=\"ar\"><em>matla</em></span>), <span aria-hidden=\"true\">______</span><span class=\"sr-only\">blank</span> thematically and logically autonomous, resulting in a poem with “a stringently formal disunity.”</p>",
+        "passage": "<p>The ghazal, a poetic form originating in seventh-century Arabic poetry, has an intricate structure. The twentieth-century Kashmiri American poet Agha Shahid Ali explains that each one of a ghazal’s couplets, while adhering to the patterns of rhyme (<span lang=\"ar\"><em>qafia</em></span>) and refrain (<span lang=\"ar\"><em>radif</em></span>) established in the poem’s opening lines (<span lang=\"ar\"><em>matla</em></span>), <span aria-hidden=\"true\" class=\"blank\">______</span><span class=\"sr-only\">blank</span> thematically and logically autonomous, resulting in a poem with “a stringently formal disunity.”</p>",
         "question": "Which choice completes the text so that it conforms to the conventions of Standard English?",
         "options": [
             "is",
@@ -4137,7 +4137,7 @@
         "skill": "Linear equations in one variable",
         "level": "Medium",
         "passage": null,
-        "question": "\\( 13(x+6)−12(x+6)=−8 \\)\n<br>\nWhat value of \\(x\\) is the solution to the given equation?",
+        "question": "<p class=\"text-center\">\\( 13(x+6)−12(x+6)=−8 \\)</p>\n<br>\nWhat value of \\(x\\) is the solution to the given equation?",
         "options": [],
         "correct_answer": 42,
         "image": null,
@@ -4151,7 +4151,7 @@
         "skill": "Linear equations in one variable",
         "level": "Hard",
         "passage": null,
-        "question": "\\( −49x=−98x \\)\n<br>\nHow many solutions does the given equation have?",
+        "question": "<p class=\"text-center\">\\( −49x=−98x \\)</p>\n<br>\nHow many solutions does the given equation have?",
         "options": [
             "Zero",
             "Exactly one",
