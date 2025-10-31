@@ -331,7 +331,8 @@ def practice():
                     # Move to break page
                     test_session.current_question = 0
                     test_session.current_section += 1
-                    test_session.section_start_time = datetime.utcnow()
+                    # test_session.section_start_time = datetime.utcnow()
+                    test_session.section_start_time = None
                     test_session.answers = json.dumps(answers)
                     test_session.marked_for_review = json.dumps(marked)
                     db.session.commit()
@@ -379,15 +380,23 @@ def practice():
     
     section_duration = SECTIONS[test_session.current_section]['duration']
 
+    # if test_session.section_start_time:
+    #     elapsed = (datetime.utcnow() - test_session.section_start_time).total_seconds()
+    # else:
+    #     # In case section_start_time was never set
+    #     test_session.section_start_time = datetime.utcnow()
+    #     db.session.commit()
+    #     elapsed = 0
+
+    # remaining_time = max(0, section_duration - int(elapsed))
+
     if test_session.section_start_time:
         elapsed = (datetime.utcnow() - test_session.section_start_time).total_seconds()
+        remaining_time = max(0, section_duration - int(elapsed))
     else:
-        # In case section_start_time was never set
-        test_session.section_start_time = datetime.utcnow()
-        db.session.commit()
-        elapsed = 0
+        # Not started yet → show full time but DO NOT start
+        remaining_time = section_duration
 
-    remaining_time = max(0, section_duration - int(elapsed))
 
     return render_template('practice.html', test_duration=remaining_time)
     # return render_template('practice.html', test_duration=SECTIONS[test_session.current_section]['duration'])

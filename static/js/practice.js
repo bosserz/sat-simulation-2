@@ -3,6 +3,12 @@ let totalQuestions = 0;
 let markedForReview = {};
 let answers = {};
 
+// timer state
+window.timerInterval = null;
+window.timerStarted = false;   // has the timer actually begun ticking?
+window.timerArmed = false;     // do we have a duration ready to start?
+window.timerDuration = null;   // seconds for next section
+
 function startTimer(duration) {
     let timer = duration;
     const timerDisplay = document.getElementById('timer');
@@ -22,6 +28,39 @@ function startTimer(duration) {
             submitTest();
         }
     }, 1000);
+}
+
+// function startTimer(duration) {
+//   let timer = duration;
+//   const timerDisplay = document.getElementById('timer');
+//   if (!timerDisplay) return;
+
+//   clearInterval(window.timerInterval);
+//   window.timerStarted = true;
+//   window.timerArmed = false;
+//   window.timerDuration = duration;
+
+//   window.timerInterval = setInterval(() => {
+//     const minutes = Math.floor(timer / 60);
+//     const seconds = timer % 60;
+//     timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+//     timer--;
+//     if (timer < 0) {
+//       clearInterval(window.timerInterval);
+//       window.timerStarted = false;
+//       alert('Time is up!');
+//       submitTest();
+//     }
+//   }, 1000);
+// }
+
+function armTimer(duration) {
+  // prepare the timer but do not start it yet
+  window.timerDuration = duration;
+  window.timerArmed = true;
+  window.timerStarted = false;
+  clearInterval(window.timerInterval);
 }
 
 
@@ -262,7 +301,7 @@ function loadQuestion(qid) {
 
             // ✅ Allow only digits, '/', and '.'
             input.setAttribute('inputmode', 'decimal');           // mobile numeric keyboard
-            input.setAttribute('pattern', '[0-9./]*');            // form validation on submit
+            input.setAttribute('pattern', '[0-9./-]*');            // form validation on submit
             input.setAttribute('title', "Only numbers, '/', and '.' are allowed");
 
             const allowed = /^[0-9./-]*$/;
@@ -405,26 +444,45 @@ function saveAnswer() {
 
 
 
+// function submitTest() {
+//     // stop any running timer as we’re leaving this section
+//     clearInterval(window.timerInterval);
+//     window.timerStarted = false;
+//     window.timerArmed = false;
+//     // previous code
+//     fetch('/practice', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({ next_question: totalQuestions }),
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//         if (data.error) {
+//             alert(data.error);
+//             window.location.href = '/login';
+//             return;
+//         }
+//         if (data.redirect) {
+//             window.location.href = data.redirect;
+//         }
+//     })
+//     .catch(error => {
+//         console.error('Error:', error);
+//         alert('An error occurred while submitting the test.');
+//     });
+// }
+
 function submitTest() {
-    fetch('/practice', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ next_question: totalQuestions }),
-    })
-    .then(response => response.json())
-    .then(data => {
+    fetch('/practice', { method: 'POST', headers: { 'Content-Type': 'application/json', }, body: JSON.stringify({ next_question: totalQuestions }), }).then(response => response.json()).then(data => {
         if (data.error) {
             alert(data.error);
             window.location.href = '/login';
             return;
         }
-        if (data.redirect) {
-            window.location.href = data.redirect;
-        }
-    })
-    .catch(error => {
+        if (data.redirect) { window.location.href = data.redirect; }
+    }).catch(error => {
         console.error('Error:', error);
         alert('An error occurred while submitting the test.');
     });
@@ -480,6 +538,45 @@ function refreshRemainingTime() {
         });
 }
 
+// function refreshRemainingTime() {
+//   fetch('/get_remaining_time')
+//     .then(response => response.json())
+//     .then(data => {
+//       if (data.remaining_time !== undefined) {
+//         // update our cached duration
+//         armTimer(data.remaining_time);
+
+//         // If the timer was already running before (e.g., user tabbed away and back),
+//         // resume it. If not started yet (e.g., we are on break), DO NOT start it.
+//         const timerDisplay = document.getElementById('timer');
+//         if (window.timerStarted && timerDisplay) {
+//           startTimer(window.timerDuration);
+//         }
+//       }
+//     })
+//     .catch(err => {
+//       console.error('Failed to refresh remaining time:', err);
+//     });
+// }
+
+// function refreshRemainingTime() {
+//   fetch('/get_remaining_time')
+//     .then(r => r.json())
+//     .then(d => {
+//       if (d.remaining_time !== undefined) {
+//         armTimer(d.remaining_time);  // updates cached duration & clears any stale interval
+
+//         // If we were already running before (tab switch, etc.), resume
+//         const timerDisplay = document.getElementById('timer');
+//         if (window.timerStarted && timerDisplay) {
+//           startTimer(window.timerDuration);
+//         }
+//       }
+//     })
+//     .catch(err => console.error('Failed to refresh remaining time:', err));
+// }
+
+
 
 function updateEndModuleStatus() {
   const grid = document.getElementById('end-module-question-grid');
@@ -523,6 +620,8 @@ function updateEndModuleStatus() {
     grid.appendChild(btn);
   }
 }
+
+
 
 
 // ---------- safe event binding helper ----------
@@ -686,6 +785,30 @@ on('close-reference-formula', 'click', () => {
   if (m) m.classList.add('hidden');
 });
 
+// Next Section
+// on('start-next-section', 'click', async (e) => {
+//   e.preventDefault();
+
+//   // Mark that the user explicitly started the next section
+//   sessionStorage.setItem('sectionJustStarted', '1');
+
+//   // Notify backend (optional)
+//   try {
+//     await fetch('/practice/start_timer', { method: 'POST' });
+//   } catch (err) {
+//     console.warn('Could not notify server timer start:', err);
+//   }
+
+//   // Arm duration if provided in data attribute
+//   const link = e.currentTarget;
+//   const durAttr = parseInt(link.dataset.duration, 10);
+//   if (Number.isFinite(durAttr)) armTimer(durAttr);
+
+//   // Redirect to the next section
+//   window.location.href = link.href;
+// });
+
+
 // Keep your existing visibilitychange handler as-is
 
 
@@ -696,19 +819,63 @@ document.addEventListener('visibilitychange', () => {
     }
 });
 
+// ---- periodic server sync (prevents drift, handles reloads) ----
+// const SYNC_MS = 15000;
+// let syncInterval = null;
+
+// function startTimerSyncLoop() {
+//   clearInterval(syncInterval);
+//   syncInterval = setInterval(() => {
+//     refreshRemainingTime();
+
+//     // Safety: if timer should be running but isn't, kick it off.
+//     // (e.g., page reload after the section already started)
+//     if (!window.timerStarted &&
+//         window.timerArmed &&
+//         typeof window.timerDuration === 'number' &&
+//         window.timerDuration > 0) {
+//       startTimer(window.timerDuration);
+//     }
+//   }, SYNC_MS);
+// }
+
+
+// document.addEventListener('DOMContentLoaded', async () => {
+//   // Get authoritative remaining time from server
+//   try {
+//     const r = await fetch('/get_remaining_time');
+//     const d = await r.json();
+//     if (d.remaining_time !== undefined) armTimer(d.remaining_time);
+//   } catch (e) {
+//     console.warn('Failed to fetch remaining time on load:', e);
+//   }
+
+//   // Only start if we arrived via Start Next Section click
+//   if (sessionStorage.getItem('sectionJustStarted') === '1') {
+//     if (typeof window.timerDuration === 'number' && window.timerDuration > 0) {
+//       startTimer(window.timerDuration);
+//     }
+//     sessionStorage.removeItem('sectionJustStarted');
+//   }
+
+//   // begin periodic sync
+//   startTimerSyncLoop();
+// });
+
+
 
 // Reference Formula Modal Event Listeners
-document.getElementById('reference-formula').addEventListener('click', () => {
-    console.log('Reference formula button clicked');
-    const refModal = document.getElementById('reference-formula-modal');
-    if (refModal) {
-        refModal.classList.remove('hidden');
-    }
-});
+// document.getElementById('reference-formula').addEventListener('click', () => {
+//     console.log('Reference formula button clicked');
+//     const refModal = document.getElementById('reference-formula-modal');
+//     if (refModal) {
+//         refModal.classList.remove('hidden');
+//     }
+// });
 
-document.getElementById('close-reference-formula').addEventListener('click', () => {
-    const refModal = document.getElementById('reference-formula-modal');
-    if (refModal) {
-        refModal.classList.add('hidden');
-    }
-});
+// document.getElementById('close-reference-formula').addEventListener('click', () => {
+//     const refModal = document.getElementById('reference-formula-modal');
+//     if (refModal) {
+//         refModal.classList.add('hidden');
+//     }
+// });
