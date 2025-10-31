@@ -521,7 +521,7 @@
         "skill": "Linear equations in one variable",
         "level": "Easy",
         "passage": null,
-        "question": "If \\( \\frac{x}{8} = 5 \\), what is the value of \\(8x\\)?",
+        "question": "If \\( \\frac{8}{x} = 5 \\), what is the value of \\(8x\\)?",
         "options": [],
         "correct_answer": 0.2,
         "image": null,
@@ -698,12 +698,12 @@
         "passage": null,
         "question": "<div>\n        <p class=\"text-center\">\\(y=x^2+1.7\\)</p>\n        <p class=\"text-center\">\\(y=1.7-x\\)</p>\n        <p>Which graph represents the given system of equations?</p>\n</div>",
         "options": [
-            "<img src=\"https://storage.cloud.google.com/sat-question-img/nov-2025/math_q75_a.png\">",
-            "<img src=\"https://storage.cloud.google.com/sat-question-img/nov-2025/math_q75_b.png\">",
-            "<img src=\"https://storage.cloud.google.com/sat-question-img/nov-2025/math_q75_c.png\">",
-            "<img src=\"https://storage.cloud.google.com/sat-question-img/nov-2025/math_q75_d.png\">"
+            "<img src=\"https://storage.googleapis.com/sat-question-img/nov-2025/math_q75_a.png\">",
+            "<img src=\"https://storage.googleapis.com/sat-question-img/nov-2025/math_q75_b.png\">",
+            "<img src=\"https://storage.googleapis.com/sat-question-img/nov-2025/math_q75_c.png\">",
+            "<img src=\"https://storage.googleapis.com/sat-question-img/nov-2025/math_q75_d.png\">"
         ],
-        "correct_answer": "<img src=\"https://storage.cloud.google.com/sat-question-img/nov-2025/math_q75_a.png\">",
+        "correct_answer": "<img src=\"https://storage.googleapis.com/sat-question-img/nov-2025/math_q75_a.png\">",
         "image": null,
         "equation": null
     },
@@ -715,7 +715,7 @@
         "skill": "Nonlinear functions",
         "level": "Easy",
         "passage": null,
-        "question": "<div>\n        <img src=\"https://storage.cloud.google.com/sat-question-img/nov-2025/math_79.png\">\n        <p>The graph shown models the number of residents of a certain city \\(𝑥\\) years after 2010. How many residents does this model estimate the city had in 2010?</p>\n</div>",
+        "question": "<div>\n        <img src=\"https://storage.googleapis.com/sat-question-img/nov-2025/math_79.png\">\n        <p>The graph shown models the number of residents of a certain city \\(𝑥\\) years after 2010. How many residents does this model estimate the city had in 2010?</p>\n</div>",
         "options": [
             "\\(0\\)",
             "\\(2,000\\)",
@@ -734,7 +734,7 @@
         "skill": "Nonlinear functions",
         "level": "Easy",
         "passage": null,
-        "question": "<div>\n        <img src=\"https://storage.cloud.google.com/sat-question-img/nov-2025/math_80.png\">\n        <p>What is the \\(x\\)-coordinate of the \\(x\\)-intercept of the graph shown?</p>\n</div>",
+        "question": "<div>\n        <img src=\"https://storage.googleapis.com/sat-question-img/nov-2025/math_80.png\">\n        <p>What is the \\(x\\)-coordinate of the \\(x\\)-intercept of the graph shown?</p>\n</div>",
         "options": [],
         "correct_answer": 6,
         "image": null,
@@ -1517,7 +1517,7 @@
         "skill": "Linear equations in two variables",
         "level": "Hard",
         "passage": null,
-        "question": "<div>\n        <img src=\"https://storage.cloud.google.com/sat-question-img/nov-2025/math_66.png\">\n        <p>\n                The points plotted in the coordinate plane above represent the possible numbers of wallflowers and cornflowers that someone can buy at the Garden Store in order to spend exactly $24.00 total on the two types of flowers. The price of each wallflower is the same and the price of each cornflower is the same. What is the price, in dollars, of 1 cornflower?\n        </p>\n</div>",
+        "question": "<div>\n        <img src=\"https://storage.googleapis.com/sat-question-img/nov-2025/math_66.png\">\n        <p>\n                The points plotted in the coordinate plane above represent the possible numbers of wallflowers and cornflowers that someone can buy at the Garden Store in order to spend exactly $24.00 total on the two types of flowers. The price of each wallflower is the same and the price of each cornflower is the same. What is the price, in dollars, of 1 cornflower?\n        </p>\n</div>",
         "options": [],
         "correct_answer": 1.5,
         "image": null,
