@@ -453,49 +453,49 @@ def break_page():
 
 from collections import defaultdict
 
-def build_domain_stats(sections, questions, section_answers, practice_test_id):
-    """
-    Returns:
-      {
-        'verbal': {'Craft and Structure': {'correct': 5, 'total': 7}, ...},
-        'math':   {'Algebra': {'correct': 3, 'total': 5}, ...}
-      }
-    """
-    # Map: (type, module) -> list of its questions (in display order)
-    sect_qs = {}
-    for s in sections:
-        key = (s['type'].lower(), s.get('module'))
-        qs = [q for q in questions[practice_test_id] if q['type'].lower() == s['type'].lower() and q.get('module') == s.get('module')]
-        sect_qs[key] = qs
+# def build_domain_stats(sections, questions, section_answers, practice_test_id):
+#     """
+#     Returns:
+#       {
+#         'verbal': {'Craft and Structure': {'correct': 5, 'total': 7}, ...},
+#         'math':   {'Algebra': {'correct': 3, 'total': 5}, ...}
+#       }
+#     """
+#     # Map: (type, module) -> list of its questions (in display order)
+#     sect_qs = {}
+#     for s in sections:
+#         key = (s['type'].lower(), s.get('module'))
+#         qs = [q for q in questions[practice_test_id] if q['type'].lower() == s['type'].lower() and q.get('module') == s.get('module')]
+#         sect_qs[key] = qs
 
-    # Tally per section-type per domain
-    domain_stats = {
-        'verbal': defaultdict(lambda: {'correct': 0, 'total': 0}),
-        'math':   defaultdict(lambda: {'correct': 0, 'total': 0}),
-    }
+#     # Tally per section-type per domain
+#     domain_stats = {
+#         'verbal': defaultdict(lambda: {'correct': 0, 'total': 0}),
+#         'math':   defaultdict(lambda: {'correct': 0, 'total': 0}),
+#     }
 
-    # Iterate sections in order so answers align: section_answers[i][qid]
-    for i, s in enumerate(sections):
-        s_type = s['type'].lower()
-        key = (s_type, s.get('module'))
-        qs = sect_qs.get(key, [])
-        answers_i = section_answers[i] if i < len(section_answers) else []
+#     # Iterate sections in order so answers align: section_answers[i][qid]
+#     for i, s in enumerate(sections):
+#         s_type = s['type'].lower()
+#         key = (s_type, s.get('module'))
+#         qs = sect_qs.get(key, [])
+#         answers_i = section_answers[i] if i < len(section_answers) else []
 
-        for qid, q in enumerate(qs):
-            dom = q.get('domain', 'Other')
-            domain_stats[s_type][dom]['total'] += 1
+#         for qid, q in enumerate(qs):
+#             dom = q.get('domain', 'Other')
+#             domain_stats[s_type][dom]['total'] += 1
 
-            ans = None
-            if qid < len(answers_i):
-                ans = answers_i[qid].get('answer')
-            if ans is not None and ans == q.get('correct_answer'):
-                domain_stats[s_type][dom]['correct'] += 1
+#             ans = None
+#             if qid < len(answers_i):
+#                 ans = answers_i[qid].get('answer')
+#             if ans is not None and ans == q.get('correct_answer'):
+#                 domain_stats[s_type][dom]['correct'] += 1
 
-    # Convert defaultdicts to normal dicts
-    for k in ('verbal', 'math'):
-        domain_stats[k] = dict(domain_stats[k])
+#     # Convert defaultdicts to normal dicts
+#     for k in ('verbal', 'math'):
+#         domain_stats[k] = dict(domain_stats[k])
 
-    return domain_stats
+#     return domain_stats
 
 # Calculate Score
 from decimal import Decimal, ROUND_HALF_UP, InvalidOperation
@@ -565,6 +565,72 @@ def _match_answer(q: Dict, user_ans: Any) -> bool:
             if str(c).strip() == u:
                 return True
         return False
+    
+def build_domain_chart_data(sections, questions, section_answers) -> Dict[str, Dict[str, list]]:
+    """
+    Returns structure ready for Chart.js with *no* frontend math:
+    {
+      'verbal': {
+        'labels': [...],
+        'correct': [...],
+        'incorrect': [...],
+        'totals': [...],
+        'pct_correct': [...],   # integers 0..100
+        'pct_incorrect': [...]
+      },
+      'math': { ... }
+    }
+    """
+    # Pre-index questions by (type,module) preserving order
+    by_tm: Dict[tuple, list] = {}
+    for s in sections:
+        key = (s["type"].lower(), s.get("module"))
+        if key not in by_tm:
+            by_tm[key] = [q for q in questions
+                          if (q.get("type","").lower() == key[0]) and (q.get("module") == key[1])]
+
+    # Accumulators per section-type per domain
+    tallies = {
+        "verbal": defaultdict(lambda: {"correct": 0, "total": 0}),
+        "math":   defaultdict(lambda: {"correct": 0, "total": 0}),
+    }
+
+    # Iterate sections in given order so answers align (section_answers[i][qid])
+    for i, s in enumerate(sections):
+        stype = s["type"].lower()
+        smod = s.get("module")
+        qs = by_tm.get((stype, smod), [])
+        ans_list = section_answers[i] if i < len(section_answers) else []
+
+        for qid, q in enumerate(qs):
+            dom = q.get("domain", "Other")
+            tallies[stype][dom]["total"] += 1
+            user_ans = ans_list[qid].get("answer") if qid < len(ans_list) else None
+            if _match_answer(q, user_ans):
+                tallies[stype][dom]["correct"] += 1
+
+    # Convert to arrays (sorted by domain name) with percentages precomputed
+    out: Dict[str, Dict[str, list]] = {}
+    for stype in ("verbal", "math"):
+        rows = []
+        for dom, v in tallies[stype].items():
+            total = v["total"]
+            correct = v["correct"]
+            incorrect = max(0, total - correct)
+            pct_c = int(round(100 * correct / total)) if total else 0
+            pct_i = 100 - pct_c if total else 0
+            rows.append((dom, correct, incorrect, total, pct_c, pct_i))
+        rows.sort(key=lambda r: r[0])  # sort by domain label
+
+        out[stype] = {
+            "labels":        [r[0] for r in rows],
+            "correct":       [r[1] for r in rows],
+            "incorrect":     [r[2] for r in rows],
+            "totals":        [r[3] for r in rows],
+            "pct_correct":   [r[4] for r in rows],
+            "pct_incorrect": [r[5] for r in rows],
+        }
+    return out
 
 def compute_section_scores(sections, questions, section_answers, module_multipliers=None):
     """
@@ -681,7 +747,9 @@ def results(session_id):
     }
 
 
-    domain_stats = build_domain_stats(SECTIONS, ALL_QUESTIONS, section_answers, practice_test_id)
+    # domain_stats = build_domain_stats(SECTIONS, ALL_QUESTIONS, section_answers, practice_test_id)
+    domain_chart_data = build_domain_chart_data(SECTIONS, ALL_QUESTIONS[practice_test_id], section_answers)
+
     scores = compute_section_scores(SECTIONS, ALL_QUESTIONS[practice_test_id], section_answers, module_multipliers)
     
     return render_template(
@@ -689,7 +757,8 @@ def results(session_id):
         verbal_score=scores["verbal_score"],
         math_score=scores["math_score"],
         total_score=scores["total_score"],
-        domain_stats=domain_stats
+        # domain_stats=domain_stats
+        domain_chart_data=domain_chart_data,
     )
 
 if __name__ == '__main__':

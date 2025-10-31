@@ -24,13 +24,13 @@
 <hr class="my-8 border-gray-300">
 
 
-  <!-- Domain Performance (100% stacked bars) -->
+<!-- Domain Performance (100% stacked bars; data precomputed in backend) -->
 <h3 class="text-xl font-bold mb-2 mt-6">Domain Performance</h3>
 <p class="text-sm text-gray-600 mb-4">Share of correct vs incorrect by domain (per section)</p>
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
   <div class="bg-white p-4 rounded shadow">
-    <h4 class="font-semibold mb-2">Reading & Writing</h4>
+    <h4 class="font-semibold mb-2">Reading &amp; Writing</h4>
     <div style="height: 360px">
       <canvas id="verbalDomainStacked"></canvas>
     </div>
@@ -43,58 +43,32 @@
   </div>
 </div>
 
-<!-- Chart.js (CDN) -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-
 <script>
-  // Data from backend
-  const domainStats = {{ domain_stats|tojson }};
+  // Precomputed arrays from backend (no frontend math)
+  const dc = {{ domain_chart_data|tojson }};
 
-  // Convert {domain: {correct,total}} -> sorted labels + % correct/incorrect + raw
-  function prep(statsObj) {
-    const rows = Object.entries(statsObj || {}).map(([domain, v]) => {
-      const total = v?.total || 0;
-      const correct = v?.correct || 0;
-      const incorrect = Math.max(0, total - correct);
-      const pCorr = total ? (100 * correct / total) : 0;
-      const pInc  = total ? (100 * incorrect / total) : 0;
-      return { domain, total, correct, incorrect, pCorr, pInc };
-    }).sort((a, b) => a.domain.localeCompare(b.domain));
-
-    return {
-      labels: rows.map(r => r.domain),
-      pCorr:  rows.map(r => Math.round(r.pCorr)),
-      pInc:   rows.map(r => Math.round(r.pInc)),
-      corr:   rows.map(r => r.correct),
-      inc:    rows.map(r => r.incorrect),
-      totals: rows.map(r => r.total),
-    };
-  }
-
-  const verbal = prep(domainStats.verbal || {});
-  const math   = prep(domainStats.math   || {});
-
-  function stackedBar(canvasId, data) {
+  function stackedBar(canvasId, labels, pctCorrect, pctIncorrect, correct, incorrect, totals) {
     const ctx = document.getElementById(canvasId).getContext('2d');
     return new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: data.labels,
+        labels: labels,
         datasets: [
-          { label: '% Correct',   data: data.pCorr, stack: 'pct' },
-          { label: '% Incorrect', data: data.pInc,  stack: 'pct' }
+          { label: '% Correct',   data: pctCorrect,   stack: 'pct' },
+          { label: '% Incorrect', data: pctIncorrect, stack: 'pct' }
         ]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        indexAxis: 'y',                 // horizontal bars
+        indexAxis: 'y',
         scales: {
           x: {
             beginAtZero: true,
             max: 100,
-            ticks: { callback: v => v + '%' },
             stacked: true,
+            ticks: { callback: v => v + '%' },
             title: { display: true, text: 'Percent' }
           },
           y: { stacked: true, ticks: { autoSkip: false } }
@@ -107,9 +81,9 @@
                 const i = ctx.dataIndex;
                 const label = ctx.dataset.label;
                 if (label.includes('Correct')) {
-                  return `${label}: ${ctx.raw}%  (${data.corr[i]}/${data.totals[i]})`;
+                  return `${label}: ${ctx.raw}%  (${correct[i]}/${totals[i]})`;
                 } else {
-                  return `${label}: ${ctx.raw}%  (${data.inc[i]}/${data.totals[i]})`;
+                  return `${label}: ${ctx.raw}%  (${incorrect[i]}/${totals[i]})`;
                 }
               }
             }
@@ -119,9 +93,29 @@
     });
   }
 
-  stackedBar('verbalDomainStacked', verbal);
-  stackedBar('mathDomainStacked',   math);
+  // Verbal
+  stackedBar(
+    'verbalDomainStacked',
+    dc.verbal.labels,
+    dc.verbal.pct_correct,
+    dc.verbal.pct_incorrect,
+    dc.verbal.correct,
+    dc.verbal.incorrect,
+    dc.verbal.totals
+  );
+
+  // Math
+  stackedBar(
+    'mathDomainStacked',
+    dc.math.labels,
+    dc.math.pct_correct,
+    dc.math.pct_incorrect,
+    dc.math.correct,
+    dc.math.incorrect,
+    dc.math.totals
+  );
 </script>
+
 
 <br>
 
