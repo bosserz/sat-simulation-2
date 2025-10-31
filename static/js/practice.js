@@ -265,21 +265,21 @@ function loadQuestion(qid) {
             input.setAttribute('pattern', '[0-9./]*');            // form validation on submit
             input.setAttribute('title', "Only numbers, '/', and '.' are allowed");
 
-            const allowed = /^[0-9./]*$/;
+            const allowed = /^[0-9./-]*$/;
 
             // Block bad keystrokes but allow control keys
             input.addEventListener('keydown', (e) => {
                 const ctrlKeys = ['Backspace','Delete','ArrowLeft','ArrowRight','Home','End','Tab','Enter'];
                 if (ctrlKeys.includes(e.key) || (e.ctrlKey || e.metaKey)) return;
-                if (!/[0-9/.]/.test(e.key)) e.preventDefault();
+                if (!/[0-9/.-]/.test(e.key)) e.preventDefault();
             });
 
             // Clean pasted/IME text
-            const sanitize = (el) => { el.value = el.value.replace(/[^0-9./]/g, ''); };
+            const sanitize = (el) => { el.value = el.value.replace(/[^0-9./-]/g, ''); };
             input.addEventListener('paste', (e) => {
                 e.preventDefault();
                 const text = (e.clipboardData || window.clipboardData).getData('text');
-                const cleaned = text.replace(/[^0-9./]/g, '');
+                const cleaned = text.replace(/[^0-9./-]/g, '');
                 document.execCommand('insertText', false, cleaned);
             });
             input.addEventListener('input', () => {
