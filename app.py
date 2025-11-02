@@ -414,51 +414,52 @@ def break_page():
     session['new_test'] = False  # Ensure new_test flag is reset
     return render_template('break.html', next_section=SECTIONS[test_session.current_section]['name'])
 
-# @app.route('/results/<int:session_id>')
-# def results(session_id):
-#     if 'user_id' not in session:
-#         flash('Please log in to view results.')
-#         return redirect(url_for('login'))
+# Full Results
+@app.route('/get_full_results/<int:session_id>')
+def get_full_results(session_id):
+    if 'user_id' not in session:
+        flash('Please log in to view results.')
+        return redirect(url_for('login'))
     
-#     test_session = TestSession.query.get_or_404(session_id)
-#     if test_session.user_id != session['user_id']:
-#         flash('Unauthorized access.')
-#         return redirect(url_for('dashboard'))
+    test_session = TestSession.query.get_or_404(session_id)
+    if test_session.user_id != session['user_id']:
+        flash('Unauthorized access.')
+        return redirect(url_for('dashboard'))
     
-#     practice_test_id = test_session.practice_test_id
-#     answers = json.loads(test_session.answers)
-#     marked = json.loads(test_session.marked_for_review)
+    practice_test_id = test_session.practice_test_id
+    answers = json.loads(test_session.answers)
+    marked = json.loads(test_session.marked_for_review)
     
-#     # Calculate section scores
-#     section_scores = {}
-#     section_answers = {}
-#     for section_idx in range(len(SECTIONS)):
-#         section_questions = get_questions_for_section(section_idx, practice_test_id)
-#         section_score = 0
-#         section_ans = {}
-#         for qid in range(len(section_questions)):
-#             answer_key = f"{section_idx}_{qid}"
-#             ans = answers.get(answer_key)
-#             if ans and section_questions[qid]['correct_answer'] == ans:
-#                 section_score += 1
-#             section_ans[qid] = {
-#                 'answer': ans,
-#                 'marked': marked.get(answer_key, False)
-#             }
-#         section_scores[section_idx] = section_score
-#         section_answers[section_idx] = section_ans
+    # Calculate section scores
+    section_scores = {}
+    section_answers = {}
+    for section_idx in range(len(SECTIONS)):
+        section_questions = get_questions_for_section(section_idx, practice_test_id)
+        section_score = 0
+        section_ans = {}
+        for qid in range(len(section_questions)):
+            answer_key = f"{section_idx}_{qid}"
+            ans = answers.get(answer_key)
+            if ans and section_questions[qid]['correct_answer'] == ans:
+                section_score += 1
+            section_ans[qid] = {
+                'answer': ans,
+                'marked': marked.get(answer_key, False)
+            }
+        section_scores[section_idx] = section_score
+        section_answers[section_idx] = section_ans
 
-#     # result = supabase.table("questions").select("*").eq("test", practice_test_id).order("id").execute()
-#     # questions = result.data
+    # result = supabase.table("questions").select("*").eq("test", practice_test_id).order("id").execute()
+    # questions = result.data
     
-#     return render_template(
-#         'results.html',
-#         score=test_session.score,
-#         section_scores=section_scores,
-#         section_answers=section_answers,
-#         sections=SECTIONS,
-#         questions=ALL_QUESTIONS[practice_test_id]
-#     )
+    return render_template(
+        'results.html',
+        score=test_session.score,
+        section_scores=section_scores,
+        section_answers=section_answers,
+        sections=SECTIONS,
+        questions=ALL_QUESTIONS[practice_test_id]
+    )
 
 from collections import defaultdict
 
@@ -769,6 +770,144 @@ def results(session_id):
         # domain_stats=domain_stats
         domain_chart_data=domain_chart_data,
     )
+
+# app.py
+from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
+from fractions import Fraction
+from markupsafe import Markup, escape
+import json, re
+from html import unescape as html_unescape
+
+# ---------- Numeric helpers ----------
+def _new_normalize_numeric(val):
+    if val is None:
+        return None
+    if isinstance(val, (int, float, Decimal)):
+        try:
+            d = Decimal(str(val))
+            return d.quantize(Decimal('0.0001'), rounding=ROUND_HALF_UP)
+        except InvalidOperation:
+            return None
+    s = str(val).strip()
+    if not s:
+        return None
+    if '/' in s:
+        try:
+            frac = Fraction(s)
+            d = Decimal(frac.numerator) / Decimal(frac.denominator)
+            return d.quantize(Decimal('0.0001'), rounding=ROUND_HALF_UP)
+        except Exception:
+            pass
+    try:
+        d = Decimal(s)
+        return d.quantize(Decimal('0.0001'), rounding=ROUND_HALF_UP)
+    except InvalidOperation:
+        return None
+
+def _equal_numeric(a, b):
+    da, db = _new_normalize_numeric(a), _new_normalize_numeric(b)
+    return (da is not None) and (db is not None) and (da == db)
+
+# ---------- Text normalization (for MCQ string match) ----------
+_TAG_RE = re.compile(r"<[^>]+>")
+
+def _norm_text(x):
+    s = str(x)
+    s = html_unescape(s)
+    s = _TAG_RE.sub("", s)           # strip HTML tags if any
+    s = re.sub(r"\s+", " ", s)       # collapse spaces
+    return s.strip().lower()
+
+# ---------- Parse correct_answer into a uniform list ----------
+def _as_iterable_correct_values(correct, is_mcq: bool):
+    """
+    Return a list of acceptable values.
+
+    MCQ:
+      - list/tuple -> list
+      - JSON list string -> parsed list
+      - ANY other string -> [string as-is]  (don't split by commas!)
+    Fill-in:
+      - list/tuple -> list
+      - JSON list string -> parsed list
+      - comma-separated string -> split into list
+      - otherwise -> [value]
+    """
+    if isinstance(correct, (list, tuple)):
+        return list(correct)
+
+    if isinstance(correct, str):
+        cs = correct.strip()
+        # JSON-like list?
+        if cs.startswith('[') and cs.endswith(']'):
+            try:
+                loaded = json.loads(cs)
+                if isinstance(loaded, list):
+                    return loaded
+            except Exception:
+                pass
+
+        if is_mcq:
+            # Single string even if it contains commas (e.g., "Paris, France")
+            return [correct]
+
+        # Fill-in: allow comma-separated multi-answers
+        if ',' in cs:
+            parts = [p.strip() for p in cs.split(',')]
+            # if splitting produced >1, treat as multi
+            if len(parts) > 1:
+                return parts
+
+        return [correct]
+
+    # other scalars
+    return [correct]
+
+# ---------- Correctness ----------
+def is_correct_answer(q, user_ans):
+    if user_ans is None or str(user_ans).strip() == '':
+        return False
+
+    correct_raw = q.get('correct_answer')
+    is_mcq = bool(q.get('options'))
+
+    acceptable = _as_iterable_correct_values(correct_raw, is_mcq=is_mcq)
+
+    if is_mcq:
+        # "No correct answer" override
+        if any(isinstance(c, str) and _norm_text(c) == "no correct answer" for c in acceptable):
+            return True
+        ua = _norm_text(user_ans)
+        return any(_norm_text(c) == ua for c in acceptable)
+
+    # Fill-in: numeric any-of
+    return any(_equal_numeric(c, user_ans) for c in acceptable)
+
+# ---------- Display ----------
+def correct_answer_display(q):
+    correct_raw = q.get('correct_answer')
+    is_mcq = bool(q.get('options'))
+    acceptable = _as_iterable_correct_values(correct_raw, is_mcq=is_mcq)
+
+    if is_mcq and any(isinstance(c, str) and _norm_text(c) == "no correct answer" for c in acceptable):
+        return Markup('No correct answer <em>(any choice accepted)</em>')
+
+    rendered = []
+    for c in acceptable:
+        if isinstance(c, str):
+            rendered.append(Markup(c))     # trust your content; use escape(c) if untrusted
+        else:
+            rendered.append(escape(str(c)))
+    return Markup(', ').join(rendered)
+
+# Make available to Jinja
+app.jinja_env.globals.update(
+    is_correct_answer=is_correct_answer,
+    correct_answer_display=correct_answer_display,
+    normalize_numeric=_new_normalize_numeric
+)
+
+
 
 if __name__ == '__main__':
     with app.app_context():

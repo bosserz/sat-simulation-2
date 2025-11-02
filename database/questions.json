@@ -523,7 +523,7 @@
         "passage": null,
         "question": "If \\( \\frac{8}{x} = 5 \\), what is the value of \\(8x\\)?",
         "options": [],
-        "correct_answer": 0.2,
+        "correct_answer": 12.8,
         "image": null,
         "equation": null
     },
@@ -594,7 +594,7 @@
         "passage": null,
         "question": "Line \\(𝑘\\) is defined by \\(𝑦=−173𝑥+5\\). Line \\(𝑗\\)\n is perpendicular to line \\(𝑘\\) in the \\(xy\\)-plane. What is the slope of line \\(𝑗\\)?",
         "options": [],
-        "correct_answer": "3/17",
+        "correct_answer": "1/173",
         "image": null,
         "equation": null
     },
@@ -1429,7 +1429,7 @@
         "passage": null,
         "question": "<p class=\"text-center\">\\( 13(x+6)−12(x+6)=−8 \\)</p>\n<br>\nWhat value of \\(x\\) is the solution to the given equation?",
         "options": [],
-        "correct_answer": 42,
+        "correct_answer": -14,
         "image": null,
         "equation": null
     },
@@ -1505,7 +1505,7 @@
             "\\(\\frac{43}{6}\\)",
             "\\(\\frac{344}{3}\\)"
         ],
-        "correct_answer": "\\(\\frac{43}{6}\\)",
+        "correct_answer": "No correct answer",
         "image": null,
         "equation": null
     },
