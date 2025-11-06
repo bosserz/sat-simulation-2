@@ -1,7 +1,38 @@
-{% extends 'base.html' %}
-
-{% block content %}
-  <h2 class="text-2xl font-bold mb-4">เฉลยคำตอบรายข้อ</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intsight - SAT Practice</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='intsight-logo.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@100..700&display=swap" rel="stylesheet">
+    <!-- MathJax for rendering LaTeX equations -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <nav class="bg-intsight text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="{{ url_for('index') }}" class="text-2xl font-bold">
+                <img src="{{ url_for('static', filename='intsight-logo-white.png') }}" style="max-width: 160px;" alt="Intsight Logo">
+            <div>
+                {% if session.username %}
+                    <span class="mr-4">{{ session.username }}</span>
+                    <!-- <a href="{{ url_for('dashboard') }}" class="mr-4">Dashboard</a> -->
+                    <a href="{{ url_for('logout') }}"></a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="mr-4">Login</a>
+                    <!-- <a href="{{ url_for('register') }}">Register</a> -->
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    <div class="container mx-auto p-6">
+        <h2 class="text-2xl font-bold mb-4">เฉลยคำตอบรายข้อ</h2>
 
   <h3 class="text-xl font-bold mb-2">Section Breakdown</h3>
 
@@ -100,4 +131,6 @@
   {% endfor %}
 
   <a href="{{ url_for('dashboard') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Back to Dashboard</a>
-{% endblock %}
+    </div>
+</body>
+</html>
