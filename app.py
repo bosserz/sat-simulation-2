@@ -1453,13 +1453,13 @@ def drill_practice(session_id):
             progress.best_score = max(progress.best_score or 0, accuracy)
             progress.last_attempt_date = datetime.utcnow()
             
-            # Increment completed_sets if this is the last set
-            all_sets_count = DrillSet.query.filter_by(topic_name=drill_set.topic_name).count()
-            completed_sets_count = DrillSession.query.join(DrillSet).filter(
+            # Count unique drill sets completed at least once for this topic
+            completed_set_ids = db.session.query(DrillSession.drill_set_id).join(DrillSet).filter(
                 DrillSession.user_id == session['user_id'],
                 DrillSet.topic_name == drill_set.topic_name,
                 DrillSession.end_time.isnot(None)
-            ).distinct(DrillSet.id).count()
+            ).distinct().subquery()
+            completed_sets_count = db.session.query(completed_set_ids).count()
             
             progress.completed_sets = completed_sets_count
             
@@ -1486,6 +1486,10 @@ def drill_practice(session_id):
             return jsonify(response)
     
     # GET request - serve practice page
+            # Save-only request (next_question is None) — just acknowledge
+            return jsonify({'ok': True})
+    
+        # GET request - serve practice page
     session['drill_session_id'] = session_id
     
     return render_template('drill_practice.html', 

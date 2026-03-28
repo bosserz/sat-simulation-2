@@ -19,7 +19,7 @@
                     <p class="text-lg font-semibold">
                         {% set seconds = session.duration_seconds %}
                         {% if seconds %}
-                            {{ (seconds // 60)|int }}:{{ (seconds % 60)|string.zfill(2) }}
+                            {{ (seconds // 60)|int }}:{{ '%02d' % (seconds % 60) }}
                         {% else %}
                             --:--
                         {% endif %}

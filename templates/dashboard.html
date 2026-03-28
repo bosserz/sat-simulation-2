@@ -131,9 +131,7 @@ async function loadDashboardData() {
                         <div class="bg-gray-200 rounded-full h-2">
                             <div class="bg-green-500 h-2 rounded-full" style="width: ${percent}%"></div>
                         </div>
-                        {% if topic.best_score %}
-                        <p class="text-xs text-gray-600 mt-1">Best: ${Math.round(topic.best_score)}%</p>
-                        {% endif %}
+                        ${topic.best_score ? `<p class="text-xs text-gray-600 mt-1">Best: ${Math.round(topic.best_score)}%</p>` : ''}
                     </div>
                 `;
             }).join('');

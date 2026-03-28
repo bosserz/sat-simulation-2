@@ -1,0 +1,1046 @@
+#!/usr/bin/env python3
+"""
+Generate missing drill questions and add them to questions.json.
+Missing: Literary Inference (20035-20051), Command of Grammar (20055-20078),
+         Algebra (30004-30027), Advanced Math (30031-30051), Geometry (30055-30075)
+"""
+import json
+
+with open('database/questions.json', 'r') as f:
+    data = json.load(f)
+
+existing_ids = {q['question_id'] for q in data.get('skill_questions', [])}
+
+new_questions = [
+    # ========== Literary Inference - Medium (20035-20043) ==========
+    {
+        "question_id": 20035, "type": "verbal", "domain": "Information and Ideas",
+        "skill": "Literary Inference", "level": "Medium",
+        "passage": "Dr. Reeves spent fifteen years studying the migration patterns of Arctic terns, often working in sub-zero temperatures with minimal funding. Her colleagues urged her to pursue more lucrative research, but she replied that the terns' journey from pole to pole was \"the most remarkable feat in the animal kingdom, and someone has to bear witness to it.\"",
+        "question": "Which inference about Dr. Reeves is most strongly supported by the passage?",
+        "options": [
+            "She regrets not pursuing more profitable research",
+            "She is motivated by scientific passion rather than financial reward",
+            "She believes her colleagues are wrong about the value of her work",
+            "She expects to receive recognition for her sacrifices"
+        ],
+        "correct_answer": "She is motivated by scientific passion rather than financial reward"
+    },
+    {
+        "question_id": 20036, "type": "verbal", "domain": "Information and Ideas",
+        "skill": "Literary Inference", "level": "Medium",
+        "passage": "After the storm, villagers found the old lighthouse keeper still at his post. The lighthouse beam had swept the rocky coast all night without interruption, guiding three fishing boats safely into harbor. When asked how he had managed alone, the keeper said only, \"What else would I do?\"",
+        "question": "What can be most reasonably inferred about the lighthouse keeper's character?",
+        "options": [
+            "He performs his duty out of obligation to receive pay",
+            "He is indifferent to the safety of the fishermen",
+            "He takes his responsibilities seriously regardless of difficulty",
+            "He considers his work to be too demanding for one person"
+        ],
+        "correct_answer": "He takes his responsibilities seriously regardless of difficulty"
+    },
+    {
+        "question_id": 20037, "type": "verbal", "domain": "Information and Ideas",
+        "skill": "Literary Inference", "level": "Medium",
+        "passage": "The novel's protagonist, an experienced diplomat, enters peace negotiations expecting the usual stalemate. To her surprise, both delegations arrive with draft agreements already initialed. She studies both documents carefully, noting that each side has conceded points she had spent years demanding. She sets the papers down and stares out the window for a long time.",
+        "question": "What can be inferred about the diplomat's reaction to the pre-drafted agreements?",
+        "options": [
+            "She is relieved that her work is finally over",
+            "She is suspicious of the sudden willingness to compromise",
+            "She is disappointed that the negotiations will not need her skills",
+            "She is overwhelmed because she expected greater resistance"
+        ],
+        "correct_answer": "She is overwhelmed because she expected greater resistance"
+    },
+    {
+        "question_id": 20038, "type": "verbal", "domain": "Information and Ideas",
+        "skill": "Literary Inference", "level": "Medium",
+        "passage": "Critics initially dismissed composer Lena Marsh's debut symphony as \"pleasant but derivative.\" By her third symphony, those same critics were calling her \"the most original voice of her generation.\" Marsh rarely gave interviews, but once said, \"I kept writing. That's all I did.\"",
+        "question": "What does the passage most strongly imply about how Marsh achieved critical recognition?",
+        "options": [
+            "She changed her musical style to please critics",
+            "She developed her voice through persistent practice",
+            "She was influenced by more experienced composers",
+            "She focused on what critics said about derivative work"
+        ],
+        "correct_answer": "She developed her voice through persistent practice"
+    },
+    {
+        "question_id": 20039, "type": "verbal", "domain": "Information and Ideas",
+        "skill": "Literary Inference", "level": "Medium",
+        "passage": "The town's only bookstore had survived two floods, a fire, and the rise of online retailers. Its owner, Mr. Hoffman, refused multiple buyout offers and spent his evenings restoring water-damaged books by hand. When a reporter asked if running the shop was profitable, he smiled and changed the subject.",
+        "question": "What can be inferred about Mr. Hoffman's primary motivation for keeping the bookstore open?",
+        "options": [
+            "He keeps the bookstore open primarily for financial gain",
+            "He values the bookstore for reasons beyond profitability",
+            "He believes online retailers will eventually fail",
+            "He wants to attract media attention for his restoration work"
+        ],
+        "correct_answer": "He values the bookstore for reasons beyond profitability"
+    },
+    {
+        "question_id": 20040, "type": "verbal", "domain": "Information and Ideas",
+        "skill": "Literary Inference", "level": "Medium",
+        "passage": "The research team published results showing that a new drug reduced tumor growth by 40% in mice. The lead researcher cautioned, \"These are early findings. The pathway from mouse model to human treatment is long and often leads nowhere. We should be hopeful but measured in our expectations.\"",
+        "question": "What does the researcher's statement imply about the drug's potential?",
+        "options": [
+            "The drug is unlikely to ever be useful for human patients",
+            "The results are too preliminary to draw any conclusions",
+            "The results are promising but not yet proven for human use",
+            "The drug has already been tested on human subjects"
+        ],
+        "correct_answer": "The results are promising but not yet proven for human use"
+    },
+    {
+        "question_id": 20041, "type": "verbal", "domain": "Information and Ideas",
+        "skill": "Literary Inference", "level": "Medium",
+        "passage": "During the expedition debrief, team leader Priya noted that the summit team had turned back just 200 meters from the peak due to a sudden wind change. Two members expressed frustration; Priya replied, \"We'll be back next year. The mountain isn't going anywhere, but recklessness has a way of making sure climbers don't come back either.\"",
+        "question": "What can be inferred about Priya's philosophy as a leader?",
+        "options": [
+            "She prioritizes speed over safety when near the summit",
+            "She values success above all other considerations",
+            "She believes safety is more important than achieving the goal",
+            "She plans to attempt the summit again without the other team members"
+        ],
+        "correct_answer": "She believes safety is more important than achieving the goal"
+    },
+    {
+        "question_id": 20042, "type": "verbal", "domain": "Information and Ideas",
+        "skill": "Literary Inference", "level": "Medium",
+        "passage": "At the annual fundraising gala, organizer Tomás quietly handed an envelope of cash to the catering staff after the event, explaining it was from \"anonymous donors who wanted to make sure everyone who made tonight possible was recognized.\" The official program listed no such donors.",
+        "question": "What can most reasonably be inferred about the source of the cash?",
+        "options": [
+            "The money was misappropriated from the charity's funds",
+            "Tomás collected the money from the gala's attendees during the event",
+            "Tomás himself likely provided the money and called it an anonymous donation",
+            "The catering staff had previously requested compensation from donors"
+        ],
+        "correct_answer": "Tomás himself likely provided the money and called it an anonymous donation"
+    },
+    {
+        "question_id": 20043, "type": "verbal", "domain": "Information and Ideas",
+        "skill": "Literary Inference", "level": "Medium",
+        "passage": "After years of teaching in underfunded schools, educator Carmen Vega established a tutoring nonprofit that served over 3,000 students in its first decade. When asked what drove her, she said, \"Every kid deserves a fair shot. I've seen too many fall through the cracks simply because no one had the time to explain things twice.\"",
+        "question": "What does the passage imply about the systemic problem Vega's nonprofit addresses?",
+        "options": [
+            "Schools lack qualified teachers who understand educational theory",
+            "Many students fail because they do not apply themselves",
+            "Students in underfunded schools often lack individualized academic support",
+            "Nonprofit organizations are more effective than public schools"
+        ],
+        "correct_answer": "Students in underfunded schools often lack individualized academic support"
+    },
+
+    # ========== Literary Inference - Hard (20044-20051) ==========
+    {
+        "question_id": 20044, "type": "verbal", "domain": "Information and Ideas",
+        "skill": "Literary Inference", "level": "Hard",
+        "passage": "In her memoir, historian Adaeze Okonkwo describes discovering a set of documents in a provincial archive that contradicted the established account of a colonial treaty. She spent two years verifying their authenticity before publishing. A senior colleague warned her that \"upsetting a settled historical narrative rarely wins friends.\" She published anyway.",
+        "question": "Which of the following best describes what the passage implies about Okonkwo's decision to publish?",
+        "options": [
+            "She underestimated the professional consequences of challenging established history",
+            "She prioritized historical accuracy over professional popularity",
+            "She was motivated primarily by the desire to discredit her colleague",
+            "She was unaware that the narrative she challenged was widely accepted"
+        ],
+        "correct_answer": "She prioritized historical accuracy over professional popularity"
+    },
+    {
+        "question_id": 20045, "type": "verbal", "domain": "Information and Ideas",
+        "skill": "Literary Inference", "level": "Hard",
+        "passage": "The city planner's proposal to convert an abandoned factory into affordable housing met with immediate resistance from neighborhood associations who cited concerns about traffic and property values. The planner presented data showing that comparable developments in other cities had no measurable impact on either. The associations voted against the proposal.",
+        "question": "What does the passage most strongly imply about the neighborhood associations' opposition?",
+        "options": [
+            "Their concerns were based on accurate predictions about local traffic",
+            "They lacked access to data about comparable housing developments",
+            "Their opposition was not primarily driven by the stated practical concerns",
+            "They were correct that the development would reduce property values"
+        ],
+        "correct_answer": "Their opposition was not primarily driven by the stated practical concerns"
+    },
+    {
+        "question_id": 20046, "type": "verbal", "domain": "Information and Ideas",
+        "skill": "Literary Inference", "level": "Hard",
+        "passage": "Linguist Farouk Amin spent decades documenting a dying language spoken by fewer than forty elders in a remote mountain community. When asked by a journalist why he devoted his career to preserving something so few people would ever use, Amin replied, \"Every language carries a way of understanding the world that exists nowhere else. When the last speaker goes, that world disappears entirely.\"",
+        "question": "Which inference about Amin's view of language is most strongly supported by his statement?",
+        "options": [
+            "Languages are valuable only when they are spoken by large populations",
+            "A language's worth lies in the unique perspective on reality it encodes",
+            "Preserving languages is more important than allowing them to evolve naturally",
+            "Documentation of a language can never fully capture its living essence"
+        ],
+        "correct_answer": "A language's worth lies in the unique perspective on reality it encodes"
+    },
+    {
+        "question_id": 20047, "type": "verbal", "domain": "Information and Ideas",
+        "skill": "Literary Inference", "level": "Hard",
+        "passage": "The theater troupe performed its experimental play to half-empty houses for six consecutive weeks. Critics were divided: some celebrated its formal innovation; others found it deliberately obscure. At closing night, the director thanked the audience by saying, \"You came, and that is the bravest thing an audience can do — to sit with uncertainty.\"",
+        "question": "What does the director's closing statement suggest about her view of the play's reception?",
+        "options": [
+            "She is disappointed that more critics did not support her work",
+            "She believes the audiences who attended demonstrated intellectual courage",
+            "She feels uncertain whether the play achieved its artistic goals",
+            "She attributes the low attendance to the audience's unwillingness to take risks"
+        ],
+        "correct_answer": "She believes the audiences who attended demonstrated intellectual courage"
+    },
+    {
+        "question_id": 20048, "type": "verbal", "domain": "Information and Ideas",
+        "skill": "Literary Inference", "level": "Hard",
+        "passage": "After inheriting a struggling newspaper, publisher Nadia Stern refused to replace investigative reporters with content aggregators, despite pressure from the board to cut costs. Within two years, the paper had won three regional journalism awards, and its circulation had stabilized. Stern said the choice was \"obvious, though it didn't feel that way at the time.\"",
+        "question": "What does Stern's statement imply about the decision she faced?",
+        "options": [
+            "The correct path was clear to her from the start, but she hesitated",
+            "The decision was difficult under pressure but ultimately proved right",
+            "She regrets not having made the decision sooner to save more money",
+            "She was confident the decision would lead to financial recovery"
+        ],
+        "correct_answer": "The decision was difficult under pressure but ultimately proved right"
+    },
+    {
+        "question_id": 20049, "type": "verbal", "domain": "Information and Ideas",
+        "skill": "Literary Inference", "level": "Hard",
+        "passage": "A 2021 study found that urban gardens established in formerly vacant lots reduced ambient temperatures in surrounding blocks by up to 3°C. Local governments that read the report increased their green space budgets significantly; yet in the neighborhoods with the highest heat-related illness rates, no new gardens were planted.",
+        "question": "What does the passage most strongly imply about the implementation of the study's findings?",
+        "options": [
+            "Local governments lacked sufficient funds to create new gardens",
+            "The benefits of urban gardens were not distributed equitably",
+            "The study's temperature findings were considered inconclusive",
+            "Officials preferred other methods of reducing urban heat"
+        ],
+        "correct_answer": "The benefits of urban gardens were not distributed equitably"
+    },
+    {
+        "question_id": 20050, "type": "verbal", "domain": "Information and Ideas",
+        "skill": "Literary Inference", "level": "Hard",
+        "passage": "The architect designed a public library in a way that eliminated traditional reading rooms in favor of open, flexible spaces. Some patrons missed the quiet alcoves of the old building, while others celebrated the sense of community the new space created. The architect wrote in her design notes: \"Silence was not the point. Access was.\"",
+        "question": "What does the architect's design note most likely imply about her priorities?",
+        "options": [
+            "She believed quiet study spaces were unnecessary in modern libraries",
+            "She prioritized broad accessibility over one particular use of the space",
+            "She was unaware that some patrons would miss quiet reading areas",
+            "She considered community spaces to be architecturally superior to alcoves"
+        ],
+        "correct_answer": "She prioritized broad accessibility over one particular use of the space"
+    },
+    {
+        "question_id": 20051, "type": "verbal", "domain": "Information and Ideas",
+        "skill": "Literary Inference", "level": "Hard",
+        "passage": "Ecologist Miran Toth discovered that a seemingly barren post-industrial site contained a surprisingly diverse population of native beetles. Developers had planned to pave the site; environmentalists had not previously advocated for its protection because it appeared degraded. Toth's findings prompted a halt to construction and a reclassification of the site as a habitat.",
+        "question": "Which of the following best describes what Toth's discovery implies about ecological assessment?",
+        "options": [
+            "Industrial sites are generally more biodiverse than natural habitats",
+            "Biodiversity cannot be reliably measured by visual appearance alone",
+            "Developers frequently ignore existing ecological surveys before construction",
+            "Environmentalists should conduct surveys only in visibly healthy ecosystems"
+        ],
+        "correct_answer": "Biodiversity cannot be reliably measured by visual appearance alone"
+    },
+
+    # ========== Command of Grammar - Easy continuation (20055-20061) ==========
+    {
+        "question_id": 20055, "type": "verbal", "domain": "Standard English Conventions",
+        "skill": "Command of Grammar", "level": "Easy",
+        "passage": "Neither the coach nor the players <span class=\"blank\">______</span> happy with the final score.",
+        "question": "Which choice completes the sentence correctly?",
+        "options": ["was", "were", "is", "are"],
+        "correct_answer": "were"
+    },
+    {
+        "question_id": 20056, "type": "verbal", "domain": "Standard English Conventions",
+        "skill": "Command of Grammar", "level": "Easy",
+        "passage": "The team <span class=\"blank\">______</span> its best to complete the project on time.",
+        "question": "Which choice completes the sentence correctly?",
+        "options": ["do", "did", "done", "does"],
+        "correct_answer": "did"
+    },
+    {
+        "question_id": 20057, "type": "verbal", "domain": "Standard English Conventions",
+        "skill": "Command of Grammar", "level": "Easy",
+        "passage": "Each of the students <span class=\"blank\">______</span> required to submit a report.",
+        "question": "Which choice completes the sentence correctly?",
+        "options": ["are", "were", "is", "have been"],
+        "correct_answer": "is"
+    },
+    {
+        "question_id": 20058, "type": "verbal", "domain": "Standard English Conventions",
+        "skill": "Command of Grammar", "level": "Easy",
+        "passage": "The library, along with its annexes, <span class=\"blank\">______</span> open until midnight.",
+        "question": "Which choice completes the sentence correctly?",
+        "options": ["remain", "are", "remains", "have remained"],
+        "correct_answer": "remains"
+    },
+    {
+        "question_id": 20059, "type": "verbal", "domain": "Standard English Conventions",
+        "skill": "Command of Grammar", "level": "Easy",
+        "passage": "She gave the award to <span class=\"blank\">______</span> had the highest score.",
+        "question": "Which choice completes the sentence correctly?",
+        "options": ["whomever", "whoever", "who", "whom"],
+        "correct_answer": "whoever"
+    },
+    {
+        "question_id": 20060, "type": "verbal", "domain": "Standard English Conventions",
+        "skill": "Command of Grammar", "level": "Easy",
+        "passage": "The dog <span class=\"blank\">______</span> its tail enthusiastically when it saw its owner.",
+        "question": "Which choice completes the sentence correctly?",
+        "options": ["wag", "wagged", "wagging", "wags"],
+        "correct_answer": "wagged"
+    },
+    {
+        "question_id": 20061, "type": "verbal", "domain": "Standard English Conventions",
+        "skill": "Command of Grammar", "level": "Easy",
+        "passage": "Between you and <span class=\"blank\">______</span>, the plan seems unrealistic.",
+        "question": "Which choice completes the sentence correctly?",
+        "options": ["I", "me", "myself", "mine"],
+        "correct_answer": "me"
+    },
+
+    # ========== Command of Grammar - Medium (20062-20070) ==========
+    {
+        "question_id": 20062, "type": "verbal", "domain": "Standard English Conventions",
+        "skill": "Command of Grammar", "level": "Medium",
+        "passage": "The committee's report, which had been revised multiple times, <span class=\"blank\">______</span> finally approved after months of deliberation.",
+        "question": "Which choice completes the sentence correctly?",
+        "options": ["were", "was", "have been", "are"],
+        "correct_answer": "was"
+    },
+    {
+        "question_id": 20063, "type": "verbal", "domain": "Standard English Conventions",
+        "skill": "Command of Grammar", "level": "Medium",
+        "passage": "Running along the trail at dawn, <span class=\"blank\">______</span> the distant mountains appeared through the mist.",
+        "question": "Which choice corrects the dangling modifier in this sentence?",
+        "options": [
+            "Running along the trail at dawn, the distant mountains appeared through the mist.",
+            "The distant mountains, running along the trail at dawn, appeared through the mist.",
+            "Running along the trail at dawn, she spotted the distant mountains through the mist.",
+            "The mist cleared the distant mountains while running along the trail at dawn."
+        ],
+        "correct_answer": "Running along the trail at dawn, she spotted the distant mountains through the mist."
+    },
+    {
+        "question_id": 20064, "type": "verbal", "domain": "Standard English Conventions",
+        "skill": "Command of Grammar", "level": "Medium",
+        "passage": "The professor insists that every student <span class=\"blank\">______</span> a research proposal before the seminar begins.",
+        "question": "Which choice completes the sentence correctly?",
+        "options": ["submits", "submit", "submitted", "has submitted"],
+        "correct_answer": "submit"
+    },
+    {
+        "question_id": 20065, "type": "verbal", "domain": "Standard English Conventions",
+        "skill": "Command of Grammar", "level": "Medium",
+        "passage": "The data <span class=\"blank\">______</span> collected from three independent sources; however, the conclusions remain contested.",
+        "question": "Which choice correctly uses the semicolon and completes the sentence?",
+        "options": [
+            "data were collected from three independent sources; however,",
+            "data was collected from three independent sources, however,",
+            "data were collected, from three independent sources; however,",
+            "data, was collected from three independent sources; however,"
+        ],
+        "correct_answer": "data were collected from three independent sources; however,"
+    },
+    {
+        "question_id": 20066, "type": "verbal", "domain": "Standard English Conventions",
+        "skill": "Command of Grammar", "level": "Medium",
+        "passage": "Despite working long hours, the researchers <span class=\"blank\">______</span> complete their analysis before the deadline.",
+        "question": "Which choice completes the sentence correctly?",
+        "options": ["couldn't barely", "could hardly", "could not barely", "barely could not"],
+        "correct_answer": "could hardly"
+    },
+    {
+        "question_id": 20067, "type": "verbal", "domain": "Standard English Conventions",
+        "skill": "Command of Grammar", "level": "Medium",
+        "passage": "The novel explores themes of identity and belonging<span class=\"blank\">______</span> it also raises questions about memory and truth.",
+        "question": "Which punctuation correctly joins the two independent clauses?",
+        "options": [
+            "; it also raises",
+            ", it also raises",
+            ". It also raises",
+            ": it also raises"
+        ],
+        "correct_answer": "; it also raises"
+    },
+    {
+        "question_id": 20068, "type": "verbal", "domain": "Standard English Conventions",
+        "skill": "Command of Grammar", "level": "Medium",
+        "passage": "The CEO, together with board members and senior advisors, <span class=\"blank\">______</span> the quarterly earnings report.",
+        "question": "Which choice completes the sentence correctly?",
+        "options": ["approve", "have approved", "approves", "are approving"],
+        "correct_answer": "approves"
+    },
+    {
+        "question_id": 20069, "type": "verbal", "domain": "Standard English Conventions",
+        "skill": "Command of Grammar", "level": "Medium",
+        "passage": "If the experiment <span class=\"blank\">______</span> conducted properly, the results would have been more reliable.",
+        "question": "Which choice completes the sentence correctly?",
+        "options": ["was", "were", "had been", "would be"],
+        "correct_answer": "had been"
+    },
+    {
+        "question_id": 20070, "type": "verbal", "domain": "Standard English Conventions",
+        "skill": "Command of Grammar", "level": "Medium",
+        "passage": "The journalist wrote that the official <span class=\"blank\">______</span> the documents the following day.",
+        "question": "Which choice completes the sentence correctly in reported speech?",
+        "options": ["will release", "would release", "releases", "is releasing"],
+        "correct_answer": "would release"
+    },
+
+    # ========== Command of Grammar - Hard (20071-20078) ==========
+    {
+        "question_id": 20071, "type": "verbal", "domain": "Standard English Conventions",
+        "skill": "Command of Grammar", "level": "Hard",
+        "passage": "The policy's architects anticipated that critics would object<span class=\"blank\">______</span> they designed safeguards to address the most predictable objections.",
+        "question": "Which transition word or phrase best logically connects the two clauses?",
+        "options": ["; consequently,", "; nevertheless,", ", and so", ", because"],
+        "correct_answer": "; consequently,"
+    },
+    {
+        "question_id": 20072, "type": "verbal", "domain": "Standard English Conventions",
+        "skill": "Command of Grammar", "level": "Hard",
+        "passage": "Not until the third act does the playwright reveal the protagonist's true motive<span class=\"blank\">______</span> the audience to reconsider every earlier scene.",
+        "question": "Which choice correctly completes the sentence?",
+        "options": [
+            ", forcing",
+            "; and forcing",
+            ", forced",
+            ". Forcing"
+        ],
+        "correct_answer": ", forcing"
+    },
+    {
+        "question_id": 20073, "type": "verbal", "domain": "Standard English Conventions",
+        "skill": "Command of Grammar", "level": "Hard",
+        "passage": "The study's authors acknowledged that the sample size, <span class=\"blank\">______</span> the study's generalizability.",
+        "question": "Which choice correctly completes the sentence?",
+        "options": [
+            "while adequate for an initial inquiry, limited",
+            "while adequate for an initial inquiry limited",
+            "although being adequate for an initial inquiry, limiting",
+            "adequate for an initial inquiry but limiting"
+        ],
+        "correct_answer": "while adequate for an initial inquiry, limited"
+    },
+    {
+        "question_id": 20074, "type": "verbal", "domain": "Standard English Conventions",
+        "skill": "Command of Grammar", "level": "Hard",
+        "passage": "Having spent two decades in the field, <span class=\"blank\">______</span>",
+        "question": "Which choice avoids a dangling modifier and correctly completes the sentence?",
+        "options": [
+            "the landscape's changes were unmistakable to the geologist.",
+            "the geologist found the landscape's changes unmistakable.",
+            "unmistakable changes in the landscape were noted.",
+            "changes in the landscape became unmistakable."
+        ],
+        "correct_answer": "the geologist found the landscape's changes unmistakable."
+    },
+    {
+        "question_id": 20075, "type": "verbal", "domain": "Standard English Conventions",
+        "skill": "Command of Grammar", "level": "Hard",
+        "passage": "The treaty, ratified by twelve nations in 1987, established a framework for environmental cooperation<span class=\"blank\">______</span> its enforcement mechanisms have been criticized as insufficient.",
+        "question": "Which punctuation correctly joins the two clauses while maintaining the contrast?",
+        "options": [
+            "; however,",
+            ", but",
+            "; therefore,",
+            ", and"
+        ],
+        "correct_answer": "; however,"
+    },
+    {
+        "question_id": 20076, "type": "verbal", "domain": "Standard English Conventions",
+        "skill": "Command of Grammar", "level": "Hard",
+        "passage": "Seldom <span class=\"blank\">______</span> a policy proposal receive unanimous support from economists of different schools.",
+        "question": "Which choice correctly completes the inverted sentence structure?",
+        "options": ["does", "do", "has", "have"],
+        "correct_answer": "does"
+    },
+    {
+        "question_id": 20077, "type": "verbal", "domain": "Standard English Conventions",
+        "skill": "Command of Grammar", "level": "Hard",
+        "passage": "The board voted to postpone the merger<span class=\"blank\">______</span> the legal team had completed its due diligence review.",
+        "question": "Which choice most precisely expresses that the postponement is conditional?",
+        "options": ["until", "while", "although", "because"],
+        "correct_answer": "until"
+    },
+    {
+        "question_id": 20078, "type": "verbal", "domain": "Standard English Conventions",
+        "skill": "Command of Grammar", "level": "Hard",
+        "passage": "The archivist discovered correspondence that cast doubt on the previously accepted timeline<span class=\"blank\">______</span> she submitted her findings to three peer-reviewed journals before making any public statement.",
+        "question": "Which choice best connects the clauses to show that caution preceded disclosure?",
+        "options": ["; nevertheless,", "; consequently,", "; moreover,", "; accordingly,"],
+        "correct_answer": "; accordingly,"
+    },
+
+    # ========== Algebra - Easy continuation (30004-30008) ==========
+    {
+        "question_id": 30004, "type": "math", "domain": "Algebra",
+        "skill": "Algebra", "level": "Easy",
+        "passage": "Solve: 3x − 7 = 14",
+        "question": "What is x?",
+        "options": ["5", "6", "7", "8"],
+        "correct_answer": "7"
+    },
+    {
+        "question_id": 30005, "type": "math", "domain": "Algebra",
+        "skill": "Algebra", "level": "Easy",
+        "passage": "A store sells notebooks for $3 each. If Maria buys n notebooks and pays with a $20 bill, the change she receives is 20 − 3n.",
+        "question": "How much change does Maria receive if she buys 4 notebooks?",
+        "options": ["$4", "$6", "$8", "$12"],
+        "correct_answer": "$8"
+    },
+    {
+        "question_id": 30006, "type": "math", "domain": "Algebra",
+        "skill": "Algebra", "level": "Easy",
+        "passage": "The equation 2(x + 4) = 18 represents a real-world situation.",
+        "question": "What is the value of x?",
+        "options": ["5", "6", "7", "9"],
+        "correct_answer": "5"
+    },
+    {
+        "question_id": 30007, "type": "math", "domain": "Algebra",
+        "skill": "Algebra", "level": "Easy",
+        "passage": "A line passes through points (0, 2) and (3, 8).",
+        "question": "What is the slope of the line?",
+        "options": ["1", "2", "3", "6"],
+        "correct_answer": "2"
+    },
+    {
+        "question_id": 30008, "type": "math", "domain": "Algebra",
+        "skill": "Algebra", "level": "Easy",
+        "passage": "If y = 4x − 3, what is the value of y when x = 5?",
+        "question": "What is y?",
+        "options": ["13", "17", "20", "23"],
+        "correct_answer": "17"
+    },
+
+    # ========== Algebra - Medium (30009-30018) ==========
+    {
+        "question_id": 30009, "type": "math", "domain": "Algebra",
+        "skill": "Algebra", "level": "Medium",
+        "passage": "Solve the system:\nx + y = 10\nx − y = 4",
+        "question": "What is the value of x?",
+        "options": ["3", "5", "7", "6"],
+        "correct_answer": "7"
+    },
+    {
+        "question_id": 30010, "type": "math", "domain": "Algebra",
+        "skill": "Algebra", "level": "Medium",
+        "passage": "A car rental company charges a flat fee of $25 plus $0.15 per mile driven. The total cost for a trip is C = 25 + 0.15m where m is the number of miles.",
+        "question": "If a customer's total cost was $55, how many miles did they drive?",
+        "options": ["150", "175", "200", "250"],
+        "correct_answer": "200"
+    },
+    {
+        "question_id": 30011, "type": "math", "domain": "Algebra",
+        "skill": "Algebra", "level": "Medium",
+        "passage": "The inequality 3x + 5 > 20 represents a constraint.",
+        "question": "Which value of x satisfies the inequality?",
+        "options": ["4", "5", "6", "3"],
+        "correct_answer": "6"
+    },
+    {
+        "question_id": 30012, "type": "math", "domain": "Algebra",
+        "skill": "Algebra", "level": "Medium",
+        "passage": "Two lines are defined by y = 2x + 1 and y = −x + 7.",
+        "question": "At what x-value do the lines intersect?",
+        "options": ["1", "2", "3", "4"],
+        "correct_answer": "2"
+    },
+    {
+        "question_id": 30013, "type": "math", "domain": "Algebra",
+        "skill": "Algebra", "level": "Medium",
+        "passage": "A factory produces widgets at a cost of C(n) = 500 + 12n, where n is the number of widgets produced and C is the total cost in dollars.",
+        "question": "What is the cost per widget when 100 widgets are produced?",
+        "options": ["$12.00", "$13.00", "$17.00", "$25.00"],
+        "correct_answer": "$17.00"
+    },
+    {
+        "question_id": 30014, "type": "math", "domain": "Algebra",
+        "skill": "Algebra", "level": "Medium",
+        "passage": "The sum of three consecutive even integers is 78.",
+        "question": "What is the largest of the three integers?",
+        "options": ["24", "26", "28", "30"],
+        "correct_answer": "28"
+    },
+    {
+        "question_id": 30015, "type": "math", "domain": "Algebra",
+        "skill": "Algebra", "level": "Medium",
+        "passage": "If 2(3x − 4) = 5x + 1, what is x?",
+        "question": "What is the value of x?",
+        "options": ["7", "8", "9", "10"],
+        "correct_answer": "9"
+    },
+    {
+        "question_id": 30016, "type": "math", "domain": "Algebra",
+        "skill": "Algebra", "level": "Medium",
+        "passage": "A train travels at a constant speed of 60 mph. The distance d (in miles) after t hours is d = 60t.",
+        "question": "How many hours does it take for the train to travel 270 miles?",
+        "options": ["3.5", "4", "4.5", "5"],
+        "correct_answer": "4.5"
+    },
+    {
+        "question_id": 30017, "type": "math", "domain": "Algebra",
+        "skill": "Algebra", "level": "Medium",
+        "passage": "Solve: |2x − 6| = 8",
+        "question": "Which of the following is a solution?",
+        "options": ["x = 1", "x = 7", "x = 5", "x = 3"],
+        "correct_answer": "x = 7"
+    },
+    {
+        "question_id": 30018, "type": "math", "domain": "Algebra",
+        "skill": "Algebra", "level": "Medium",
+        "passage": "The graph of a linear function passes through (−2, 3) and (4, 9).",
+        "question": "What is the y-intercept of the line?",
+        "options": ["3", "4", "5", "6"],
+        "correct_answer": "5"
+    },
+
+    # ========== Algebra - Hard (30019-30027) ==========
+    {
+        "question_id": 30019, "type": "math", "domain": "Algebra",
+        "skill": "Algebra", "level": "Hard",
+        "passage": "A small business's monthly profit P (in dollars) is modeled by P = −2n² + 80n − 600, where n is the number of units sold.",
+        "question": "What is the maximum monthly profit?",
+        "options": ["$100", "$200", "$300", "$400"],
+        "correct_answer": "$200"
+    },
+    {
+        "question_id": 30020, "type": "math", "domain": "Algebra",
+        "skill": "Algebra", "level": "Hard",
+        "passage": "The system below has no solution:\n3x + ky = 12\n6x + 4y = 20",
+        "question": "What value of k makes the system have no solution?",
+        "options": ["1", "2", "3", "4"],
+        "correct_answer": "2"
+    },
+    {
+        "question_id": 30021, "type": "math", "domain": "Algebra",
+        "skill": "Algebra", "level": "Hard",
+        "passage": "An investment of $P grows according to the formula A = P(1 + r)^t, where r is the annual rate and t is time in years. An investment of $1,000 grows to $1,210 after 2 years.",
+        "question": "What is the annual interest rate r?",
+        "options": ["5%", "10%", "11%", "21%"],
+        "correct_answer": "10%"
+    },
+    {
+        "question_id": 30022, "type": "math", "domain": "Algebra",
+        "skill": "Algebra", "level": "Hard",
+        "passage": "The function f(x) = ax + b passes through (2, 5) and has a slope of 3.",
+        "question": "What is the value of b?",
+        "options": ["−1", "0", "1", "2"],
+        "correct_answer": "−1"
+    },
+    {
+        "question_id": 30023, "type": "math", "domain": "Algebra",
+        "skill": "Algebra", "level": "Hard",
+        "passage": "Solve the inequality: −3(x − 4) ≤ 2x + 7",
+        "question": "What is the solution?",
+        "options": ["x ≥ 1", "x ≤ 1", "x ≥ −1", "x ≤ −1"],
+        "correct_answer": "x ≥ 1"
+    },
+    {
+        "question_id": 30024, "type": "math", "domain": "Algebra",
+        "skill": "Algebra", "level": "Hard",
+        "passage": "Two trains leave cities 300 miles apart, traveling toward each other. Train A travels at 70 mph and Train B at 80 mph.",
+        "question": "After how many hours do the trains meet?",
+        "options": ["1.5", "2", "2.5", "3"],
+        "correct_answer": "2"
+    },
+    {
+        "question_id": 30025, "type": "math", "domain": "Algebra",
+        "skill": "Algebra", "level": "Hard",
+        "passage": "Given that 2^(x+1) = 32, what is x?",
+        "question": "What is the value of x?",
+        "options": ["3", "4", "5", "6"],
+        "correct_answer": "4"
+    },
+    {
+        "question_id": 30026, "type": "math", "domain": "Algebra",
+        "skill": "Algebra", "level": "Hard",
+        "passage": "The ratio of boys to girls in a class is 3:5. If there are 40 students total, how many boys are there?",
+        "question": "How many boys are in the class?",
+        "options": ["12", "15", "18", "24"],
+        "correct_answer": "15"
+    },
+    {
+        "question_id": 30027, "type": "math", "domain": "Algebra",
+        "skill": "Algebra", "level": "Hard",
+        "passage": "In a mixture problem, Solution A is 20% acid and Solution B is 50% acid. How many liters of Solution A must be mixed with 10 liters of Solution B to get a 30% acid mixture?",
+        "question": "How many liters of Solution A are needed?",
+        "options": ["10", "15", "20", "25"],
+        "correct_answer": "20"
+    },
+
+    # ========== Advanced Math - Easy continuation (30031-30034) ==========
+    {
+        "question_id": 30031, "type": "math", "domain": "Advanced Math",
+        "skill": "Advanced Math", "level": "Easy",
+        "passage": "f(x) = x² − 4. What is f(−3)?",
+        "question": "What is the value of f(−3)?",
+        "options": ["−13", "5", "13", "−5"],
+        "correct_answer": "5"
+    },
+    {
+        "question_id": 30032, "type": "math", "domain": "Advanced Math",
+        "skill": "Advanced Math", "level": "Easy",
+        "passage": "The equation y = (x − 2)(x + 4) is a parabola.",
+        "question": "What are the x-intercepts of the parabola?",
+        "options": ["x = 2 and x = 4", "x = −2 and x = 4", "x = 2 and x = −4", "x = −2 and x = −4"],
+        "correct_answer": "x = 2 and x = −4"
+    },
+    {
+        "question_id": 30033, "type": "math", "domain": "Advanced Math",
+        "skill": "Advanced Math", "level": "Easy",
+        "passage": "g(x) = 3x² + 2. What is g(2)?",
+        "question": "What is the value of g(2)?",
+        "options": ["10", "12", "14", "16"],
+        "correct_answer": "14"
+    },
+    {
+        "question_id": 30034, "type": "math", "domain": "Advanced Math",
+        "skill": "Advanced Math", "level": "Easy",
+        "passage": "A quadratic function has a vertex at (3, −1) and opens upward.",
+        "question": "At what x-value does the function reach its minimum?",
+        "options": ["−3", "−1", "1", "3"],
+        "correct_answer": "3"
+    },
+
+    # ========== Advanced Math - Medium (30035-30043) ==========
+    {
+        "question_id": 30035, "type": "math", "domain": "Advanced Math",
+        "skill": "Advanced Math", "level": "Medium",
+        "passage": "Solve: x² − 5x + 6 = 0",
+        "question": "Which of the following are the solutions?",
+        "options": ["x = 1 and x = 6", "x = 2 and x = 3", "x = −2 and x = −3", "x = −1 and x = 6"],
+        "correct_answer": "x = 2 and x = 3"
+    },
+    {
+        "question_id": 30036, "type": "math", "domain": "Advanced Math",
+        "skill": "Advanced Math", "level": "Medium",
+        "passage": "A bacteria culture doubles every 3 hours. Starting with 200 bacteria, the population after t hours is P = 200 · 2^(t/3).",
+        "question": "How many bacteria are present after 9 hours?",
+        "options": ["800", "1200", "1600", "2400"],
+        "correct_answer": "1600"
+    },
+    {
+        "question_id": 30037, "type": "math", "domain": "Advanced Math",
+        "skill": "Advanced Math", "level": "Medium",
+        "passage": "The polynomial p(x) = x³ − 4x² + x + 6 has a factor of (x − 2).",
+        "question": "What is another factor of p(x)?",
+        "options": ["(x − 1)", "(x + 1)", "(x − 3)", "(x + 3)"],
+        "correct_answer": "(x − 3)"
+    },
+    {
+        "question_id": 30038, "type": "math", "domain": "Advanced Math",
+        "skill": "Advanced Math", "level": "Medium",
+        "passage": "If f(x) = 2x + 3 and g(x) = x², what is f(g(2))?",
+        "question": "What is the value of f(g(2))?",
+        "options": ["7", "11", "13", "19"],
+        "correct_answer": "11"
+    },
+    {
+        "question_id": 30039, "type": "math", "domain": "Advanced Math",
+        "skill": "Advanced Math", "level": "Medium",
+        "passage": "A quadratic equation x² + bx + 9 = 0 has exactly one real solution.",
+        "question": "What is the value of |b|?",
+        "options": ["3", "4", "5", "6"],
+        "correct_answer": "6"
+    },
+    {
+        "question_id": 30040, "type": "math", "domain": "Advanced Math",
+        "skill": "Advanced Math", "level": "Medium",
+        "passage": "The vertex of f(x) = x² − 6x + 13 is at (h, k).",
+        "question": "What is the value of k?",
+        "options": ["3", "4", "5", "13"],
+        "correct_answer": "4"
+    },
+    {
+        "question_id": 30041, "type": "math", "domain": "Advanced Math",
+        "skill": "Advanced Math", "level": "Medium",
+        "passage": "log₂(32) = x",
+        "question": "What is the value of x?",
+        "options": ["3", "4", "5", "6"],
+        "correct_answer": "5"
+    },
+    {
+        "question_id": 30042, "type": "math", "domain": "Advanced Math",
+        "skill": "Advanced Math", "level": "Medium",
+        "passage": "If h(x) = (x + 2)/(x − 3), for what value of x is h(x) undefined?",
+        "question": "For what value is h(x) undefined?",
+        "options": ["x = −2", "x = 2", "x = 3", "x = −3"],
+        "correct_answer": "x = 3"
+    },
+    {
+        "question_id": 30043, "type": "math", "domain": "Advanced Math",
+        "skill": "Advanced Math", "level": "Medium",
+        "passage": "The sum of the solutions of x² − 7x + k = 0 is 7.",
+        "question": "According to Vieta's formulas, what is the product of the solutions?",
+        "options": ["7", "k", "−k", "−7"],
+        "correct_answer": "k"
+    },
+
+    # ========== Advanced Math - Hard (30044-30051) ==========
+    {
+        "question_id": 30044, "type": "math", "domain": "Advanced Math",
+        "skill": "Advanced Math", "level": "Hard",
+        "passage": "The function f(x) = ax² + bx + c has a maximum value of 5, and the axis of symmetry is x = 2. The function passes through (0, 1).",
+        "question": "What is the value of a?",
+        "options": ["−1", "−2", "−3", "1"],
+        "correct_answer": "−1"
+    },
+    {
+        "question_id": 30045, "type": "math", "domain": "Advanced Math",
+        "skill": "Advanced Math", "level": "Hard",
+        "passage": "If x² + y² = 25 and xy = 12, what is (x + y)²?",
+        "question": "What is the value of (x + y)²?",
+        "options": ["37", "47", "49", "61"],
+        "correct_answer": "49"
+    },
+    {
+        "question_id": 30046, "type": "math", "domain": "Advanced Math",
+        "skill": "Advanced Math", "level": "Hard",
+        "passage": "A rational function r(x) = (x² − 4)/(x − 2) is simplified.",
+        "question": "What is the simplified form and its excluded value?",
+        "options": [
+            "x + 2, x ≠ 2",
+            "x − 2, x ≠ 2",
+            "x + 2, x ≠ −2",
+            "x − 2, x ≠ −2"
+        ],
+        "correct_answer": "x + 2, x ≠ 2"
+    },
+    {
+        "question_id": 30047, "type": "math", "domain": "Advanced Math",
+        "skill": "Advanced Math", "level": "Hard",
+        "passage": "The equation 3^(2x) = 81 can be solved using properties of exponents.",
+        "question": "What is the value of x?",
+        "options": ["1", "2", "3", "4"],
+        "correct_answer": "2"
+    },
+    {
+        "question_id": 30048, "type": "math", "domain": "Advanced Math",
+        "skill": "Advanced Math", "level": "Hard",
+        "passage": "Let f(x) = x² − 2 and g(x) = √x. What is the domain of g(f(x))?",
+        "question": "What is the domain of the composite function g(f(x))?",
+        "options": [
+            "x ≥ 0",
+            "x ≥ √2",
+            "x ≤ −√2 or x ≥ √2",
+            "All real numbers"
+        ],
+        "correct_answer": "x ≤ −√2 or x ≥ √2"
+    },
+    {
+        "question_id": 30049, "type": "math", "domain": "Advanced Math",
+        "skill": "Advanced Math", "level": "Hard",
+        "passage": "A parabola with equation y = ax² intersects a line y = 2x + 3 at exactly one point.",
+        "question": "If a > 0, which value of a allows exactly one intersection point?",
+        "options": ["a = 1/3", "a = 1/2", "a = 1", "a = 2"],
+        "correct_answer": "a = 1/3"
+    },
+    {
+        "question_id": 30050, "type": "math", "domain": "Advanced Math",
+        "skill": "Advanced Math", "level": "Hard",
+        "passage": "The roots of the equation 2x² − 5x − 3 = 0 are p and q.",
+        "question": "What is the value of p² + q²?",
+        "options": ["7.25", "10.25", "12.25", "18.25"],
+        "correct_answer": "12.25"
+    },
+    {
+        "question_id": 30051, "type": "math", "domain": "Advanced Math",
+        "skill": "Advanced Math", "level": "Hard",
+        "passage": "The function f(x) = 2^x and g(x) = log₂(x) are inverse functions.",
+        "question": "What is f(g(16))?",
+        "options": ["2", "4", "8", "16"],
+        "correct_answer": "16"
+    },
+
+    # ========== Geometry - Easy continuation (30055-30059) ==========
+    {
+        "question_id": 30055, "type": "math", "domain": "Geometry",
+        "skill": "Geometry", "level": "Easy",
+        "passage": "A rectangle has a length of 8 cm and width of 5 cm.",
+        "question": "What is the perimeter of the rectangle?",
+        "options": ["13", "26", "40", "52"],
+        "correct_answer": "26"
+    },
+    {
+        "question_id": 30056, "type": "math", "domain": "Geometry",
+        "skill": "Geometry", "level": "Easy",
+        "passage": "A right triangle has legs of length 6 and 8.",
+        "question": "What is the length of the hypotenuse?",
+        "options": ["8", "9", "10", "14"],
+        "correct_answer": "10"
+    },
+    {
+        "question_id": 30057, "type": "math", "domain": "Geometry",
+        "skill": "Geometry", "level": "Easy",
+        "passage": "Two angles of a triangle measure 45° and 75°.",
+        "question": "What is the measure of the third angle?",
+        "options": ["45°", "60°", "70°", "75°"],
+        "correct_answer": "60°"
+    },
+    {
+        "question_id": 30058, "type": "math", "domain": "Geometry",
+        "skill": "Geometry", "level": "Easy",
+        "passage": "A circle has a diameter of 14 cm. Use π ≈ 3.14.",
+        "question": "What is the circumference of the circle?",
+        "options": ["21.98", "43.96", "153.86", "61.54"],
+        "correct_answer": "43.96"
+    },
+    {
+        "question_id": 30059, "type": "math", "domain": "Geometry",
+        "skill": "Geometry", "level": "Easy",
+        "passage": "A square has a side length of 9 cm.",
+        "question": "What is the area of the square?",
+        "options": ["36", "45", "72", "81"],
+        "correct_answer": "81"
+    },
+
+    # ========== Geometry - Medium (30060-30068) ==========
+    {
+        "question_id": 30060, "type": "math", "domain": "Geometry",
+        "skill": "Geometry", "level": "Medium",
+        "passage": "Two parallel lines are cut by a transversal. One angle measures 65°.",
+        "question": "What is the measure of the co-interior (same-side interior) angle?",
+        "options": ["25°", "65°", "115°", "125°"],
+        "correct_answer": "115°"
+    },
+    {
+        "question_id": 30061, "type": "math", "domain": "Geometry",
+        "skill": "Geometry", "level": "Medium",
+        "passage": "A sector of a circle has a central angle of 90° and a radius of 6 cm. Use π ≈ 3.14.",
+        "question": "What is the area of the sector?",
+        "options": ["9.42", "18.84", "28.26", "113.04"],
+        "correct_answer": "28.26"
+    },
+    {
+        "question_id": 30062, "type": "math", "domain": "Geometry",
+        "skill": "Geometry", "level": "Medium",
+        "passage": "Triangle ABC is similar to triangle DEF. In triangle ABC, AB = 4 and BC = 6. In triangle DEF, DE = 10.",
+        "question": "What is the length of EF?",
+        "options": ["10", "12", "15", "18"],
+        "correct_answer": "15"
+    },
+    {
+        "question_id": 30063, "type": "math", "domain": "Geometry",
+        "skill": "Geometry", "level": "Medium",
+        "passage": "A cylinder has a radius of 3 cm and a height of 10 cm. Use π ≈ 3.14.",
+        "question": "What is the volume of the cylinder?",
+        "options": ["94.2", "188.4", "282.6", "376.8"],
+        "correct_answer": "282.6"
+    },
+    {
+        "question_id": 30064, "type": "math", "domain": "Geometry",
+        "skill": "Geometry", "level": "Medium",
+        "passage": "In the coordinate plane, a line segment connects (1, 2) and (7, 10).",
+        "question": "What is the length of the segment?",
+        "options": ["8", "10", "12", "14"],
+        "correct_answer": "10"
+    },
+    {
+        "question_id": 30065, "type": "math", "domain": "Geometry",
+        "skill": "Geometry", "level": "Medium",
+        "passage": "A trapezoid has bases of 8 cm and 14 cm and a height of 6 cm.",
+        "question": "What is the area of the trapezoid?",
+        "options": ["60", "66", "72", "84"],
+        "correct_answer": "66"
+    },
+    {
+        "question_id": 30066, "type": "math", "domain": "Geometry",
+        "skill": "Geometry", "level": "Medium",
+        "passage": "An isosceles triangle has two sides of length 10 cm and a vertex angle of 40°.",
+        "question": "What is the measure of each base angle?",
+        "options": ["60°", "65°", "70°", "75°"],
+        "correct_answer": "70°"
+    },
+    {
+        "question_id": 30067, "type": "math", "domain": "Geometry",
+        "skill": "Geometry", "level": "Medium",
+        "passage": "A rectangular prism has dimensions 4 cm × 5 cm × 6 cm.",
+        "question": "What is the surface area of the prism?",
+        "options": ["120", "148", "120", "208"],
+        "correct_answer": "148"
+    },
+    {
+        "question_id": 30068, "type": "math", "domain": "Geometry",
+        "skill": "Geometry", "level": "Medium",
+        "passage": "In a right triangle, one acute angle is 30°. The hypotenuse is 20 cm.",
+        "question": "What is the length of the side opposite the 30° angle?",
+        "options": ["5", "8", "10", "12"],
+        "correct_answer": "10"
+    },
+
+    # ========== Geometry - Hard (30069-30075) ==========
+    {
+        "question_id": 30069, "type": "math", "domain": "Geometry",
+        "skill": "Geometry", "level": "Hard",
+        "passage": "A circle with center (3, −2) passes through the point (7, 1).",
+        "question": "What is the equation of the circle?",
+        "options": [
+            "(x−3)² + (y+2)² = 25",
+            "(x+3)² + (y−2)² = 25",
+            "(x−3)² + (y+2)² = 5",
+            "(x−3)² + (y−2)² = 25"
+        ],
+        "correct_answer": "(x−3)² + (y+2)² = 25"
+    },
+    {
+        "question_id": 30070, "type": "math", "domain": "Geometry",
+        "skill": "Geometry", "level": "Hard",
+        "passage": "A cone has a base radius of 5 cm and a slant height of 13 cm. Use π ≈ 3.14.",
+        "question": "What is the lateral surface area of the cone?",
+        "options": ["78.5", "163.28", "204.1", "314"],
+        "correct_answer": "204.1"
+    },
+    {
+        "question_id": 30071, "type": "math", "domain": "Geometry",
+        "skill": "Geometry", "level": "Hard",
+        "passage": "Two chords AB and CD of a circle intersect at point E inside the circle. AE = 4, EB = 9, and CE = 6.",
+        "question": "What is the length of ED?",
+        "options": ["4", "5", "6", "7"],
+        "correct_answer": "6"
+    },
+    {
+        "question_id": 30072, "type": "math", "domain": "Geometry",
+        "skill": "Geometry", "level": "Hard",
+        "passage": "A regular hexagon has a side length of 6 cm.",
+        "question": "What is the area of the hexagon?",
+        "options": ["54√3", "72√3", "90√3", "108√3"],
+        "correct_answer": "54√3"
+    },
+    {
+        "question_id": 30073, "type": "math", "domain": "Geometry",
+        "skill": "Geometry", "level": "Hard",
+        "passage": "Points A(0, 0), B(6, 0), and C(3, 4) form a triangle.",
+        "question": "What is the area of triangle ABC?",
+        "options": ["10", "12", "14", "16"],
+        "correct_answer": "12"
+    },
+    {
+        "question_id": 30074, "type": "math", "domain": "Geometry",
+        "skill": "Geometry", "level": "Hard",
+        "passage": "An inscribed angle in a circle measures 35°.",
+        "question": "What is the measure of the corresponding central angle?",
+        "options": ["17.5°", "35°", "70°", "140°"],
+        "correct_answer": "70°"
+    },
+    {
+        "question_id": 30075, "type": "math", "domain": "Geometry",
+        "skill": "Geometry", "level": "Hard",
+        "passage": "A sphere has a surface area of 324π cm².",
+        "question": "What is the radius of the sphere?",
+        "options": ["6", "8", "9", "12"],
+        "correct_answer": "9"
+    },
+]
+
+# Filter out any questions that already exist
+new_questions_filtered = [q for q in new_questions if q['question_id'] not in existing_ids]
+print(f"Adding {len(new_questions_filtered)} new questions (skipping {len(new_questions) - len(new_questions_filtered)} that already exist)")
+
+data['skill_questions'].extend(new_questions_filtered)
+data['skill_questions'].sort(key=lambda q: q['question_id'])
+
+with open('database/questions.json', 'w') as f:
+    json.dump(data, f, indent=2, ensure_ascii=False)
+
+print(f"Total skill_questions now: {len(data['skill_questions'])}")
+print("Done!")

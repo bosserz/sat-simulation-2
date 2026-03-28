@@ -88,16 +88,24 @@ async function initializeDrill() {
 
 async function loadQuestion(qnum) {
     try {
-        // Get current question's answer from before
-        const currentQ = questions.length > 0 ? questions[qnum] : null;
-        
+        // Use cached question when navigating back
+        if (questions[qnum]) {
+            currentQuestion = qnum;
+            renderQuestion();
+            updateProgressBar();
+            updateNavigationButtons();
+            return;
+        }
+
+        const currentQ = questions[currentQuestion] || null;
+
         const response = await fetch(`/drill/${sessionId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                current_question: qnum,
-                question_id: currentQ?.question_id,
-                answer: answers[currentQ?.question_id] || null,
+                current_question: currentQuestion,
+                question_id: currentQ ? currentQ.question_id : null,
+                answer: currentQ ? (answers[currentQ.question_id] || null) : null,
                 next_question: qnum
             })
         });
@@ -109,12 +117,10 @@ async function loadQuestion(qnum) {
             return;
         }
         
-        // First load - get questions from response
-        if (questions.length === 0 && data.question) {
-            // Response contains individual question per request
-            questions.push(data.question);
+        if (data.question) {
+            questions[qnum] = data.question;
         }
-        
+
         currentQuestion = qnum;
         renderQuestion();
         updateProgressBar();
