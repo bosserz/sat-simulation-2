@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-100">
+    <!-- Header -->
+    <div class="bg-white shadow">
+        <div class="max-w-4xl mx-auto px-4 py-4">
+            <div class="flex justify-between items-center mb-4">
+                <div>
+                    <h2 class="text-2xl font-bold">{{ topic_name }}</h2>
+                    <p class="text-gray-600 text-sm">Set {{ set_number }} - {{ difficulty }} Difficulty</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-lg font-bold">Question <span id="current-qnum">1</span> of {{ total_questions }}</p>
+                </div>
+            </div>
+            
+            <!-- Progress bar -->
+            <div class="bg-gray-200 rounded-full h-2">
+                <div id="progress-bar" class="bg-blue-600 h-2 rounded-full transition-all" 
+                     style="width: {{ (1 / total_questions * 100)|int }}%"></div>
+            </div>
+            
+            <!-- Timer (if enabled) -->
+            {% if use_timer %}
+            <div class="mt-4 flex justify-between items-center">
+                <p class="text-sm text-gray-600">Time remaining:</p>
+                <p id="timer" class="text-2xl font-bold text-red-600">--:--</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Practice Area -->
+    <div class="max-w-4xl mx-auto mt-6 px-4 pb-8">
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <!-- Question -->
+            <div id="question-container">
+                <!-- Questions loaded via JavaScript -->
+                <p class="text-center text-gray-500">Loading question...</p>
+            </div>
+        </div>
+        
+        <!-- Navigation -->
+        <div class="flex justify-between mt-6">
+            <button id="prev-btn" onclick="previousQuestion()" 
+                    class="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600 transition disabled:opacity-50" 
+                    disabled>
+                ← Previous
+            </button>
+            
+            <button id="next-btn" onclick="nextQuestion()" 
+                    class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+                Next →
+            </button>
+            
+            <button id="finish-btn" onclick="finishDrill()" 
+                    class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition hidden">
+                Finish Drill
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentQuestion = 0;
+let totalQuestions = {{ total_questions }};
+let sessionId = {{ session_id }};
+let useTimer = {{ 'true' if use_timer else 'false' }};
+let questions = [];
+let answers = {};
+let timerInterval = null;
+let timeLeft = 0;
+
+// Calculate time for timer (2 min per question)
+const TIMER_MINUTES = 2;
+const TIMER_SECONDS = TIMER_MINUTES * 60;
+
+async function initializeDrill() {
+    // Load first question
+    await loadQuestion(0);
+    
+    // Start timer if enabled
+    if (useTimer) {
+        startTimer();
+    }
+}
+
+async function loadQuestion(qnum) {
+    try {
+        // Get current question's answer from before
+        const currentQ = questions.length > 0 ? questions[qnum] : null;
+        
+        const response = await fetch(`/drill/${sessionId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                current_question: qnum,
+                question_id: currentQ?.question_id,
+                answer: answers[currentQ?.question_id] || null,
+                next_question: qnum
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.redirect) {
+            window.location.href = data.redirect;
+            return;
+        }
+        
+        // First load - get questions from response
+        if (questions.length === 0 && data.question) {
+            // Response contains individual question per request
+            questions.push(data.question);
+        }
+        
+        currentQuestion = qnum;
+        renderQuestion();
+        updateProgressBar();
+        updateNavigationButtons();
+    } catch (error) {
+        console.error('Error loading question:', error);
+    }
+}
+
+function renderQuestion() {
+    const q = questions[currentQuestion];
+    if (!q) return;
+    
+    const container = document.getElementById('question-container');
+    
+    let html = `
+        <div class="mb-6">
+            <p class="text-lg font-semibold text-gray-700 mb-4">${q.question}</p>
+        </div>
+    `;
+    
+    if (q.passage) {
+        html += `
+            <div class="bg-gray-50 border-l-4 border-blue-500 p-4 mb-6 rounded">
+                <p class="text-gray-700">${q.passage}</p>
+            </div>
+        `;
+    }
+    
+    if (q.options && q.options.length > 0) {
+        html += '<div class="space-y-3 mb-6">';
+        q.options.forEach((option, idx) => {
+            const optionLabel = String.fromCharCode(65 + idx); // A, B, C, D
+            const isSelected = answers[q.question_id] === option;
+            html += `
+                <label class="flex items-center p-4 border-2 rounded cursor-pointer transition ${isSelected ? 'border-blue-600 bg-blue-50' : 'border-gray-300 hover:border-gray-400'}">
+                    <input type="radio" name="answer" value="${option}" 
+                           ${isSelected ? 'checked' : ''} 
+                           onclick="selectAnswer('${q.question_id}', '${option.replace(/'/g, "\\'")}')"
+                           class="w-4 h-4">
+                    <span class="ml-4 font-semibold text-gray-700">${optionLabel}.</span>
+                    <span class="ml-2 text-gray-700">${option}</span>
+                </label>
+            `;
+        });
+        html += '</div>';
+    }
+    
+    container.innerHTML = html;
+    document.getElementById('current-qnum').textContent = currentQuestion + 1;
+}
+
+function selectAnswer(questionId, answer) {
+    answers[questionId] = answer;
+    saveAnswer(questionId, answer);
+}
+
+async function saveAnswer(questionId, answer) {
+    try {
+        await fetch(`/drill/${sessionId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                current_question: currentQuestion,
+                question_id: questionId,
+                answer: answer,
+                next_question: null
+            })
+        });
+    } catch (error) {
+        console.error('Error saving answer:', error);
+    }
+}
+
+async function nextQuestion() {
+    if (currentQuestion < totalQuestions - 1) {
+        await loadQuestion(currentQuestion + 1);
+    }
+}
+
+async function previousQuestion() {
+    if (currentQuestion > 0) {
+        await loadQuestion(currentQuestion - 1);
+    }
+}
+
+async function finishDrill() {
+    if (confirm('Are you sure you want to finish the drill? You cannot undo this.')) {
+        try {
+            const response = await fetch(`/drill/${sessionId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    current_question: currentQuestion,
+                    question_id: questions[currentQuestion]?.question_id,
+                    answer: answers[questions[currentQuestion]?.question_id],
+                    next_question: totalQuestions  // Signal completion
+                })
+            });
+            
+            const data = await response.json();
+            if (data.redirect) {
+                window.location.href = data.redirect;
+            }
+        } catch (error) {
+            console.error('Error finishing drill:', error);
+        }
+    }
+}
+
+function updateProgressBar() {
+    const percentage = ((currentQuestion + 1) / totalQuestions) * 100;
+    document.getElementById('progress-bar').style.width = percentage + '%';
+}
+
+function updateNavigationButtons() {
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const finishBtn = document.getElementById('finish-btn');
+    
+    prevBtn.disabled = currentQuestion === 0;
+    
+    if (currentQuestion === totalQuestions - 1) {
+        nextBtn.classList.add('hidden');
+        finishBtn.classList.remove('hidden');
+    } else {
+        nextBtn.classList.remove('hidden');
+        finishBtn.classList.add('hidden');
+    }
+}
+
+function startTimer() {
+    timeLeft = TIMER_SECONDS * totalQuestions;
+    const timerEl = document.getElementById('timer');
+    
+    timerInterval = setInterval(() => {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        timerEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        
+        if (timeLeft <= 60) {
+            timerEl.classList.add('text-red-600');
+        }
+        
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            finishDrill();
+        }
+        
+        timeLeft--;
+    }, 1000);
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', initializeDrill);
+</script>
+{% endblock %}

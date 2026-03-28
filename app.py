@@ -84,6 +84,90 @@ class TextHighlight(db.Model):
             "selected_text": self.selected_text,
         }
 
+
+class DrillSet(db.Model):
+    __tablename__ = "drill_sets"
+    
+    id = db.Column(db.Integer, primary_key=True)
+    topic_name = db.Column(db.String(100), nullable=False, index=True)  # e.g., "Words in Context"
+    skill_name = db.Column(db.String(100), nullable=False)  # Same as topic for now
+    section_type = db.Column(db.String(20), nullable=False)  # 'verbal' or 'math'
+    set_number = db.Column(db.Integer, nullable=False)  # 1, 2, 3...
+    difficulty = db.Column(db.String(20), nullable=False)  # 'Easy', 'Medium', 'Hard'
+    num_questions = db.Column(db.Integer, nullable=False)
+    question_ids = db.Column(db.Text, nullable=False)  # JSON array of question IDs
+    description = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    __table_args__ = (
+        db.Index('ix_drill_topic_difficulty', 'topic_name', 'difficulty'),
+    )
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'topic_name': self.topic_name,
+            'skill_name': self.skill_name,
+            'section_type': self.section_type,
+            'set_number': self.set_number,
+            'difficulty': self.difficulty,
+            'num_questions': self.num_questions,
+            'question_ids': json.loads(self.question_ids),
+            'description': self.description,
+        }
+
+
+class DrillSession(db.Model):
+    __tablename__ = "drill_sessions"
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
+    drill_set_id = db.Column(db.Integer, db.ForeignKey('drill_sets.id'), nullable=False, index=True)
+    start_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    end_time = db.Column(db.DateTime)
+    duration_seconds = db.Column(db.Integer)  # Time taken in seconds
+    answers = db.Column(db.Text, nullable=False)  # JSON: {question_id: user_answer}
+    correct_count = db.Column(db.Integer)  # Number of correct answers
+    total_count = db.Column(db.Integer)  # Total questions
+    accuracy_percent = db.Column(db.Float)  # 0-100
+    use_timer = db.Column(db.Boolean, default=False)  # Did user enable timer?
+    
+    drill_set = db.relationship('DrillSet', backref='sessions')
+    user = db.relationship('User', backref='drill_sessions')
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'drill_set_id': self.drill_set_id,
+            'start_time': self.start_time.isoformat() if self.start_time else None,
+            'end_time': self.end_time.isoformat() if self.end_time else None,
+            'duration_seconds': self.duration_seconds,
+            'correct_count': self.correct_count,
+            'total_count': self.total_count,
+            'accuracy_percent': self.accuracy_percent,
+            'use_timer': self.use_timer,
+        }
+
+
+class DrillSetProgress(db.Model):
+    __tablename__ = "drill_set_progress"
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
+    topic_name = db.Column(db.String(100), nullable=False, index=True)
+    total_attempts = db.Column(db.Integer, default=0)
+    completed_sets = db.Column(db.Integer, default=0)  # e.g., 2/3 sets
+    best_score = db.Column(db.Float)  # Best accuracy across all attempts
+    last_attempt_date = db.Column(db.DateTime)
+    
+    user = db.relationship('User', backref='drill_progress')
+    
+    __table_args__ = (
+        db.UniqueConstraint('user_id', 'topic_name', name='uq_user_topic'),
+        db.Index('ix_user_progress', 'user_id', 'topic_name'),
+    )
+
 # Load questions
 with open('database/questions.json', 'r') as f:
     ALL_QUESTIONS = json.load(f)
@@ -104,6 +188,107 @@ def get_questions_for_section(section_idx, practice_test_id):
         q for q in practice_test_questions
         if q['type'] == section['type'] and q['module'] == section['module']
     ]
+
+
+# Initialize drill sets from questions.json
+def initialize_drill_sets():
+    """Populate DrillSet table from the drill_sets in questions.json"""
+    drill_sets_data = ALL_QUESTIONS.get('drill_sets', {})
+    
+    for topic_name, topic_data in drill_sets_data.items():
+        section_type = topic_data.get('section_type', 'verbal')
+        skill_name = topic_name  # For now, skill_name = topic_name
+        description = topic_data.get('description', '')
+        
+        sets_data = topic_data.get('sets', {})
+        
+        for set_key, set_info in sets_data.items():
+            set_number = int(set_key.split('_')[1])  # Extract number from set_1, set_2, etc.
+            difficulty = set_info.get('difficulty', 'Medium')
+            num_questions = set_info.get('num_questions', 0)
+            question_ids = set_info.get('question_ids', [])
+            
+            # Check if this drill set already exists
+            existing = DrillSet.query.filter_by(
+                topic_name=topic_name,
+                set_number=set_number,
+                difficulty=difficulty
+            ).first()
+            
+            if not existing:
+                drill_set = DrillSet(
+                    topic_name=topic_name,
+                    skill_name=skill_name,
+                    section_type=section_type,
+                    set_number=set_number,
+                    difficulty=difficulty,
+                    num_questions=num_questions,
+                    question_ids=json.dumps(question_ids),
+                    description=description
+                )
+                db.session.add(drill_set)
+    
+    try:
+        db.session.commit()
+        print(f"✅ Initialized drill sets in database")
+    except Exception as e:
+        db.session.rollback()
+        print(f"⚠️  Error initializing drill sets: {e}")
+
+
+# Get all available drill topics with metadata
+def get_drill_topics():
+    """Return list of all drill topics grouped by section type"""
+    drill_sets_data = ALL_QUESTIONS.get('drill_sets', {})
+    
+    topics_by_section = {'verbal': [], 'math': []}
+    
+    for topic_name, topic_data in drill_sets_data.items():
+        section_type = topic_data.get('section_type', 'verbal')
+        description = topic_data.get('description', '')
+        sets_data = topic_data.get('sets', {})
+        num_sets = len(sets_data)
+        
+        # Get user's progress on this topic
+        user_id = session.get('user_id')
+        progress = None
+        if user_id:
+            progress = DrillSetProgress.query.filter_by(
+                user_id=user_id,
+                topic_name=topic_name
+            ).first()
+        
+        topic_info = {
+            'topic_name': topic_name,
+            'description': description,
+            'section_type': section_type,
+            'num_sets': num_sets,
+            'completed_sets': progress.completed_sets if progress else 0,
+            'best_score': progress.best_score if progress else None,
+            'last_attempt_date': progress.last_attempt_date if progress else None,
+        }
+        
+        topics_by_section[section_type].append(topic_info)
+    
+    return topics_by_section
+
+
+# Get sets for a specific topic
+def get_drill_sets_for_topic(topic_name):
+    """Return all drill sets for a given topic with user's history"""
+    return DrillSet.query.filter_by(topic_name=topic_name).order_by(
+        DrillSet.difficulty,
+        DrillSet.set_number
+    ).all()
+
+
+# Get skill questions by IDs
+def get_skill_questions(question_ids):
+    """Get question objects from skill_questions array by IDs"""
+    skill_questions = ALL_QUESTIONS.get('skill_questions', [])
+    questions = [q for q in skill_questions if q['question_id'] in question_ids]
+    return questions
+
 
 @app.route('/')
 def index():
@@ -1119,7 +1304,306 @@ def admin_user_detail(user_id):
     return render_template('admin_user_detail.html', u=u, session_data=session_data)
 
 
+# ===================== DRILL ROUTES =====================
+
+@app.route('/drill_select', methods=['GET'])
+def drill_select():
+    """Display all drill topics for student selection"""
+    if 'user_id' not in session:
+        flash('Please log in to start a drill.')
+        return redirect(url_for('login'))
+    
+    topics_by_section = get_drill_topics()
+    
+    return render_template('drill_select.html', topics_by_section=topics_by_section)
+
+
+@app.route('/drill_topic/<topic_name>', methods=['GET'])
+def drill_topic(topic_name):
+    """Display all sets for a specific drill topic"""
+    if 'user_id' not in session:
+        flash('Please log in.')
+        return redirect(url_for('login'))
+    
+    drill_sets = get_drill_sets_for_topic(topic_name)
+    if not drill_sets:
+        flash(f'No drill sets found for {topic_name}.')
+        return redirect(url_for('drill_select'))
+    
+    # Get user's session history for each set
+    user_id = session['user_id']
+    sets_with_history = []
+    
+    for drill_set in drill_sets:
+        history = DrillSession.query.filter_by(
+            user_id=user_id,
+            drill_set_id=drill_set.id
+        ).order_by(DrillSession.start_time.desc()).all()
+        
+        sets_with_history.append({
+            'drill_set': drill_set,
+            'attempts': len(history),
+            'best_score': max([h.accuracy_percent for h in history]) if history else None,
+            'latest_score': history[0].accuracy_percent if history else None,
+            'latest_date': history[0].start_time if history else None,
+        })
+    
+    drill_sets_data = ALL_QUESTIONS.get('drill_sets', {}).get(topic_name, {})
+    description = drill_sets_data.get('description', '')
+    
+    return render_template('drill_topic.html', 
+                         topic_name=topic_name, 
+                         description=description,
+                         sets_with_history=sets_with_history)
+
+
+@app.route('/drill_start/<int:drill_set_id>', methods=['POST'])
+def drill_start(drill_set_id):
+    """Create a new drill session and start drill practice"""
+    if 'user_id' not in session:
+        return jsonify({'error': 'Not authorized'}), 401
+    
+    use_timer = request.form.get('use_timer', 'false').lower() == 'true'
+    
+    drill_set = DrillSet.query.get_or_404(drill_set_id)
+    
+    # Create new drill session
+    drill_session = DrillSession(
+        user_id=session['user_id'],
+        drill_set_id=drill_set_id,
+        answers=json.dumps({}),
+        use_timer=use_timer
+    )
+    db.session.add(drill_session)
+    db.session.commit()
+    
+    # Store in session for practice page
+    session['drill_session_id'] = drill_session.id
+    
+    return redirect(url_for('drill_practice', session_id=drill_session.id))
+
+
+@app.route('/drill/<int:session_id>', methods=['GET', 'POST'])
+def drill_practice(session_id):
+    """Display drill practice page and handle answer submissions"""
+    if 'user_id' not in session:
+        return jsonify({'error': 'Please log in.'}), 401
+    
+    drill_session = DrillSession.query.get_or_404(session_id)
+    
+    # Verify ownership
+    if drill_session.user_id != session['user_id']:
+        flash('Unauthorized access.')
+        return redirect(url_for('dashboard'))
+    
+    # Check if already completed
+    if drill_session.end_time is not None:
+        return redirect(url_for('drill_results', session_id=session_id))
+    
+    drill_set = drill_session.drill_set
+    question_ids = json.loads(drill_set.question_ids)
+    questions = get_skill_questions(question_ids)
+    
+    if request.method == 'POST':
+        data = request.json
+        answers = json.loads(drill_session.answers)
+        current_question = data.get('current_question', 0)
+        question_id = data.get('question_id')
+        answer = data.get('answer')
+        
+        # Save answer
+        if answer is not None:
+            answers[str(question_id)] = answer
+        
+        next_question = data.get('next_question')
+        
+        if next_question is not None and next_question >= len(questions):
+            # Drill finished, calculate score
+            correct_count = 0
+            for q in questions:
+                user_answer = answers.get(str(q['question_id']))
+                if is_correct_answer(q, user_answer):
+                    correct_count += 1
+            
+            accuracy = (correct_count / len(questions) * 100) if questions else 0
+            
+            drill_session.answers = json.dumps(answers)
+            drill_session.end_time = datetime.utcnow()
+            drill_session.duration_seconds = int((datetime.utcnow() - drill_session.start_time).total_seconds())
+            drill_session.correct_count = correct_count
+            drill_session.total_count = len(questions)
+            drill_session.accuracy_percent = accuracy
+            
+            # Update progress
+            progress = DrillSetProgress.query.filter_by(
+                user_id=session['user_id'],
+                topic_name=drill_set.topic_name
+            ).first()
+            
+            if not progress:
+                progress = DrillSetProgress(
+                    user_id=session['user_id'],
+                    topic_name=drill_set.topic_name,
+                    total_attempts=0,
+                    completed_sets=0
+                )
+                db.session.add(progress)
+            
+            progress.total_attempts += 1
+            progress.best_score = max(progress.best_score or 0, accuracy)
+            progress.last_attempt_date = datetime.utcnow()
+            
+            # Increment completed_sets if this is the last set
+            all_sets_count = DrillSet.query.filter_by(topic_name=drill_set.topic_name).count()
+            completed_sets_count = DrillSession.query.join(DrillSet).filter(
+                DrillSession.user_id == session['user_id'],
+                DrillSet.topic_name == drill_set.topic_name,
+                DrillSession.end_time.isnot(None)
+            ).distinct(DrillSet.id).count()
+            
+            progress.completed_sets = completed_sets_count
+            
+            db.session.commit()
+            
+            return jsonify({'redirect': url_for('drill_results', session_id=session_id)})
+        
+        drill_session.answers = json.dumps(answers)
+        db.session.commit()
+        
+        # Return next question
+        if next_question is not None and next_question < len(questions):
+            question = questions[next_question]
+            response = {
+                'question': question,
+                'qid': next_question,
+                'session_id': session_id,
+                'answer': answers.get(str(question['question_id']), ''),
+                'total_questions': len(questions),
+                'topic_name': drill_set.topic_name,
+                'difficulty': drill_set.difficulty,
+                'set_number': drill_set.set_number,
+            }
+            return jsonify(response)
+    
+    # GET request - serve practice page
+    session['drill_session_id'] = session_id
+    
+    return render_template('drill_practice.html', 
+                         session_id=session_id,
+                         use_timer=drill_session.use_timer,
+                         topic_name=drill_set.topic_name,
+                         difficulty=drill_set.difficulty,
+                         set_number=drill_set.set_number,
+                         total_questions=len(questions))
+
+
+@app.route('/drill_results/<int:session_id>', methods=['GET'])
+def drill_results(session_id):
+    """Display results of a completed drill session"""
+    if 'user_id' not in session:
+        flash('Please log in.')
+        return redirect(url_for('login'))
+    
+    drill_session = DrillSession.query.get_or_404(session_id)
+    
+    # Verify ownership
+    if drill_session.user_id != session['user_id']:
+        flash('Unauthorized access.')
+        return redirect(url_for('dashboard'))
+    
+    # Check if completed
+    if drill_session.end_time is None:
+        flash('This drill has not been completed yet.')
+        return redirect(url_for('drill_practice', session_id=session_id))
+    
+    drill_set = drill_session.drill_set
+    question_ids = json.loads(drill_set.question_ids)
+    questions = get_skill_questions(question_ids)
+    answers = json.loads(drill_session.answers)
+    
+    # Build question results with performance breakdown
+    question_results = []
+    difficulty_breakdown = {}
+    
+    for q in questions:
+        q_id = q['question_id']
+        user_answer = answers.get(str(q_id))
+        is_correct = is_correct_answer(q, user_answer)
+        
+        question_results.append({
+            'question': q,
+            'user_answer': user_answer,
+            'is_correct': is_correct,
+            'correct_answer': q.get('correct_answer')
+        })
+        
+        # Track by difficulty
+        q_level = q.get('level', 'Medium')
+        if q_level not in difficulty_breakdown:
+            difficulty_breakdown[q_level] = {'correct': 0, 'total': 0}
+        difficulty_breakdown[q_level]['total'] += 1
+        if is_correct:
+            difficulty_breakdown[q_level]['correct'] += 1
+    
+    # Get user's attempts history on this set
+    previous_sessions = DrillSession.query.filter_by(
+        user_id=session['user_id'],
+        drill_set_id=drill_set.id
+    ).order_by(DrillSession.start_time.desc()).limit(10).all()
+    
+    return render_template('drill_results.html',
+                         session=drill_session,
+                         drill_set=drill_set,
+                         question_results=question_results,
+                         difficulty_breakdown=difficulty_breakdown,
+                         previous_sessions=previous_sessions)
+
+
+@app.route('/api/drill/dashboard')
+def api_drill_dashboard():
+    """Get dashboard data: recent drills + topic progress"""
+    if 'user_id' not in session:
+        return jsonify({'error': 'Not authorized'}), 401
+    
+    user_id = session['user_id']
+    
+    # Recent drills (last 5)
+    recent_drills = DrillSession.query.filter_by(user_id=user_id).filter(
+        DrillSession.end_time.isnot(None)
+    ).order_by(DrillSession.end_time.desc()).limit(5).all()
+    
+    recent_drills_data = []
+    for ds in recent_drills:
+        recent_drills_data.append({
+            'id': ds.id,
+            'topic_name': ds.drill_set.topic_name,
+            'difficulty': ds.drill_set.difficulty,
+            'set_number': ds.drill_set.set_number,
+            'accuracy': ds.accuracy_percent,
+            'end_time': ds.end_time.isoformat() if ds.end_time else None,
+        })
+    
+    # Topic progress
+    progress_data = DrillSetProgress.query.filter_by(user_id=user_id).all()
+    
+    progress_list = []
+    for prog in progress_data:
+        progress_list.append({
+            'topic_name': prog.topic_name,
+            'completed_sets': prog.completed_sets,
+            'total_attempts': prog.total_attempts,
+            'best_score': prog.best_score,
+            'last_attempt_date': prog.last_attempt_date.isoformat() if prog.last_attempt_date else None,
+        })
+    
+    return jsonify({
+        'recent_drills': recent_drills_data,
+        'topic_progress': progress_list
+    })
+
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+        initialize_drill_sets()
     app.run(debug=True)

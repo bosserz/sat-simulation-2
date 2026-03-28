@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+        <a href="{{ url_for('drill_select') }}" class="text-blue-600 hover:underline">← Back to Drills</a>
+        <h2 class="text-3xl font-bold mt-4 mb-2">{{ topic_name }}</h2>
+        <p class="text-gray-600">{{ description }}</p>
+    </div>
+    
+    <!-- Drill Sets Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {% for item in sets_with_history %}
+        {% set set = item.drill_set %}
+        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 {% if set.difficulty == 'Easy' %}border-green-500{% elif set.difficulty == 'Medium' %}border-yellow-500{% else %}border-red-500{% endif %}">
+            <!-- Header -->
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h3 class="text-xl font-bold mb-1">Set {{ set.set_number }}</h3>
+                    <span class="inline-block px-3 py-1 rounded text-white text-sm font-semibold
+                        {% if set.difficulty == 'Easy' %}bg-green-500
+                        {% elif set.difficulty == 'Medium' %}bg-yellow-500
+                        {% else %}bg-red-500
+                        {% endif %}">
+                        {{ set.difficulty }}
+                    </span>
+                </div>
+                <span class="text-lg font-bold text-gray-600">{{ set.num_questions }} ?</span>
+            </div>
+            
+            <!-- Statistics -->
+            <div class="bg-gray-50 rounded p-3 mb-4">
+                {% if item.attempts == 0 %}
+                <p class="text-gray-600 text-sm">Not attempted yet</p>
+                {% else %}
+                <div class="space-y-1 text-sm">
+                    <p><strong>Attempts:</strong> {{ item.attempts }}</p>
+                    {% if item.best_score %}
+                    <p><strong>Best Score:</strong> <span class="text-green-600 font-semibold">{{ item.best_score|round(0)|int }}%</span></p>
+                    {% endif %}
+                    {% if item.latest_score %}
+                    <p><strong>Latest Score:</strong> <span>{{ item.latest_score|round(0)|int }}%</span></p>
+                    {% endif %}
+                    {% if item.latest_date %}
+                    <p><strong>Last Attempt:</strong> {{ item.latest_date.strftime('%b %d, %Y') }}</p>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Start Button -->
+            <form method="POST" action="{{ url_for('drill_start', drill_set_id=set.id) }}" class="space-y-3">
+                <!-- Timer Toggle -->
+                <div class="flex items-center space-x-2">
+                    <input type="checkbox" id="timer-{{ set.id }}" name="use_timer" value="true" 
+                           class="w-4 h-4 rounded">
+                    <label for="timer-{{ set.id }}" class="text-sm text-gray-700">Enable timer (~2 min per question)</label>
+                </div>
+                
+                <!-- Button -->
+                <button type="submit" 
+                        class="w-full bg-blue-600 text-white px-4 py-2 rounded font-semibold hover:bg-blue-700 transition">
+                    {% if item.attempts > 0 %}Retry{% else %}Start Drill{% endif %}
+                </button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

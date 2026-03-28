@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <h2 class="text-3xl font-bold mb-2">Short Drills</h2>
+    <p class="text-gray-600 mb-6">Practice SAT topics with focused, bite-sized sets (7-12 questions each)</p>
+    
+    <!-- Navigation -->
+    <div class="mb-6">
+        <a href="{{ url_for('dashboard') }}" class="text-blue-600 hover:underline">← Back to Dashboard</a>
+    </div>
+    
+    <!-- Verbal Section -->
+    <div class="mb-12">
+        <h3 class="text-2xl font-bold mb-4 text-blue-700">Verbal Skills</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for topic in topics_by_section.verbal %}
+            <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition overflow-hidden">
+                <div class="bg-blue-100 px-4 py-3">
+                    <h4 class="text-lg font-bold text-blue-900">{{ topic.topic_name }}</h4>
+                </div>
+                <div class="p-4">
+                    <p class="text-gray-600 text-sm mb-3">{{ topic.description }}</p>
+                    
+                    <!-- Sets info -->
+                    <div class="mb-3 text-sm text-gray-700">
+                        <p><strong>{{ topic.num_sets }}</strong> sets available</p>
+                        {% if topic.best_score %}
+                        <p class="text-green-600"><strong>Best Score:</strong> {{ topic.best_score|round(0)|int }}%</p>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Progress bar -->
+                    {% if topic.completed_sets %}
+                    <div class="mb-3">
+                        <div class="flex justify-between text-xs text-gray-600 mb-1">
+                            <span>Progress</span>
+                            <span>{{ topic.completed_sets }}/{{ topic.num_sets }}</span>
+                        </div>
+                        <div class="bg-gray-200 rounded-full h-2">
+                            <div class="bg-green-500 h-2 rounded-full" style="width: {{ (topic.completed_sets / topic.num_sets * 100)|int }}%"></div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <a href="{{ url_for('drill_topic', topic_name=topic.topic_name) }}" 
+                       class="block w-full bg-blue-600 text-white text-center px-4 py-2 rounded hover:bg-blue-700 transition font-semibold">
+                        View Sets
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Math Section -->
+    <div class="mb-12">
+        <h3 class="text-2xl font-bold mb-4 text-purple-700">Math Skills</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for topic in topics_by_section.math %}
+            <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition overflow-hidden">
+                <div class="bg-purple-100 px-4 py-3">
+                    <h4 class="text-lg font-bold text-purple-900">{{ topic.topic_name }}</h4>
+                </div>
+                <div class="p-4">
+                    <p class="text-gray-600 text-sm mb-3">{{ topic.description }}</p>
+                    
+                    <!-- Sets info -->
+                    <div class="mb-3 text-sm text-gray-700">
+                        <p><strong>{{ topic.num_sets }}</strong> sets available</p>
+                        {% if topic.best_score %}
+                        <p class="text-green-600"><strong>Best Score:</strong> {{ topic.best_score|round(0)|int }}%</p>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Progress bar -->
+                    {% if topic.completed_sets %}
+                    <div class="mb-3">
+                        <div class="flex justify-between text-xs text-gray-600 mb-1">
+                            <span>Progress</span>
+                            <span>{{ topic.completed_sets }}/{{ topic.num_sets }}</span>
+                        </div>
+                        <div class="bg-gray-200 rounded-full h-2">
+                            <div class="bg-green-500 h-2 rounded-full" style="width: {{ (topic.completed_sets / topic.num_sets * 100)|int }}%"></div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <a href="{{ url_for('drill_topic', topic_name=topic.topic_name) }}" 
+                       class="block w-full bg-purple-600 text-white text-center px-4 py-2 rounded hover:bg-purple-700 transition font-semibold">
+                        View Sets
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
