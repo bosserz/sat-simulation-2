@@ -33,7 +33,11 @@ app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL or "sqlite:///sat_practice.
 # app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 if DATABASE_URL and "postgresql" in DATABASE_URL:
-    app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"connect_args": {"sslmode": "require"}}
+    app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+        "connect_args": {"sslmode": "require"},
+        "pool_pre_ping": True,   # discard stale connections before use
+        "pool_recycle": 280,     # recycle before Render's 5-min idle timeout
+    }
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -168,9 +172,15 @@ class DrillSetProgress(db.Model):
         db.Index('ix_user_progress', 'user_id', 'topic_name'),
     )
 
-# Load questions
+# Load full-test questions (Mock Test, Adaptive Test, …)
 with open('database/questions.json', 'r') as f:
     ALL_QUESTIONS = json.load(f)
+
+# Load drill questions separately (skill_questions + drill_sets)
+with open('database/drill_questions.json', 'r') as f:
+    _drill_data = json.load(f)
+SKILL_QUESTIONS = _drill_data.get('skill_questions', [])
+DRILL_SETS_DATA = _drill_data.get('drill_sets', {})
 
 # Section configuration
 SECTIONS = [
@@ -190,10 +200,10 @@ def get_questions_for_section(section_idx, practice_test_id):
     ]
 
 
-# Initialize drill sets from questions.json
+# Initialize drill sets from drill_questions.json
 def initialize_drill_sets():
-    """Populate DrillSet table from the drill_sets in questions.json"""
-    drill_sets_data = ALL_QUESTIONS.get('drill_sets', {})
+    """Populate DrillSet table from drill_questions.json"""
+    drill_sets_data = DRILL_SETS_DATA
     
     for topic_name, topic_data in drill_sets_data.items():
         section_type = topic_data.get('section_type', 'verbal')
@@ -239,7 +249,7 @@ def initialize_drill_sets():
 # Get all available drill topics with metadata
 def get_drill_topics():
     """Return list of all drill topics grouped by section type"""
-    drill_sets_data = ALL_QUESTIONS.get('drill_sets', {})
+    drill_sets_data = DRILL_SETS_DATA
     
     topics_by_section = {'verbal': [], 'math': []}
     
@@ -284,10 +294,16 @@ def get_drill_sets_for_topic(topic_name):
 
 # Get skill questions by IDs
 def get_skill_questions(question_ids):
-    """Get question objects from skill_questions array by IDs"""
-    skill_questions = ALL_QUESTIONS.get('skill_questions', [])
-    questions = [q for q in skill_questions if q['question_id'] in question_ids]
-    return questions
+    """Get question objects from drill_questions.json by ID list"""
+    id_set = set(question_ids)
+    return [q for q in SKILL_QUESTIONS if q['question_id'] in id_set]
+
+
+@app.cli.command('init-drills')
+def init_drills_command():
+    """Populate the drill_sets table from drill_questions.json (run once on Render)."""
+    initialize_drill_sets()
+    print('Drill sets initialised.')
 
 
 @app.route('/')
@@ -315,10 +331,8 @@ def select_test():
         session['practice_test_id'] = practice_test_id
         return redirect(url_for('practice'))
     
-    # List available practice tests
+    # List available practice tests (exclude drill data keys)
     practice_tests = list(ALL_QUESTIONS.keys())
-    # result = supabase.table("questions").select("test").execute()
-    # practice_tests = sorted(set(q["test"] for q in result.data))
 
     return render_template('select_test.html', practice_tests=practice_tests)
 
@@ -1348,7 +1362,7 @@ def drill_topic(topic_name):
             'latest_date': history[0].start_time if history else None,
         })
     
-    drill_sets_data = ALL_QUESTIONS.get('drill_sets', {}).get(topic_name, {})
+    drill_sets_data = DRILL_SETS_DATA.get(topic_name, {})
     description = drill_sets_data.get('description', '')
     
     return render_template('drill_topic.html', 
