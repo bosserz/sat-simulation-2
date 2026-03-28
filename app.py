@@ -13,7 +13,15 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)  # Session lasts 1 day
 app.config['SESSION_COOKIE_SECURE'] = False  # Set to True in production with HTTPS
 
+# Admin access: comma-separated usernames in env var, or hardcode here
+ADMIN_USERNAMES = set(
+    u.strip() for u in os.environ.get("ADMIN_USERNAMES", "admin").split(",") if u.strip()
+)
+
 DATABASE_URL = os.environ.get("DATABASE_URL")
+
+if DATABASE_URL is None:
+    DATABASE_URL = "sqlite:///sat_practice.db"
 
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+psycopg2://", 1)
@@ -24,7 +32,7 @@ elif DATABASE_URL.startswith("postgresql://") and not DATABASE_URL.startswith("p
 app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL or "sqlite:///sat_practice.db"
 # app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-if DATABASE_URL:
+if DATABASE_URL and "postgresql" in DATABASE_URL:
     app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"connect_args": {"sslmode": "require"}}
 
 db = SQLAlchemy(app)
@@ -904,9 +912,82 @@ def correct_answer_display(q):
 app.jinja_env.globals.update(
     is_correct_answer=is_correct_answer,
     correct_answer_display=correct_answer_display,
-    normalize_numeric=_new_normalize_numeric
+    normalize_numeric=_new_normalize_numeric,
+    admin_usernames=ADMIN_USERNAMES,
 )
 
+
+
+def _is_admin():
+    return session.get('username') in ADMIN_USERNAMES
+
+
+@app.route('/admin')
+def admin():
+    if 'user_id' not in session:
+        flash('Please log in.')
+        return redirect(url_for('login'))
+    if not _is_admin():
+        flash('Access denied.')
+        return redirect(url_for('dashboard'))
+
+    users = User.query.order_by(User.username).all()
+
+    # Aggregate stats per user
+    user_stats = []
+    for u in users:
+        sessions_all = TestSession.query.filter_by(user_id=u.id).order_by(TestSession.start_time.desc()).all()
+        completed = [s for s in sessions_all if s.score is not None]
+        in_progress = [s for s in sessions_all if s.score is None]
+        latest = sessions_all[0] if sessions_all else None
+        user_stats.append({
+            'user': u,
+            'total': len(sessions_all),
+            'completed': len(completed),
+            'in_progress': len(in_progress),
+            'latest': latest,
+        })
+
+    return render_template('admin.html', user_stats=user_stats)
+
+
+@app.route('/admin/user/<int:user_id>')
+def admin_user_detail(user_id):
+    if 'user_id' not in session:
+        flash('Please log in.')
+        return redirect(url_for('login'))
+    if not _is_admin():
+        flash('Access denied.')
+        return redirect(url_for('dashboard'))
+
+    u = User.query.get_or_404(user_id)
+    test_sessions = TestSession.query.filter_by(user_id=u.id).order_by(TestSession.start_time.desc()).all()
+
+    # Compute scaled scores for each completed session
+    session_data = []
+    for ts in test_sessions:
+        scores = None
+        if ts.score is not None:
+            answers = json.loads(ts.answers or '{}')
+            section_answers = []
+            for section_idx in range(len(SECTIONS)):
+                qs = get_questions_for_section(section_idx, ts.practice_test_id)
+                ans_list = []
+                for qid in range(len(qs)):
+                    key = f"{section_idx}_{qid}"
+                    ans_list.append({'answer': answers.get(key)})
+                section_answers.append(ans_list)
+            module_multipliers = {
+                'verbal': {1: 1.0, 2: 1.66},
+                'math':   {1: 0.79, 2: 1.345},
+            }
+            try:
+                scores = compute_section_scores(SECTIONS, ALL_QUESTIONS.get(ts.practice_test_id, []), section_answers, module_multipliers)
+            except Exception:
+                scores = None
+        session_data.append({'session': ts, 'scores': scores})
+
+    return render_template('admin_user_detail.html', u=u, session_data=session_data)
 
 
 if __name__ == '__main__':

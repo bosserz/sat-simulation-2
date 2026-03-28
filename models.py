@@ -99,5 +99,90 @@ class UserTestAttempt(db.Model):
 
     def __repr__(self):
         return f'<UserTestAttempt User:{self.user_id} Test:{self.test_id} Score:{self.score}>'
+
+
+# ============================================================================
+# ADAPTIVE TESTING MODELS
+# ============================================================================
+
+class AdaptiveQuestionMetadata(db.Model):
+    """
+    Stores adaptive testing parameters for each question.
+    Based on Item Response Theory (IRT).
+    """
+    __tablename__ = 'adaptive_question_metadata'
     
+    id = db.Column(db.Integer, primary_key=True)
+    question_id = db.Column(db.Integer, nullable=False, unique=True)  # FK to question JSON
+    
+    # Difficulty parameter (θ): ranges from -1.5 (very easy) to 2.0 (very hard)
+    # Easy: -1.0 to -0.5, Medium: -0.5 to 0.5, Hard: 0.5 to 1.5
+    difficulty_parameter = db.Column(db.Float, nullable=False, default=0.0)
+    difficulty_label = db.Column(db.String(20), nullable=False, default="Medium")  # Easy, Medium, Hard
+    
+    # Discrimination index: ability of question to distinguish between high/low ability students
+    # Range: 0.0 to 2.0, higher = better discrimination
+    discrimination_index = db.Column(db.Float, nullable=False, default=1.0)
+    
+    # Guessing parameter: probability of correct answer by random guess
+    # For 4-choice: 0.25, Range: 0.0 to 0.5
+    guess_parameter = db.Column(db.Float, nullable=False, default=0.25)
+    
+    # Statistics for tracking performance
+    total_attempts = db.Column(db.Integer, nullable=False, default=0)
+    correct_attempts = db.Column(db.Integer, nullable=False, default=0)
+    
+    # Question characteristics for adaptive selection
+    question_type = db.Column(db.String(20), nullable=False)  # 'verbal' or 'math'
+    module = db.Column(db.Integer, nullable=False)  # 1 or 2
+    domain = db.Column(db.String(100), nullable=True)  # e.g., "Craft and Structure"
+    skill = db.Column(db.String(100), nullable=True)  # e.g., "Words in Context"
+    
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    def __repr__(self):
+        return f'<AdaptiveQuestionMetadata Q:{self.question_id} Difficulty:{self.difficulty_parameter:.2f}>'
+
+
+class AdaptiveTestSession(db.Model):
+    """
+    Extended test session tracking for adaptive tests.
+    Tracks student ability estimate and question difficulty progression.
+    """
+    __tablename__ = 'adaptive_test_sessions'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    test_session_id = db.Column(db.Integer, nullable=False, unique=True)  # FK to TestSession
+    user_id = db.Column(db.Integer, nullable=False)
+    
+    # Adaptive mode tracking
+    is_adaptive = db.Column(db.Boolean, nullable=False, default=True)
+    
+    # Ability estimation (θ): starts at 0 (medium), updates after each response
+    # Ranges from -3.0 to 3.0
+    current_ability = db.Column(db.Float, nullable=False, default=0.0)
+    initial_ability = db.Column(db.Float, nullable=False, default=0.0)
+    
+    # History of ability over time (JSON): [{"question_id": 1, "ability": 0.0, "correct": true}, ...]
+    ability_history = db.Column(db.Text, nullable=True, default='[]')
+    
+    # Previous question difficulty for selection logic
+    previous_difficulty = db.Column(db.Float, nullable=True)
+    
+    # Questions answered (for preventing repeats)
+    answered_question_ids = db.Column(db.Text, nullable=True, default='[]')
+    
+    # Difficulty distribution across test
+    # Track how many easy/medium/hard questions answered
+    easy_count = db.Column(db.Integer, default=0)
+    medium_count = db.Column(db.Integer, default=0)
+    hard_count = db.Column(db.Integer, default=0)
+    
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    def __repr__(self):
+        return f'<AdaptiveTestSession User:{self.user_id} Ability:{self.current_ability:.2f}>'
+
     

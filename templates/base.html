@@ -23,6 +23,9 @@
                 {% if session.username %}
                     <span class="mr-4">Hello, {{ session.username }}</span>
                     <a href="{{ url_for('dashboard') }}" class="mr-4">Dashboard</a>
+                    {% if session.username in admin_usernames %}
+                    <a href="{{ url_for('admin') }}" class="mr-4">Admin</a>
+                    {% endif %}
                     <a href="{{ url_for('logout') }}">Logout</a>
                 {% else %}
                     <a href="{{ url_for('login') }}" class="mr-4">Login</a>

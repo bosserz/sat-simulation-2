@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+    <h2 class="text-2xl font-bold">Admin — All Users</h2>
+    <span class="text-sm text-gray-500">{{ user_stats|length }} user(s)</span>
+</div>
+
+{% if user_stats %}
+<div class="overflow-x-auto">
+    <table class="w-full bg-white shadow rounded text-sm">
+        <thead>
+            <tr class="bg-gray-200 text-left">
+                <th class="p-3">Username</th>
+                <th class="p-3">Email</th>
+                <th class="p-3 text-center">Tests Taken</th>
+                <th class="p-3 text-center">Completed</th>
+                <th class="p-3 text-center">In Progress</th>
+                <th class="p-3">Latest Activity</th>
+                <th class="p-3">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in user_stats %}
+            <tr class="border-t hover:bg-gray-50">
+                <td class="p-3 font-medium">{{ row.user.username }}</td>
+                <td class="p-3 text-gray-600">{{ row.user.email }}</td>
+                <td class="p-3 text-center">{{ row.total }}</td>
+                <td class="p-3 text-center">
+                    {% if row.completed > 0 %}
+                        <span class="bg-green-100 text-green-800 px-2 py-0.5 rounded-full">{{ row.completed }}</span>
+                    {% else %}
+                        <span class="text-gray-400">0</span>
+                    {% endif %}
+                </td>
+                <td class="p-3 text-center">
+                    {% if row.in_progress > 0 %}
+                        <span class="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full">{{ row.in_progress }}</span>
+                    {% else %}
+                        <span class="text-gray-400">0</span>
+                    {% endif %}
+                </td>
+                <td class="p-3 text-gray-600">
+                    {% if row.latest %}
+                        {{ row.latest.start_time.strftime('%Y-%m-%d %H:%M') }}
+                        <span class="text-xs text-gray-400">({{ row.latest.practice_test_id }})</span>
+                    {% else %}
+                        <span class="text-gray-400">—</span>
+                    {% endif %}
+                </td>
+                <td class="p-3">
+                    <a href="{{ url_for('admin_user_detail', user_id=row.user.id) }}"
+                       class="text-blue-600 hover:underline text-sm">View Details →</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p class="text-gray-500">No users found.</p>
+{% endif %}
+{% endblock %}
