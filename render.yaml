@@ -8,6 +8,8 @@ services:
       flask init-drills
     startCommand: gunicorn app:app
     envVars:
+      - key: FLASK_APP
+        value: app
       - key: FLASK_ENV
         value: production
       - key: SECRET_KEY

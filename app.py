@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from flask_migrate import Migrate
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-secret-key'  # Replace with a secure key
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-change-in-production')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sat_practice.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)  # Session lasts 1 day
@@ -172,12 +172,15 @@ class DrillSetProgress(db.Model):
         db.Index('ix_user_progress', 'user_id', 'topic_name'),
     )
 
+# Use absolute path so it works regardless of gunicorn working directory
+_BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # Load full-test questions (Mock Test, Adaptive Test, …)
-with open('database/questions.json', 'r') as f:
+with open(os.path.join(_BASE_DIR, 'database', 'questions.json'), 'r') as f:
     ALL_QUESTIONS = json.load(f)
 
 # Load drill questions separately (skill_questions + drill_sets)
-with open('database/drill_questions.json', 'r') as f:
+with open(os.path.join(_BASE_DIR, 'database', 'drill_questions.json'), 'r') as f:
     _drill_data = json.load(f)
 SKILL_QUESTIONS = _drill_data.get('skill_questions', [])
 DRILL_SETS_DATA = _drill_data.get('drill_sets', {})
@@ -312,14 +315,14 @@ def index():
 
 @app.route('/select_test', methods=['GET', 'POST'])
 def select_test():
+    if 'user_id' not in session:
+        flash('Please log in to select a practice test.')
+        return redirect(url_for('login'))
+
     incomplete_session = TestSession.query.filter_by(user_id=session['user_id'], score=None).first()
     if incomplete_session:
         flash('Please complete your ongoing test before starting a new one.')
         return redirect(url_for('dashboard'))
-    
-    if 'user_id' not in session:
-        flash('Please log in to select a practice test.')
-        return redirect(url_for('login'))
     
     if request.method == 'POST':
         practice_test_id = request.form.get('practice_test_id')
@@ -535,8 +538,8 @@ def practice():
     session['new_test'] = False  # Reset the flag
     
     if request.method == 'POST':
+      try:
         data = request.json
-        print(f"POST data received: {data}")  # Debugging
         answers = json.loads(test_session.answers)
         marked = json.loads(test_session.marked_for_review)
         
@@ -610,9 +613,11 @@ def practice():
             'total_questions': len(section_questions),
             'section_name': SECTIONS[test_session.current_section]['name']
         }
-        print(f"Returning question data: {response}")  # Debugging
         return jsonify(response)
-    
+      except Exception as exc:
+        app.logger.exception('Error in practice POST')
+        return jsonify({'error': f'Server error: {exc}'}), 500
+
     section_duration = SECTIONS[test_session.current_section]['duration']
 
     # if test_session.section_start_time:
@@ -1419,6 +1424,7 @@ def drill_practice(session_id):
     questions = get_skill_questions(question_ids)
     
     if request.method == 'POST':
+      try:
         data = request.json
         answers = json.loads(drill_session.answers)
         current_question = data.get('current_question', 0)
@@ -1498,12 +1504,15 @@ def drill_practice(session_id):
                 'set_number': drill_set.set_number,
             }
             return jsonify(response)
-    
-    # GET request - serve practice page
-            # Save-only request (next_question is None) — just acknowledge
-            return jsonify({'ok': True})
-    
-        # GET request - serve practice page
+
+        # Save-only request (next_question is None) — just acknowledge
+        return jsonify({'ok': True})
+
+      except Exception as exc:
+        app.logger.exception('Error in drill POST')
+        return jsonify({'error': f'Server error: {exc}'}), 500
+
+    # GET request
     session['drill_session_id'] = session_id
     
     return render_template('drill_practice.html', 
