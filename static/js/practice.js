@@ -556,7 +556,13 @@ function loadQuestion(qid) {
 
         await Promise.all(mathTasks);
         captureQuestionBaselines();
-        await refreshHighlightsOnScreen();
+        try {
+            await refreshHighlightsOnScreen();
+        } catch (err) {
+            console.warn('Highlights unavailable for this question load:', err);
+            currentHighlights = [];
+            renderHighlights();
+        }
         updateHighlightButtonState();
     })
     .catch(error => {

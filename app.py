@@ -1168,12 +1168,19 @@ def get_highlights():
     if section_idx is None or question_idx is None:
         return jsonify({'error': 'section_idx and question_idx are required'}), 400
 
-    rows = TextHighlight.query.filter_by(
-        user_id=session['user_id'],
-        test_session_id=session['test_session_id'],
-        section_idx=section_idx,
-        question_idx=question_idx,
-    ).order_by(TextHighlight.start_offset.asc(), TextHighlight.id.asc()).all()
+    try:
+        rows = TextHighlight.query.filter_by(
+            user_id=session['user_id'],
+            test_session_id=session['test_session_id'],
+            section_idx=section_idx,
+            question_idx=question_idx,
+        ).order_by(TextHighlight.start_offset.asc(), TextHighlight.id.asc()).all()
+    except (ProgrammingError, OperationalError):
+        db.session.rollback()
+        app.logger.warning(
+            "text_highlights table unavailable while loading highlights; returning empty list."
+        )
+        rows = []
 
     return jsonify({'highlights': [r.to_dict() for r in rows]})
 
@@ -1217,8 +1224,15 @@ def create_highlight():
         end_offset=end_offset,
         selected_text=selected_text,
     )
-    db.session.add(row)
-    db.session.commit()
+    try:
+        db.session.add(row)
+        db.session.commit()
+    except (ProgrammingError, OperationalError):
+        db.session.rollback()
+        app.logger.warning(
+            "text_highlights table unavailable while creating highlight; request ignored."
+        )
+        return jsonify({'error': 'Highlight feature is temporarily unavailable'}), 503
     return jsonify({'ok': True, 'highlight': row.to_dict()})
 
 
@@ -1227,12 +1241,26 @@ def delete_highlight(highlight_id):
     if 'user_id' not in session or 'test_session_id' not in session:
         return jsonify({'error': 'Not authorized'}), 401
 
-    row = TextHighlight.query.get_or_404(highlight_id)
+    try:
+        row = TextHighlight.query.get_or_404(highlight_id)
+    except (ProgrammingError, OperationalError):
+        db.session.rollback()
+        app.logger.warning(
+            "text_highlights table unavailable while deleting a highlight; request ignored."
+        )
+        return jsonify({'error': 'Highlight feature is temporarily unavailable'}), 503
     if row.user_id != session['user_id'] or row.test_session_id != session['test_session_id']:
         return jsonify({'error': 'Unauthorized'}), 403
 
-    db.session.delete(row)
-    db.session.commit()
+    try:
+        db.session.delete(row)
+        db.session.commit()
+    except (ProgrammingError, OperationalError):
+        db.session.rollback()
+        app.logger.warning(
+            "text_highlights table unavailable while deleting a highlight; request ignored."
+        )
+        return jsonify({'error': 'Highlight feature is temporarily unavailable'}), 503
     return jsonify({'ok': True})
 
 
@@ -1248,13 +1276,20 @@ def clear_highlights_for_question():
     if not isinstance(section_idx, int) or not isinstance(question_idx, int):
         return jsonify({'error': 'section_idx and question_idx must be integers'}), 400
 
-    TextHighlight.query.filter_by(
-        user_id=session['user_id'],
-        test_session_id=session['test_session_id'],
-        section_idx=section_idx,
-        question_idx=question_idx,
-    ).delete(synchronize_session=False)
-    db.session.commit()
+    try:
+        TextHighlight.query.filter_by(
+            user_id=session['user_id'],
+            test_session_id=session['test_session_id'],
+            section_idx=section_idx,
+            question_idx=question_idx,
+        ).delete(synchronize_session=False)
+        db.session.commit()
+    except (ProgrammingError, OperationalError):
+        db.session.rollback()
+        app.logger.warning(
+            "text_highlights table unavailable while clearing highlights; request ignored."
+        )
+        return jsonify({'error': 'Highlight feature is temporarily unavailable'}), 503
     return jsonify({'ok': True})
 
 
