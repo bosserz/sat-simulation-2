@@ -5,6 +5,7 @@ import json
 import os
 from datetime import datetime, timedelta
 from flask_migrate import Migrate
+from sqlalchemy.exc import OperationalError, ProgrammingError
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-change-in-production')
@@ -255,6 +256,19 @@ def get_drill_topics():
     drill_sets_data = DRILL_SETS_DATA
     
     topics_by_section = {'verbal': [], 'math': []}
+    user_progress_by_topic = {}
+    user_id = session.get('user_id')
+
+    if user_id:
+        try:
+            all_progress = DrillSetProgress.query.filter_by(user_id=user_id).all()
+            user_progress_by_topic = {progress.topic_name: progress for progress in all_progress}
+        except (ProgrammingError, OperationalError):
+            # Schema may lag during deploys; keep page usable without progress data.
+            db.session.rollback()
+            app.logger.warning(
+                "Drill progress table unavailable while loading drill topics; continuing without progress data."
+            )
     
     for topic_name, topic_data in drill_sets_data.items():
         section_type = topic_data.get('section_type', 'verbal')
@@ -262,14 +276,8 @@ def get_drill_topics():
         sets_data = topic_data.get('sets', {})
         num_sets = len(sets_data)
         
-        # Get user's progress on this topic
-        user_id = session.get('user_id')
-        progress = None
-        if user_id:
-            progress = DrillSetProgress.query.filter_by(
-                user_id=user_id,
-                topic_name=topic_name
-            ).first()
+        # Get user's progress on this topic if drill progress tables are available.
+        progress = user_progress_by_topic.get(topic_name)
         
         topic_info = {
             'topic_name': topic_name,
@@ -1611,7 +1619,14 @@ def api_drill_dashboard():
         })
     
     # Topic progress
-    progress_data = DrillSetProgress.query.filter_by(user_id=user_id).all()
+    try:
+        progress_data = DrillSetProgress.query.filter_by(user_id=user_id).all()
+    except (ProgrammingError, OperationalError):
+        db.session.rollback()
+        app.logger.warning(
+            "Drill progress table unavailable while building dashboard API response; returning empty progress."
+        )
+        progress_data = []
     
     progress_list = []
     for prog in progress_data:
