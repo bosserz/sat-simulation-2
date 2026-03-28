@@ -58,6 +58,32 @@ class TestSession(db.Model):
     marked_for_review = db.Column(db.Text, nullable=True)  # JSON string of marked questions
     section_start_time = db.Column(db.DateTime, nullable=True)
 
+
+class TextHighlight(db.Model):
+    __tablename__ = "text_highlights"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
+    test_session_id = db.Column(db.Integer, db.ForeignKey('test_sessions.id'), nullable=False, index=True)
+    section_idx = db.Column(db.Integer, nullable=False, index=True)
+    question_idx = db.Column(db.Integer, nullable=False, index=True)
+    target = db.Column(db.String(20), nullable=False, default='passage')
+    start_offset = db.Column(db.Integer, nullable=False)
+    end_offset = db.Column(db.Integer, nullable=False)
+    selected_text = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "section_idx": self.section_idx,
+            "question_idx": self.question_idx,
+            "target": self.target,
+            "start_offset": self.start_offset,
+            "end_offset": self.end_offset,
+            "selected_text": self.selected_text,
+        }
+
 # Load questions
 with open('database/questions.json', 'r') as f:
     ALL_QUESTIONS = json.load(f)
@@ -378,6 +404,8 @@ def practice():
         response = {
             'question': question,
             'qid': current_question,
+            'section_idx': test_session.current_section,
+            'test_session_id': test_session.id,
             'answer': answers.get(f"{test_session.current_section}_{current_question}", ''),
             'marked': marked.get(f"{test_session.current_section}_{current_question}", False),
             'total_questions': len(section_questions),
@@ -915,6 +943,107 @@ app.jinja_env.globals.update(
     normalize_numeric=_new_normalize_numeric,
     admin_usernames=ADMIN_USERNAMES,
 )
+
+
+@app.route('/api/highlights', methods=['GET'])
+def get_highlights():
+    if 'user_id' not in session or 'test_session_id' not in session:
+        return jsonify({'error': 'Not authorized'}), 401
+
+    section_idx = request.args.get('section_idx', type=int)
+    question_idx = request.args.get('question_idx', type=int)
+
+    if section_idx is None or question_idx is None:
+        return jsonify({'error': 'section_idx and question_idx are required'}), 400
+
+    rows = TextHighlight.query.filter_by(
+        user_id=session['user_id'],
+        test_session_id=session['test_session_id'],
+        section_idx=section_idx,
+        question_idx=question_idx,
+    ).order_by(TextHighlight.start_offset.asc(), TextHighlight.id.asc()).all()
+
+    return jsonify({'highlights': [r.to_dict() for r in rows]})
+
+
+@app.route('/api/highlights', methods=['POST'])
+def create_highlight():
+    if 'user_id' not in session or 'test_session_id' not in session:
+        return jsonify({'error': 'Not authorized'}), 401
+
+    data = request.get_json(silent=True) or {}
+
+    section_idx = data.get('section_idx')
+    question_idx = data.get('question_idx')
+    target = (data.get('target') or '').strip().lower()
+    start_offset = data.get('start_offset')
+    end_offset = data.get('end_offset')
+    selected_text = (data.get('selected_text') or '').strip()
+
+    if target not in {'passage', 'question'}:
+        return jsonify({'error': 'Invalid target'}), 400
+
+    if not isinstance(section_idx, int) or not isinstance(question_idx, int):
+        return jsonify({'error': 'section_idx and question_idx must be integers'}), 400
+
+    if not isinstance(start_offset, int) or not isinstance(end_offset, int):
+        return jsonify({'error': 'start_offset and end_offset must be integers'}), 400
+
+    if start_offset < 0 or end_offset <= start_offset:
+        return jsonify({'error': 'Invalid highlight range'}), 400
+
+    if not selected_text:
+        return jsonify({'error': 'No selected text'}), 400
+
+    row = TextHighlight(
+        user_id=session['user_id'],
+        test_session_id=session['test_session_id'],
+        section_idx=section_idx,
+        question_idx=question_idx,
+        target=target,
+        start_offset=start_offset,
+        end_offset=end_offset,
+        selected_text=selected_text,
+    )
+    db.session.add(row)
+    db.session.commit()
+    return jsonify({'ok': True, 'highlight': row.to_dict()})
+
+
+@app.route('/api/highlights/<int:highlight_id>', methods=['DELETE'])
+def delete_highlight(highlight_id):
+    if 'user_id' not in session or 'test_session_id' not in session:
+        return jsonify({'error': 'Not authorized'}), 401
+
+    row = TextHighlight.query.get_or_404(highlight_id)
+    if row.user_id != session['user_id'] or row.test_session_id != session['test_session_id']:
+        return jsonify({'error': 'Unauthorized'}), 403
+
+    db.session.delete(row)
+    db.session.commit()
+    return jsonify({'ok': True})
+
+
+@app.route('/api/highlights/clear', methods=['DELETE'])
+def clear_highlights_for_question():
+    if 'user_id' not in session or 'test_session_id' not in session:
+        return jsonify({'error': 'Not authorized'}), 401
+
+    data = request.get_json(silent=True) or {}
+    section_idx = data.get('section_idx')
+    question_idx = data.get('question_idx')
+
+    if not isinstance(section_idx, int) or not isinstance(question_idx, int):
+        return jsonify({'error': 'section_idx and question_idx must be integers'}), 400
+
+    TextHighlight.query.filter_by(
+        user_id=session['user_id'],
+        test_session_id=session['test_session_id'],
+        section_idx=section_idx,
+        question_idx=question_idx,
+    ).delete(synchronize_session=False)
+    db.session.commit()
+    return jsonify({'ok': True})
 
 
 

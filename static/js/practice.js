@@ -2,6 +2,10 @@ let currentQuestion = 0;
 let totalQuestions = 0;
 let markedForReview = {};
 let answers = {};
+let currentSectionIdx = 0;
+let currentTestSessionId = null;
+let questionBaselines = { passage: '', question: '' };
+let currentHighlights = [];
 
 // timer state
 window.timerInterval = null;
@@ -63,6 +67,153 @@ function armTimer(duration) {
   clearInterval(window.timerInterval);
 }
 
+function getTargetContainer(target) {
+    if (target === 'passage') return document.getElementById('passage');
+    if (target === 'question') return document.getElementById('question-text');
+    return null;
+}
+
+function captureQuestionBaselines() {
+    const passage = getTargetContainer('passage');
+    const question = getTargetContainer('question');
+    questionBaselines = {
+        passage: passage ? passage.innerHTML : '',
+        question: question ? question.innerHTML : '',
+    };
+}
+
+function resetHighlightTargetsToBaseline() {
+    const passage = getTargetContainer('passage');
+    const question = getTargetContainer('question');
+    if (passage) passage.innerHTML = questionBaselines.passage;
+    if (question) question.innerHTML = questionBaselines.question;
+}
+
+function getTextNodes(root) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+            if (!node || !node.nodeValue) return NodeFilter.FILTER_REJECT;
+            if (!node.nodeValue.length) return NodeFilter.FILTER_REJECT;
+            return NodeFilter.FILTER_ACCEPT;
+        }
+    });
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    return nodes;
+}
+
+function locateTextPosition(root, offset) {
+    const nodes = getTextNodes(root);
+    let remaining = offset;
+    for (const node of nodes) {
+        const len = node.nodeValue.length;
+        if (remaining <= len) {
+            return { node, offset: remaining };
+        }
+        remaining -= len;
+    }
+    if (nodes.length === 0) return null;
+    const last = nodes[nodes.length - 1];
+    return { node: last, offset: last.nodeValue.length };
+}
+
+function offsetFromNode(root, targetNode, nodeOffset) {
+    const nodes = getTextNodes(root);
+    let total = 0;
+    for (const node of nodes) {
+        if (node === targetNode) {
+            return total + nodeOffset;
+        }
+        total += node.nodeValue.length;
+    }
+    return -1;
+}
+
+function applyHighlightToContainer(container, highlight) {
+    const start = locateTextPosition(container, highlight.start_offset);
+    const end = locateTextPosition(container, highlight.end_offset);
+    if (!start || !end) return;
+
+    const range = document.createRange();
+    range.setStart(start.node, start.offset);
+    range.setEnd(end.node, end.offset);
+
+    const mark = document.createElement('mark');
+    mark.className = 'sat-highlight';
+    mark.dataset.highlightId = String(highlight.id);
+    mark.title = 'Click to remove highlight';
+
+    const frag = range.extractContents();
+    mark.appendChild(frag);
+    range.insertNode(mark);
+}
+
+function renderHighlights() {
+    resetHighlightTargetsToBaseline();
+    const sorted = [...currentHighlights].sort((a, b) => b.start_offset - a.start_offset);
+    for (const h of sorted) {
+        const container = getTargetContainer(h.target);
+        if (!container) continue;
+        applyHighlightToContainer(container, h);
+    }
+}
+
+function detectSelectionTarget(range) {
+    const passage = getTargetContainer('passage');
+    const question = getTargetContainer('question');
+
+    if (passage && passage.contains(range.startContainer) && passage.contains(range.endContainer)) {
+        return 'passage';
+    }
+    if (question && question.contains(range.startContainer) && question.contains(range.endContainer)) {
+        return 'question';
+    }
+    return null;
+}
+
+function readSelectionAsHighlightPayload() {
+    const sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0 || sel.isCollapsed) return null;
+
+    const range = sel.getRangeAt(0);
+    const target = detectSelectionTarget(range);
+    if (!target) return null;
+
+    const container = getTargetContainer(target);
+    if (!container) return null;
+
+    const startOffset = offsetFromNode(container, range.startContainer, range.startOffset);
+    const endOffset = offsetFromNode(container, range.endContainer, range.endOffset);
+    const selectedText = sel.toString().trim();
+
+    if (startOffset < 0 || endOffset <= startOffset || !selectedText) return null;
+
+    return {
+        section_idx: currentSectionIdx,
+        question_idx: currentQuestion,
+        target,
+        start_offset: startOffset,
+        end_offset: endOffset,
+        selected_text: selectedText,
+    };
+}
+
+async function fetchHighlightsForCurrentQuestion() {
+    const params = new URLSearchParams({
+        section_idx: String(currentSectionIdx),
+        question_idx: String(currentQuestion),
+    });
+    const resp = await fetch(`/api/highlights?${params.toString()}`);
+    if (!resp.ok) throw new Error(`Failed to load highlights (${resp.status})`);
+    const data = await resp.json();
+    currentHighlights = Array.isArray(data.highlights) ? data.highlights : [];
+}
+
+async function refreshHighlightsOnScreen() {
+    await fetchHighlightsForCurrentQuestion();
+    renderHighlights();
+}
+
 
 function loadQuestion(qid) {
     console.log(`Loading question ${qid}`);  // Debugging
@@ -80,7 +231,7 @@ function loadQuestion(qid) {
         }
         return response.json();
     })
-    .then(data => {
+    .then(async data => {
         console.log('Question data received:', data);  // Debugging
         if (data.error) {
             alert(data.error);
@@ -91,8 +242,12 @@ function loadQuestion(qid) {
             window.location.href = data.redirect;
             return;
         }
+
+        const mathTasks = [];
         
         currentQuestion = data.qid;
+        currentSectionIdx = data.section_idx;
+        currentTestSessionId = data.test_session_id;
         totalQuestions = data.total_questions;
         markedForReview[currentQuestion] = data.marked;
         answers[currentQuestion] = data.answer;
@@ -201,9 +356,10 @@ function loadQuestion(qid) {
 
             // Render MathJax only when passage is not empty and not special directions
             if (!noPassage && hasOptions && typeof MathJax !== 'undefined') {
-                MathJax.typesetPromise([passageElement]).catch(err => {
+                const t = MathJax.typesetPromise([passageElement]).catch(err => {
                     console.error('MathJax error:', err);
                 });
+                mathTasks.push(t);
             }
         } else {
             console.error('Passage or container elements not found');
@@ -239,9 +395,10 @@ function loadQuestion(qid) {
             // questionTextElement.textContent = data.question.question || 'No question text available';
             questionTextElement.innerHTML = data.question.question || 'No question text available';
             if (typeof MathJax !== 'undefined') {
-                MathJax.typesetPromise([questionTextElement]).catch(err => {
+                const t = MathJax.typesetPromise([questionTextElement]).catch(err => {
                     console.error('MathJax error:', err);
                 });
+                mathTasks.push(t);
             }
         } else {
             console.error('Question text element not found');
@@ -269,10 +426,11 @@ function loadQuestion(qid) {
                 equationElement.innerHTML = `\\[${data.question.equation}\\]`;
                 // Trigger MathJax to render the equation
                 if (typeof MathJax !== 'undefined') {
-                    MathJax.typesetPromise([equationElement]).catch(err => {
+                    const t = MathJax.typesetPromise([equationElement]).catch(err => {
                         console.error('MathJax error:', err);
                         equationElement.innerHTML = `<p>Error rendering equation: ${data.question.equation}</p>`;
                     });
+                    mathTasks.push(t);
                 } else {
                     console.error('MathJax not loaded');
                     equationElement.innerHTML = `<p>Equation: ${data.question.equation} (Math rendering unavailable)</p>`;
@@ -357,9 +515,10 @@ function loadQuestion(qid) {
 
                 // 🧠 Render math if needed
                 if (typeof MathJax !== 'undefined') {
-                    MathJax.typesetPromise([optionsDiv]).catch(err => {
+                    const t = MathJax.typesetPromise([optionsDiv]).catch(err => {
                         console.error('MathJax error in options:', err);
                     });
+                    mathTasks.push(t);
                 }
             }
             } else {
@@ -394,6 +553,11 @@ function loadQuestion(qid) {
         } else {
             console.error('Back button not found');
         }
+
+        await Promise.all(mathTasks);
+        captureQuestionBaselines();
+        await refreshHighlightsOnScreen();
+        updateHighlightButtonState();
     })
     .catch(error => {
         console.error('Error loading question:', error);
@@ -634,6 +798,103 @@ function on(id, event, handler) {
   el.addEventListener(event, handler);
 }
 // ----------------------------------------------
+
+function updateHighlightButtonState() {
+    const btn = document.getElementById('highlight-selection');
+    if (!btn) return;
+    const payload = readSelectionAsHighlightPayload();
+    btn.disabled = !payload;
+    btn.classList.toggle('opacity-40', !payload);
+}
+
+document.addEventListener('selectionchange', updateHighlightButtonState);
+
+async function createHighlightFromSelection() {
+    const payload = readSelectionAsHighlightPayload();
+    if (!payload) {
+        alert('Select text in the passage or question first.');
+        return false;
+    }
+
+    const resp = await fetch('/api/highlights', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+    });
+    const data = await resp.json();
+    if (!resp.ok) {
+        alert(data.error || 'Could not save highlight.');
+        return false;
+    }
+
+    if (window.getSelection) {
+        const sel = window.getSelection();
+        if (sel) sel.removeAllRanges();
+    }
+
+    await refreshHighlightsOnScreen();
+    updateHighlightButtonState();
+    return true;
+}
+
+on('highlight-selection', 'click', async () => {
+    await createHighlightFromSelection();
+});
+
+function isTypingTarget(target) {
+    if (!target) return false;
+    const tag = (target.tagName || '').toLowerCase();
+    return target.isContentEditable || tag === 'input' || tag === 'textarea' || tag === 'select';
+}
+
+document.addEventListener('keydown', async (e) => {
+    if (e.defaultPrevented) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if ((e.key || '').toLowerCase() !== 'h') return;
+    if (isTypingTarget(e.target)) return;
+
+    const payload = readSelectionAsHighlightPayload();
+    if (!payload) return;
+
+    e.preventDefault();
+    await createHighlightFromSelection();
+});
+
+on('clear-highlights', 'click', async () => {
+    const resp = await fetch('/api/highlights/clear', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            section_idx: currentSectionIdx,
+            question_idx: currentQuestion,
+        }),
+    });
+    const data = await resp.json();
+    if (!resp.ok) {
+        alert(data.error || 'Could not clear highlights.');
+        return;
+    }
+
+    currentHighlights = [];
+    renderHighlights();
+});
+
+document.addEventListener('click', async (e) => {
+    const mark = e.target.closest('mark.sat-highlight');
+    if (!mark) return;
+
+    const highlightId = mark.dataset.highlightId;
+    if (!highlightId) return;
+
+    const resp = await fetch(`/api/highlights/${highlightId}`, { method: 'DELETE' });
+    if (!resp.ok) {
+        const data = await resp.json().catch(() => ({}));
+        alert(data.error || 'Could not remove highlight.');
+        return;
+    }
+
+    await refreshHighlightsOnScreen();
+});
 
 // Next button
 on('next-button', 'click', async () => {

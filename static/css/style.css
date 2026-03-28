@@ -114,3 +114,15 @@ label:hover {
 .blank {
     font-family: Arial, Helvetica, sans-serif;
 }
+
+mark.sat-highlight {
+    background: #fff1a8;
+    color: inherit;
+    padding: 0 1px;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+#highlight-selection:disabled {
+    cursor: not-allowed;
+}
