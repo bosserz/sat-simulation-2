@@ -194,14 +194,120 @@ SECTIONS = [
     {"name": "Section 4: Math - Module 2", "type": "math", "module": 2, "duration": 2100},    # 35 minutes
 ]
 
+# Adaptive test configuration
+ADAPTIVE_TEST_NAME = "Adaptive Test"
+ADAPTIVE_SECTION_LIMITS = {
+    ("verbal", 1): 27,
+    ("verbal", 2): 27,
+    ("math", 1): 22,
+    ("math", 2): 22,
+}
+
+
+def _adaptive_target_difficulty(accuracy):
+    """Map module-1 accuracy to module-2 difficulty bucket."""
+    if accuracy >= 0.70:
+        return "Hard"
+    if accuracy >= 0.40:
+        return "Medium"
+    return "Easy"
+
+
+def _build_adaptive_module2_set(section_questions, target_label, limit):
+    """Build a fixed-size module-2 set, prioritizing target difficulty then backfilling."""
+    priority_by_target = {
+        "Hard": ["Hard", "Medium", "Easy"],
+        "Medium": ["Medium", "Hard", "Easy"],
+        "Easy": ["Easy", "Medium", "Hard"],
+    }
+    priority = priority_by_target.get(target_label, ["Medium", "Hard", "Easy"])
+
+    selected = []
+    seen_ids = set()
+
+    for label in priority:
+        for question in section_questions:
+            q_label = question.get("difficulty_label") or "Medium"
+            q_id = question.get("question_id")
+            if q_label == label and q_id not in seen_ids:
+                selected.append(question)
+                seen_ids.add(q_id)
+                if len(selected) >= limit:
+                    return selected
+
+    # Final fallback: include any remaining questions if labels are missing/inconsistent.
+    for question in section_questions:
+        q_id = question.get("question_id")
+        if q_id not in seen_ids:
+            selected.append(question)
+            seen_ids.add(q_id)
+            if len(selected) >= limit:
+                return selected
+
+    return selected
+
+
+def _get_adaptive_module1_accuracy(section_idx, practice_test_questions, answers):
+    """Calculate module-1 accuracy for verbal or math branch of adaptive test."""
+    if section_idx not in (1, 3):
+        return None
+
+    module1_section_idx = 0 if section_idx == 1 else 2
+    branch_type = SECTIONS[module1_section_idx]["type"]
+    module1_questions = [
+        q for q in practice_test_questions
+        if q.get("type") == branch_type and q.get("module") == 1
+    ]
+
+    limit = ADAPTIVE_SECTION_LIMITS.get((branch_type, 1))
+    if limit:
+        module1_questions = module1_questions[:limit]
+
+    if not module1_questions:
+        return None
+
+    correct = 0
+    total = len(module1_questions)
+    for qid, question in enumerate(module1_questions):
+        ans = answers.get(f"{module1_section_idx}_{qid}")
+        if _match_answer(question, ans):
+            correct += 1
+
+    return correct / total if total else None
+
 # Filter questions for a given section and practice test
-def get_questions_for_section(section_idx, practice_test_id):
+def get_questions_for_section(section_idx, practice_test_id, answers=None):
     section = SECTIONS[section_idx]
     practice_test_questions = ALL_QUESTIONS.get(practice_test_id, [])
-    return [
+    section_questions = [
         q for q in practice_test_questions
         if q['type'] == section['type'] and q['module'] == section['module']
     ]
+
+    # Only adaptive-test set uses branch-by-performance logic.
+    if practice_test_id == ADAPTIVE_TEST_NAME:
+        answers = answers or {}
+
+        if section['module'] == 2:
+            accuracy = _get_adaptive_module1_accuracy(
+                section_idx,
+                practice_test_questions,
+                answers
+            )
+            target = _adaptive_target_difficulty(accuracy) if accuracy is not None else 'Medium'
+
+        limit = ADAPTIVE_SECTION_LIMITS.get((section['type'], section['module']))
+        if limit:
+            if section['module'] == 2:
+                section_questions = _build_adaptive_module2_set(
+                    section_questions,
+                    target,
+                    limit
+                )
+            else:
+                section_questions = section_questions[:limit]
+
+    return section_questions
 
 
 # Initialize drill sets from drill_questions.json
@@ -546,85 +652,97 @@ def practice():
     session['new_test'] = False  # Reset the flag
     
     if request.method == 'POST':
-      try:
-        data = request.json
-        answers = json.loads(test_session.answers)
-        marked = json.loads(test_session.marked_for_review)
-        
-        # Compute answer_key for both answers and mark_for_review
-        qid = str(data.get('current_question'))
-        answer_key = f"{test_session.current_section}_{qid}"
-        
-        # Update answers
-        answer = data.get('answer')
-        if answer:
-            answers[answer_key] = answer
-        
-        # Update marked for review
-        if data.get('mark_for_review') is not None:
-            marked[answer_key] = data.get('mark_for_review')
-        
-        # Update current question
-        next_question = data.get('next_question')
-        if next_question is not None:
-            test_session.current_question = next_question
-            section_questions = get_questions_for_section(test_session.current_section, practice_test_id)
-            if next_question >= len(section_questions):
-                # End of section
-                if test_session.current_section < len(SECTIONS) - 1:
-                    # Move to break page
-                    test_session.current_question = 0
-                    test_session.current_section += 1
-                    # test_session.section_start_time = datetime.utcnow()
-                    test_session.section_start_time = None
-                    test_session.answers = json.dumps(answers)
-                    test_session.marked_for_review = json.dumps(marked)
-                    db.session.commit()
-                    return jsonify({'redirect': url_for('break_page')})
-                else:
-                    # End of test, calculate score
-                    score = 0
-                    section_scores = {}
-                    for section_idx in range(len(SECTIONS)):
-                        section_questions = get_questions_for_section(section_idx, practice_test_id)
-                        section_score = 0
-                        for qid in range(len(section_questions)):
-                            answer_key = f"{section_idx}_{qid}"
-                            ans = answers.get(answer_key)
-                            if ans and section_questions[qid]['correct_answer'] == ans:
-                                section_score += 1
-                        section_scores[section_idx] = section_score
-                        score += section_score
-                    test_session.score = score
-                    test_session.answers = json.dumps(answers)
-                    test_session.marked_for_review = json.dumps(marked)
-                    db.session.commit()
-                    print(f"Test completed. Score: {score}, Redirecting to results.")  # Debugging
-                    return jsonify({'redirect': url_for('results', session_id=test_session.id)})
-        
-        test_session.answers = json.dumps(answers)
-        test_session.marked_for_review = json.dumps(marked)
-        db.session.commit()
-        
-        # Return the next question
-        current_question = test_session.current_question
-        section_questions = get_questions_for_section(test_session.current_section, practice_test_id)
-        # section_questions = session.get('current_section_questions', [])
-        question = section_questions[current_question]
-        response = {
-            'question': question,
-            'qid': current_question,
-            'section_idx': test_session.current_section,
-            'test_session_id': test_session.id,
-            'answer': answers.get(f"{test_session.current_section}_{current_question}", ''),
-            'marked': marked.get(f"{test_session.current_section}_{current_question}", False),
-            'total_questions': len(section_questions),
-            'section_name': SECTIONS[test_session.current_section]['name']
-        }
-        return jsonify(response)
-      except Exception as exc:
-        app.logger.exception('Error in practice POST')
-        return jsonify({'error': f'Server error: {exc}'}), 500
+        try:
+            data = request.json
+            answers = json.loads(test_session.answers)
+            marked = json.loads(test_session.marked_for_review)
+
+            # Compute answer_key for both answers and mark_for_review
+            qid = str(data.get('current_question'))
+            answer_key = f"{test_session.current_section}_{qid}"
+
+            # Update answers
+            answer = data.get('answer')
+            if answer:
+                answers[answer_key] = answer
+
+            # Update marked for review
+            if data.get('mark_for_review') is not None:
+                marked[answer_key] = data.get('mark_for_review')
+
+            # Update current question
+            next_question = data.get('next_question')
+            if next_question is not None:
+                test_session.current_question = next_question
+                section_questions = get_questions_for_section(
+                    test_session.current_section,
+                    practice_test_id,
+                    answers=answers
+                )
+                if next_question >= len(section_questions):
+                    # End of section
+                    if test_session.current_section < len(SECTIONS) - 1:
+                        # Move to break page
+                        test_session.current_question = 0
+                        test_session.current_section += 1
+                        # test_session.section_start_time = datetime.utcnow()
+                        test_session.section_start_time = None
+                        test_session.answers = json.dumps(answers)
+                        test_session.marked_for_review = json.dumps(marked)
+                        db.session.commit()
+                        return jsonify({'redirect': url_for('break_page')})
+                    else:
+                        # End of test, calculate score
+                        score = 0
+                        section_scores = {}
+                        for section_idx in range(len(SECTIONS)):
+                            section_questions = get_questions_for_section(
+                                section_idx,
+                                practice_test_id,
+                                answers=answers
+                            )
+                            section_score = 0
+                            for qid in range(len(section_questions)):
+                                answer_key = f"{section_idx}_{qid}"
+                                ans = answers.get(answer_key)
+                                if ans and section_questions[qid]['correct_answer'] == ans:
+                                    section_score += 1
+                            section_scores[section_idx] = section_score
+                            score += section_score
+                        test_session.score = score
+                        test_session.answers = json.dumps(answers)
+                        test_session.marked_for_review = json.dumps(marked)
+                        db.session.commit()
+                        print(f"Test completed. Score: {score}, Redirecting to results.")  # Debugging
+                        return jsonify({'redirect': url_for('results', session_id=test_session.id)})
+
+            test_session.answers = json.dumps(answers)
+            test_session.marked_for_review = json.dumps(marked)
+            db.session.commit()
+
+            # Return the next question
+            current_question = test_session.current_question
+            section_questions = get_questions_for_section(
+                test_session.current_section,
+                practice_test_id,
+                answers=answers
+            )
+            # section_questions = session.get('current_section_questions', [])
+            question = section_questions[current_question]
+            response = {
+                'question': question,
+                'qid': current_question,
+                'section_idx': test_session.current_section,
+                'test_session_id': test_session.id,
+                'answer': answers.get(f"{test_session.current_section}_{current_question}", ''),
+                'marked': marked.get(f"{test_session.current_section}_{current_question}", False),
+                'total_questions': len(section_questions),
+                'section_name': SECTIONS[test_session.current_section]['name']
+            }
+            return jsonify(response)
+        except Exception as exc:
+            app.logger.exception('Error in practice POST')
+            return jsonify({'error': f'Server error: {exc}'}), 500
 
     section_duration = SECTIONS[test_session.current_section]['duration']
 
@@ -682,7 +800,11 @@ def get_full_results(session_id):
     section_scores = {}
     section_answers = {}
     for section_idx in range(len(SECTIONS)):
-        section_questions = get_questions_for_section(section_idx, practice_test_id)
+        section_questions = get_questions_for_section(
+            section_idx,
+            practice_test_id,
+            answers=answers
+        )
         section_score = 0
         section_ans = {}
         for qid in range(len(section_questions)):
@@ -981,7 +1103,11 @@ def results(session_id):
     section_scores = {}
     section_answers = {}
     for section_idx in range(len(SECTIONS)):
-        section_questions = get_questions_for_section(section_idx, practice_test_id)
+        section_questions = get_questions_for_section(
+            section_idx,
+            practice_test_id,
+            answers=answers
+        )
         section_score = 0
         section_ans = {}
         for qid in range(len(section_questions)):
@@ -1347,7 +1473,11 @@ def admin_user_detail(user_id):
             answers = json.loads(ts.answers or '{}')
             section_answers = []
             for section_idx in range(len(SECTIONS)):
-                qs = get_questions_for_section(section_idx, ts.practice_test_id)
+                qs = get_questions_for_section(
+                    section_idx,
+                    ts.practice_test_id,
+                    answers=answers
+                )
                 ans_list = []
                 for qid in range(len(qs)):
                     key = f"{section_idx}_{qid}"
@@ -1467,93 +1597,93 @@ def drill_practice(session_id):
     questions = get_skill_questions(question_ids)
     
     if request.method == 'POST':
-      try:
-        data = request.json
-        answers = json.loads(drill_session.answers)
-        current_question = data.get('current_question', 0)
-        question_id = data.get('question_id')
-        answer = data.get('answer')
-        
-        # Save answer
-        if answer is not None:
-            answers[str(question_id)] = answer
-        
-        next_question = data.get('next_question')
-        
-        if next_question is not None and next_question >= len(questions):
-            # Drill finished, calculate score
-            correct_count = 0
-            for q in questions:
-                user_answer = answers.get(str(q['question_id']))
-                if is_correct_answer(q, user_answer):
-                    correct_count += 1
-            
-            accuracy = (correct_count / len(questions) * 100) if questions else 0
-            
-            drill_session.answers = json.dumps(answers)
-            drill_session.end_time = datetime.utcnow()
-            drill_session.duration_seconds = int((datetime.utcnow() - drill_session.start_time).total_seconds())
-            drill_session.correct_count = correct_count
-            drill_session.total_count = len(questions)
-            drill_session.accuracy_percent = accuracy
-            
-            # Update progress
-            progress = DrillSetProgress.query.filter_by(
-                user_id=session['user_id'],
-                topic_name=drill_set.topic_name
-            ).first()
-            
-            if not progress:
-                progress = DrillSetProgress(
+        try:
+            data = request.json
+            answers = json.loads(drill_session.answers)
+            current_question = data.get('current_question', 0)
+            question_id = data.get('question_id')
+            answer = data.get('answer')
+
+            # Save answer
+            if answer is not None:
+                answers[str(question_id)] = answer
+
+            next_question = data.get('next_question')
+
+            if next_question is not None and next_question >= len(questions):
+                # Drill finished, calculate score
+                correct_count = 0
+                for q in questions:
+                    user_answer = answers.get(str(q['question_id']))
+                    if is_correct_answer(q, user_answer):
+                        correct_count += 1
+
+                accuracy = (correct_count / len(questions) * 100) if questions else 0
+
+                drill_session.answers = json.dumps(answers)
+                drill_session.end_time = datetime.utcnow()
+                drill_session.duration_seconds = int((datetime.utcnow() - drill_session.start_time).total_seconds())
+                drill_session.correct_count = correct_count
+                drill_session.total_count = len(questions)
+                drill_session.accuracy_percent = accuracy
+
+                # Update progress
+                progress = DrillSetProgress.query.filter_by(
                     user_id=session['user_id'],
-                    topic_name=drill_set.topic_name,
-                    total_attempts=0,
-                    completed_sets=0
-                )
-                db.session.add(progress)
-            
-            progress.total_attempts += 1
-            progress.best_score = max(progress.best_score or 0, accuracy)
-            progress.last_attempt_date = datetime.utcnow()
-            
-            # Count unique drill sets completed at least once for this topic
-            completed_set_ids = db.session.query(DrillSession.drill_set_id).join(DrillSet).filter(
-                DrillSession.user_id == session['user_id'],
-                DrillSet.topic_name == drill_set.topic_name,
-                DrillSession.end_time.isnot(None)
-            ).distinct().subquery()
-            completed_sets_count = db.session.query(completed_set_ids).count()
-            
-            progress.completed_sets = completed_sets_count
-            
+                    topic_name=drill_set.topic_name
+                ).first()
+
+                if not progress:
+                    progress = DrillSetProgress(
+                        user_id=session['user_id'],
+                        topic_name=drill_set.topic_name,
+                        total_attempts=0,
+                        completed_sets=0
+                    )
+                    db.session.add(progress)
+
+                progress.total_attempts += 1
+                progress.best_score = max(progress.best_score or 0, accuracy)
+                progress.last_attempt_date = datetime.utcnow()
+
+                # Count unique drill sets completed at least once for this topic
+                completed_set_ids = db.session.query(DrillSession.drill_set_id).join(DrillSet).filter(
+                    DrillSession.user_id == session['user_id'],
+                    DrillSet.topic_name == drill_set.topic_name,
+                    DrillSession.end_time.isnot(None)
+                ).distinct().subquery()
+                completed_sets_count = db.session.query(completed_set_ids).count()
+
+                progress.completed_sets = completed_sets_count
+
+                db.session.commit()
+
+                return jsonify({'redirect': url_for('drill_results', session_id=session_id)})
+
+            drill_session.answers = json.dumps(answers)
             db.session.commit()
-            
-            return jsonify({'redirect': url_for('drill_results', session_id=session_id)})
-        
-        drill_session.answers = json.dumps(answers)
-        db.session.commit()
-        
-        # Return next question
-        if next_question is not None and next_question < len(questions):
-            question = questions[next_question]
-            response = {
-                'question': question,
-                'qid': next_question,
-                'session_id': session_id,
-                'answer': answers.get(str(question['question_id']), ''),
-                'total_questions': len(questions),
-                'topic_name': drill_set.topic_name,
-                'difficulty': drill_set.difficulty,
-                'set_number': drill_set.set_number,
-            }
-            return jsonify(response)
 
-        # Save-only request (next_question is None) — just acknowledge
-        return jsonify({'ok': True})
+            # Return next question
+            if next_question is not None and next_question < len(questions):
+                question = questions[next_question]
+                response = {
+                    'question': question,
+                    'qid': next_question,
+                    'session_id': session_id,
+                    'answer': answers.get(str(question['question_id']), ''),
+                    'total_questions': len(questions),
+                    'topic_name': drill_set.topic_name,
+                    'difficulty': drill_set.difficulty,
+                    'set_number': drill_set.set_number,
+                }
+                return jsonify(response)
 
-      except Exception as exc:
-        app.logger.exception('Error in drill POST')
-        return jsonify({'error': f'Server error: {exc}'}), 500
+            # Save-only request (next_question is None) — just acknowledge
+            return jsonify({'ok': True})
+
+        except Exception as exc:
+            app.logger.exception('Error in drill POST')
+            return jsonify({'error': f'Server error: {exc}'}), 500
 
     # GET request
     session['drill_session_id'] = session_id
