@@ -119,5 +119,12 @@
 
 <br>
 
-  <a href="{{ url_for('dashboard') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Back to Dashboard</a>
+  <div class="flex gap-2 flex-wrap">
+    <a href="{{ url_for('comprehensive_report', session_id=test_session.id) }}" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">View Comprehensive Report</a>
+    {% if session.username in admin_usernames and test_session.user_id != session.user_id %}
+    <a href="{{ url_for('admin_user_detail', user_id=test_session.user_id) }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Back to Admin User</a>
+    {% else %}
+    <a href="{{ url_for('dashboard') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Back to Dashboard</a>
+    {% endif %}
+  </div>
 {% endblock %}

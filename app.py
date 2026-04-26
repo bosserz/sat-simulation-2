@@ -1,11 +1,17 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, send_file
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 import json
 import os
+import html
+from io import BytesIO
 from datetime import datetime, timedelta
 from flask_migrate import Migrate
 from sqlalchemy.exc import OperationalError, ProgrammingError
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import mm
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-change-in-production')
@@ -788,7 +794,7 @@ def get_full_results(session_id):
         return redirect(url_for('login'))
     
     test_session = TestSession.query.get_or_404(session_id)
-    if test_session.user_id != session['user_id']:
+    if not _can_view_test_session(test_session):
         flash('Unauthorized access.')
         return redirect(url_for('dashboard'))
     
@@ -1084,6 +1090,87 @@ def compute_section_scores(sections, questions, section_answers, module_multipli
     }
 
 
+def _can_view_test_session(test_session):
+    """Allow owner or admin to view a test session."""
+    if 'user_id' not in session:
+        return False
+    return test_session.user_id == session['user_id'] or _is_admin()
+
+
+def _build_test_report_context(test_session):
+    """Build comprehensive report payload for a completed test session."""
+    practice_test_id = test_session.practice_test_id
+    test_questions = ALL_QUESTIONS.get(practice_test_id, [])
+    answers = json.loads(test_session.answers or '{}')
+    marked = json.loads(test_session.marked_for_review or '{}')
+
+    section_scores = {}
+    section_answers = []
+    section_reviews = []
+
+    for section_idx in range(len(SECTIONS)):
+        section_questions = get_questions_for_section(
+            section_idx,
+            practice_test_id,
+            answers=answers
+        )
+
+        section_score = 0
+        answer_list = []
+        question_reviews = []
+
+        for qid, q in enumerate(section_questions):
+            answer_key = f"{section_idx}_{qid}"
+            user_answer = answers.get(answer_key)
+            is_correct = is_correct_answer(q, user_answer)
+            if is_correct:
+                section_score += 1
+
+            answer_obj = {
+                'answer': user_answer,
+                'marked': marked.get(answer_key, False)
+            }
+            answer_list.append(answer_obj)
+
+            question_reviews.append({
+                'qid': qid,
+                'question': q,
+                'user_answer': user_answer,
+                'marked': answer_obj['marked'],
+                'is_correct': is_correct,
+            })
+
+        section_scores[section_idx] = section_score
+        section_answers.append(answer_list)
+        section_reviews.append({
+            'section_idx': section_idx,
+            'section': SECTIONS[section_idx],
+            'questions': question_reviews,
+            'score': section_score,
+            'total': len(section_questions),
+        })
+
+    module_multipliers = {
+        'verbal': {1: 1.0, 2: 1.66},
+        'math':   {1: 0.79, 2: 1.345},
+    }
+
+    scores = compute_section_scores(SECTIONS, test_questions, section_answers, module_multipliers)
+    domain_chart_data = build_domain_chart_data(SECTIONS, test_questions, section_answers)
+
+    return {
+        'test_session': test_session,
+        'practice_test_id': practice_test_id,
+        'raw_score': test_session.score,
+        'section_scores': section_scores,
+        'section_reviews': section_reviews,
+        'domain_chart_data': domain_chart_data,
+        'verbal_score': scores['verbal_score'],
+        'math_score': scores['math_score'],
+        'total_score': scores['total_score'],
+    }
+
+
 @app.route('/mock_results/<int:session_id>')
 def results(session_id):
     if 'user_id' not in session:
@@ -1091,7 +1178,7 @@ def results(session_id):
         return redirect(url_for('login'))
     
     test_session = TestSession.query.get_or_404(session_id)
-    if test_session.user_id != session['user_id']:
+    if not _can_view_test_session(test_session):
         flash('Unauthorized access.')
         return redirect(url_for('dashboard'))
     
@@ -1143,6 +1230,145 @@ def results(session_id):
         total_score=scores["total_score"],
         # domain_stats=domain_stats
         domain_chart_data=domain_chart_data,
+        test_session=test_session,
+    )
+
+
+@app.route('/report/<int:session_id>')
+def comprehensive_report(session_id):
+    if 'user_id' not in session:
+        flash('Please log in to view results.')
+        return redirect(url_for('login'))
+
+    test_session = TestSession.query.get_or_404(session_id)
+    if not _can_view_test_session(test_session):
+        flash('Unauthorized access.')
+        return redirect(url_for('dashboard'))
+
+    if test_session.score is None:
+        flash('This test is still in progress.')
+        return redirect(url_for('dashboard'))
+
+    report_data = _build_test_report_context(test_session)
+    viewer_is_admin = _is_admin() and test_session.user_id != session.get('user_id')
+    test_owner = User.query.get(test_session.user_id)
+
+    return render_template(
+        'comprehensive_report.html',
+        **report_data,
+        viewer_is_admin=viewer_is_admin,
+        test_owner=test_owner,
+    )
+
+
+@app.route('/report/<int:session_id>/pdf')
+def comprehensive_report_pdf(session_id):
+    if 'user_id' not in session:
+        flash('Please log in to view results.')
+        return redirect(url_for('login'))
+
+    test_session = TestSession.query.get_or_404(session_id)
+    if not _can_view_test_session(test_session):
+        flash('Unauthorized access.')
+        return redirect(url_for('dashboard'))
+
+    if test_session.score is None:
+        flash('This test is still in progress.')
+        return redirect(url_for('dashboard'))
+
+    report_data = _build_test_report_context(test_session)
+    test_owner = User.query.get(test_session.user_id)
+
+    styles = getSampleStyleSheet()
+    title_style = styles['Heading1']
+    section_style = styles['Heading3']
+    normal_style = ParagraphStyle(
+        'ReportBody',
+        parent=styles['BodyText'],
+        fontSize=9,
+        leading=12,
+        spaceAfter=4,
+    )
+
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(
+        buffer,
+        pagesize=A4,
+        leftMargin=15 * mm,
+        rightMargin=15 * mm,
+        topMargin=12 * mm,
+        bottomMargin=12 * mm,
+        title='Comprehensive Exam Report',
+    )
+
+    def _clean_text(value):
+        if value is None:
+            return ''
+        s = str(value)
+        s = html.unescape(s)
+        s = re.sub(r'<[^>]+>', ' ', s)
+        s = re.sub(r'\s+', ' ', s)
+        return s.strip()
+
+    def _answer_text(value):
+        if value is None or value == '':
+            return 'Not answered'
+        if isinstance(value, (list, tuple, set)):
+            return ', '.join(_clean_text(v) for v in value)
+        return _clean_text(value)
+
+    story = []
+    student_label = test_owner.username if test_owner else f'User {test_session.user_id}'
+    story.append(Paragraph('Comprehensive Exam Report', title_style))
+    story.append(Paragraph(f"Student: {student_label}", normal_style))
+    story.append(Paragraph(f"Test: {_clean_text(report_data['practice_test_id'])}", normal_style))
+    story.append(Paragraph(
+        f"Scores - Total: {report_data['total_score']}, Reading &amp; Writing: {report_data['verbal_score']}, Mathematics: {report_data['math_score']}, Raw Correct: {report_data['raw_score']}",
+        normal_style
+    ))
+    story.append(Spacer(1, 6))
+
+    for section_data in report_data['section_reviews']:
+        section_name = _clean_text(section_data['section'].get('name'))
+        story.append(Paragraph(
+            f"{section_name} ({section_data['score']}/{section_data['total']} correct)",
+            section_style
+        ))
+        story.append(Spacer(1, 4))
+
+        for row in section_data['questions']:
+            q = row['question']
+            status = 'Correct' if row['is_correct'] else 'Incorrect'
+            marked = 'Yes' if row['marked'] else 'No'
+            question_text = _clean_text(q.get('question'))
+            if not question_text:
+                question_text = '(Question text unavailable)'
+
+            story.append(Paragraph(
+                f"Q{row['qid'] + 1} - {status} (Marked: {marked})",
+                normal_style
+            ))
+            story.append(Paragraph(f"Question: {question_text}", normal_style))
+            story.append(Paragraph(
+                f"Student answer: {_answer_text(row['user_answer'])}",
+                normal_style
+            ))
+            story.append(Paragraph(
+                f"Correct answer: {_answer_text(q.get('correct_answer'))}",
+                normal_style
+            ))
+            story.append(Spacer(1, 4))
+
+        story.append(Spacer(1, 6))
+
+    doc.build(story)
+    buffer.seek(0)
+    filename = f"comprehensive_report_session_{session_id}.pdf"
+    return send_file(
+        buffer,
+        mimetype='application/pdf',
+        as_attachment=True,
+        download_name=filename,
     )
 
 # app.py

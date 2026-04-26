@@ -78,7 +78,7 @@
                                 <td class="p-3">{{ session.practice_test_id }}</td>
                                 <td class="p-3">{{ session.start_time.strftime('%b %d, %Y') }}</td>
                                 <td class="p-3">
-                                    <a href="{{ url_for('results', session_id=session.id) }}" class="text-blue-600 hover:underline font-semibold">View Results</a>
+                                    <a href="{{ url_for('comprehensive_report', session_id=session.id) }}" class="text-blue-600 hover:underline font-semibold">View Report</a>
                                 </td>
                             </tr>
                         {% endfor %}

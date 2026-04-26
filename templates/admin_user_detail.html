@@ -50,8 +50,12 @@
 
                 <td class="p-3">
                     {% if row.session.score is not none %}
-                        <a href="{{ url_for('results', session_id=row.session.id) }}"
-                           class="text-blue-600 hover:underline text-sm">View Results →</a>
+                        <div class="flex gap-3">
+                            <a href="{{ url_for('results', session_id=row.session.id) }}"
+                               class="text-blue-600 hover:underline text-sm">Summary</a>
+                            <a href="{{ url_for('comprehensive_report', session_id=row.session.id) }}"
+                               class="text-indigo-600 hover:underline text-sm">Comprehensive</a>
+                        </div>
                     {% else %}
                         <span class="text-gray-400 text-sm">—</span>
                     {% endif %}
