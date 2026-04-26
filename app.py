@@ -1097,6 +1097,113 @@ def _can_view_test_session(test_session):
     return test_session.user_id == session['user_id'] or _is_admin()
 
 
+def _build_improvement_analysis(section_reviews, domain_chart_data):
+    """Create human-readable analysis and recommendations from report performance."""
+    subject_labels = {
+        'verbal': 'Reading & Writing',
+        'math': 'Mathematics',
+    }
+
+    subject_totals = {
+        'verbal': {'correct': 0, 'total': 0},
+        'math': {'correct': 0, 'total': 0},
+    }
+
+    for section_data in section_reviews:
+        subject = (section_data.get('section') or {}).get('type', '').lower()
+        if subject in subject_totals:
+            subject_totals[subject]['correct'] += section_data.get('score', 0)
+            subject_totals[subject]['total'] += section_data.get('total', 0)
+
+    def _subject_recommendations(subject, accuracy):
+        if subject == 'verbal':
+            if accuracy < 55:
+                return [
+                    'Start with untimed passage drills and focus on evidence-based elimination.',
+                    'Review grammar and sentence-boundary rules daily in short practice sets.',
+                    'After each verbal set, write why each wrong option is wrong to reduce repeat mistakes.',
+                ]
+            if accuracy < 75:
+                return [
+                    'Practice mixed verbal modules under moderate time to improve pacing and consistency.',
+                    'Track recurring error patterns (inference, vocabulary-in-context, transitions) each week.',
+                    'Re-solve missed verbal questions after 24 hours to reinforce reasoning patterns.',
+                ]
+            return [
+                'Maintain speed by solving one timed verbal module every 2-3 days.',
+                'Prioritize advanced inference and rhetoric items to push the ceiling higher.',
+                'Keep an error log to avoid dropping easy points under test pressure.',
+            ]
+
+        if accuracy < 55:
+            return [
+                'Rebuild core algebra and arithmetic foundations before increasing speed.',
+                'Use step-by-step written setups for word problems to reduce careless errors.',
+                'Drill calculator and no-calculator routines separately for accuracy first.',
+            ]
+        if accuracy < 75:
+            return [
+                'Run mixed-topic math sets and focus on translating word problems into equations quickly.',
+                'Review missed questions by category and redo similar problems in batches.',
+                'Use a two-pass strategy: secure easy/mid questions first, then return to harder items.',
+            ]
+        return [
+            'Increase challenge with hard multi-step and non-routine SAT math questions.',
+            'Refine timing by targeting one minute average on straightforward items.',
+            'Validate final answers with estimation checks to prevent avoidable misses.',
+        ]
+
+    subject_analysis = []
+    weak_domains_all = []
+
+    for subject in ('verbal', 'math'):
+        totals = subject_totals[subject]
+        total = totals['total']
+        correct = totals['correct']
+        accuracy = int(round((100 * correct / total), 0)) if total else 0
+
+        labels = domain_chart_data.get(subject, {}).get('labels', [])
+        pct_correct = domain_chart_data.get(subject, {}).get('pct_correct', [])
+        totals_by_domain = domain_chart_data.get(subject, {}).get('totals', [])
+
+        domain_rows = []
+        for idx, label in enumerate(labels):
+            pct = pct_correct[idx] if idx < len(pct_correct) else 0
+            total_q = totals_by_domain[idx] if idx < len(totals_by_domain) else 0
+            domain_rows.append({
+                'domain': label,
+                'pct_correct': pct,
+                'total': total_q,
+            })
+
+        weak_domains = [d for d in sorted(domain_rows, key=lambda x: x['pct_correct']) if d['total'] > 0][:2]
+        for d in weak_domains:
+            weak_domains_all.append({
+                'subject': subject,
+                'subject_label': subject_labels[subject],
+                'domain': d['domain'],
+                'pct_correct': d['pct_correct'],
+            })
+
+        subject_analysis.append({
+            'subject': subject,
+            'subject_label': subject_labels[subject],
+            'correct': correct,
+            'total': total,
+            'accuracy': accuracy,
+            'weak_domains': weak_domains,
+            'recommendations': _subject_recommendations(subject, accuracy),
+        })
+
+    weak_domains_all = sorted(weak_domains_all, key=lambda x: x['pct_correct'])
+    priority_focus = weak_domains_all[:3]
+
+    return {
+        'subject_analysis': subject_analysis,
+        'priority_focus': priority_focus,
+    }
+
+
 def _build_test_report_context(test_session):
     """Build comprehensive report payload for a completed test session."""
     practice_test_id = test_session.practice_test_id
@@ -1157,6 +1264,7 @@ def _build_test_report_context(test_session):
 
     scores = compute_section_scores(SECTIONS, test_questions, section_answers, module_multipliers)
     domain_chart_data = build_domain_chart_data(SECTIONS, test_questions, section_answers)
+    improvement_analysis = _build_improvement_analysis(section_reviews, domain_chart_data)
 
     return {
         'test_session': test_session,
@@ -1165,6 +1273,7 @@ def _build_test_report_context(test_session):
         'section_scores': section_scores,
         'section_reviews': section_reviews,
         'domain_chart_data': domain_chart_data,
+        'improvement_analysis': improvement_analysis,
         'verbal_score': scores['verbal_score'],
         'math_score': scores['math_score'],
         'total_score': scores['total_score'],
