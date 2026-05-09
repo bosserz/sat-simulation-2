@@ -6,6 +6,8 @@ let currentSectionIdx = 0;
 let currentTestSessionId = null;
 let questionBaselines = { passage: '', question: '' };
 let currentHighlights = [];
+let cachedHighlightPayload = null;
+let clearHighlightCacheTimer = null;
 
 // timer state
 window.timerInterval = null;
@@ -198,6 +200,34 @@ function readSelectionAsHighlightPayload() {
     };
 }
 
+function clearHighlightSelectionCache() {
+    cachedHighlightPayload = null;
+    clearTimeout(clearHighlightCacheTimer);
+    clearHighlightCacheTimer = null;
+}
+
+function cacheCurrentHighlightSelection() {
+    const payload = readSelectionAsHighlightPayload();
+    if (payload) {
+        cachedHighlightPayload = payload;
+        clearTimeout(clearHighlightCacheTimer);
+        clearHighlightCacheTimer = null;
+    }
+    return payload;
+}
+
+function scheduleHighlightSelectionCacheClear() {
+    clearTimeout(clearHighlightCacheTimer);
+    clearHighlightCacheTimer = setTimeout(() => {
+        cachedHighlightPayload = null;
+        updateHighlightButtonState();
+    }, 1200);
+}
+
+function getHighlightPayloadForAction() {
+    return readSelectionAsHighlightPayload() || cachedHighlightPayload;
+}
+
 async function fetchHighlightsForCurrentQuestion() {
     const params = new URLSearchParams({
         section_idx: String(currentSectionIdx),
@@ -217,6 +247,7 @@ async function refreshHighlightsOnScreen() {
 
 function loadQuestion(qid) {
     console.log(`Loading question ${qid}`);  // Debugging
+    clearHighlightSelectionCache();
     fetch('/practice', {
         method: 'POST',
         headers: {
@@ -302,15 +333,16 @@ function loadQuestion(qid) {
             // 🔹 Case 1: Passage empty but has options → hide passage + expand question area
             if (noPassage && hasOptions) {
                 passageParent.style.display = 'none';
-                questionContainer.classList.remove('w-1/2');
-                questionContainer.classList.add('w-3/5');
+                questionContainer.classList.remove('lg:w-1/2');
+                questionContainer.classList.add('lg:w-3/5');
                 questionContainer.classList.add('mx-auto');
             } 
             // 🔹 Case 2: No options (student-produced response) → show special directions
             else if (noOptions) {
                 passageParent.style.display = 'block';
-                questionContainer.classList.remove('w-full');
-                questionContainer.classList.add('w-1/2');
+                questionContainer.classList.remove('lg:w-3/5');
+                questionContainer.classList.add('lg:w-1/2');
+                questionContainer.classList.remove('mx-auto');
                 passageElement.innerHTML = `
                     <h3 class="font-bold">Student-produced response directions</h3>
                     <ul class="list-disc list-inside text-small mb-4">
@@ -349,8 +381,9 @@ function loadQuestion(qid) {
             // 🔹 Case 3: Passage exists → show it normally
             else {
                 passageParent.style.display = 'block';
-                questionContainer.classList.remove('w-full');
-                questionContainer.classList.add('w-1/2');
+                questionContainer.classList.remove('lg:w-3/5');
+                questionContainer.classList.add('lg:w-1/2');
+                questionContainer.classList.remove('mx-auto');
                 passageElement.innerHTML = passageHTML;
             }
 
@@ -458,9 +491,13 @@ function loadQuestion(qid) {
             input.value = data.answer || '';
 
             // ✅ Allow only digits, '/', and '.'
-            input.setAttribute('inputmode', 'decimal');           // mobile numeric keyboard
+            input.setAttribute('inputmode', 'text');              // iPad decimal keyboard can hide '/' and '-'
             input.setAttribute('pattern', '[0-9./-]*');            // form validation on submit
-            input.setAttribute('title', "Only numbers, '/', and '.' are allowed");
+            input.setAttribute('autocomplete', 'off');
+            input.setAttribute('autocorrect', 'off');
+            input.setAttribute('autocapitalize', 'none');
+            input.setAttribute('spellcheck', 'false');
+            input.setAttribute('title', "Only numbers, '-', '/', and '.' are allowed");
 
             const allowed = /^[0-9./-]*$/;
 
@@ -808,15 +845,17 @@ function on(id, event, handler) {
 function updateHighlightButtonState() {
     const btn = document.getElementById('highlight-selection');
     if (!btn) return;
-    const payload = readSelectionAsHighlightPayload();
-    btn.disabled = !payload;
-    btn.classList.toggle('opacity-40', !payload);
+    const payload = cacheCurrentHighlightSelection();
+    if (!payload && cachedHighlightPayload) scheduleHighlightSelectionCacheClear();
+    const hasPayload = Boolean(payload || cachedHighlightPayload);
+    btn.disabled = !hasPayload;
+    btn.classList.toggle('opacity-40', !hasPayload);
 }
 
 document.addEventListener('selectionchange', updateHighlightButtonState);
 
 async function createHighlightFromSelection() {
-    const payload = readSelectionAsHighlightPayload();
+    const payload = getHighlightPayloadForAction();
     if (!payload) {
         alert('Select text in the passage or question first.');
         return false;
@@ -839,6 +878,7 @@ async function createHighlightFromSelection() {
     }
 
     await refreshHighlightsOnScreen();
+    clearHighlightSelectionCache();
     updateHighlightButtonState();
     return true;
 }
@@ -846,6 +886,13 @@ async function createHighlightFromSelection() {
 on('highlight-selection', 'click', async () => {
     await createHighlightFromSelection();
 });
+
+const highlightButton = document.getElementById('highlight-selection');
+if (highlightButton) {
+    highlightButton.addEventListener('touchstart', cacheCurrentHighlightSelection, { passive: true });
+    highlightButton.addEventListener('pointerdown', cacheCurrentHighlightSelection);
+    highlightButton.addEventListener('mousedown', cacheCurrentHighlightSelection);
+}
 
 function isTypingTarget(target) {
     if (!target) return false;
@@ -883,6 +930,7 @@ on('clear-highlights', 'click', async () => {
 
     currentHighlights = [];
     renderHighlights();
+    clearHighlightSelectionCache();
 });
 
 document.addEventListener('click', async (e) => {
@@ -925,7 +973,6 @@ on('next-button', 'click', async () => {
     const modal = document.getElementById('end-of-module-modal');
     if (modal) {
       modal.classList.remove('hidden');   // remove Tailwind's hidden
-      modal.style.display = 'flex';       // ensure it's visible
       console.log("Modal displayed successfully");
     } else {
       console.error("❌ end-of-module-modal not found in DOM");

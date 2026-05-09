@@ -1,5 +1,6 @@
 body {
     min-height: 100vh;
+    min-height: 100svh;
     display: flex;
     flex-direction: column;
     font-family: "Anuphan", sans-serif !important;
@@ -21,8 +22,13 @@ button:hover, a.bg-blue-600:hover, a.bg-green-600:hover {
     transition: background-color 0.3s;
 }
 
+button, a, input, label {
+    touch-action: manipulation;
+}
+
 #passage, #question-container {
     min-height: 400px;
+    overflow-wrap: anywhere;
 }
 
 #passage {
@@ -35,6 +41,10 @@ button:hover, a.bg-blue-600:hover, a.bg-green-600:hover {
 
 input[type="radio"] {
     margin-right: 8px;
+}
+
+input[type="text"], input[type="password"], input[type="email"], select, textarea {
+    font-size: 16px;
 }
 
 label {
@@ -66,9 +76,15 @@ label:hover {
     z-index: 1000;
 }
 
+#reference-formula-modal,
+#end-of-module-modal,
+#submit-confirmation-modal {
+    z-index: 1000;
+}
+
 #desmos-iframe {
     width: 100%;
-    height: 100%;
+    height: calc(100% - 3.5rem);
 }
 
 .flash {
@@ -125,4 +141,77 @@ mark.sat-highlight {
 
 #highlight-selection:disabled {
     cursor: not-allowed;
+}
+
+.practice-shell {
+    overflow-x: hidden;
+}
+
+.practice-toolbar {
+    max-width: 100%;
+}
+
+.practice-tool-button {
+    min-height: 44px;
+    padding: 0.25rem 0.5rem;
+}
+
+.practice-icon-button {
+    min-width: 44px;
+    min-height: 44px;
+    line-height: 1;
+}
+
+.practice-modal-panel {
+    max-height: calc(100vh - 2rem);
+    max-height: calc(100svh - 2rem);
+}
+
+.desmos-panel {
+    height: calc(100vh - 2rem);
+    height: calc(100svh - 2rem);
+}
+
+.formula-panel {
+    max-height: calc(100vh - 2rem);
+    max-height: calc(100svh - 2rem);
+}
+
+.formula-image {
+    max-height: calc(100vh - 8rem);
+    max-height: calc(100svh - 8rem);
+    width: 100%;
+    object-fit: contain;
+}
+
+#passage-panel,
+#question-container {
+    min-width: 0;
+}
+
+#passage-panel {
+    overflow-x: auto;
+}
+
+.explained-table {
+    min-width: 36rem;
+}
+
+@media (max-width: 1023px) {
+    #passage,
+    #question-container {
+        min-height: auto;
+    }
+
+    #question-status-grid,
+    #end-module-question-grid {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    #question-status-grid,
+    #end-module-question-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
 }

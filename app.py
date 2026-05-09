@@ -648,6 +648,7 @@ def practice():
         if 'new_test' in session and session['new_test']:
             test_session.current_section = 0
             test_session.current_question = 0
+            test_session.section_start_time = datetime.utcnow()
             test_session.answers = json.dumps({})
             test_session.marked_for_review = json.dumps({})
             test_session.score = None
@@ -766,7 +767,9 @@ def practice():
         elapsed = (datetime.utcnow() - test_session.section_start_time).total_seconds()
         remaining_time = max(0, section_duration - int(elapsed))
     else:
-        # Not started yet → show full time but DO NOT start
+        # Start the new section when the student leaves the break page and opens practice.
+        test_session.section_start_time = datetime.utcnow()
+        db.session.commit()
         remaining_time = section_duration
 
 

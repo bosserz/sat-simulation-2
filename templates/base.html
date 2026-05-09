@@ -16,19 +16,20 @@
 </head>
 <body class="bg-gray-100 font-sans">
     <nav class="bg-intsight text-white p-4">
-        <div class="container mx-auto flex justify-between items-center">
+        <div class="container mx-auto flex flex-wrap justify-between items-center gap-4">
             <a href="{{ url_for('index') }}" class="text-2xl font-bold">
                 <img src="{{ url_for('static', filename='intsight-logo-white.png') }}" style="max-width: 160px;" alt="Intsight Logo">
-            <div>
+            </a>
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
                 {% if session.username %}
-                    <span class="mr-4">Hello, {{ session.username }}</span>
-                    <a href="{{ url_for('dashboard') }}" class="mr-4">Dashboard</a>
+                    <span>Hello, {{ session.username }}</span>
+                    <a href="{{ url_for('dashboard') }}">Dashboard</a>
                     {% if session.username in admin_usernames %}
-                    <a href="{{ url_for('admin') }}" class="mr-4">Admin</a>
+                    <a href="{{ url_for('admin') }}">Admin</a>
                     {% endif %}
                     <a href="{{ url_for('logout') }}">Logout</a>
                 {% else %}
-                    <a href="{{ url_for('login') }}" class="mr-4">Login</a>
+                    <a href="{{ url_for('login') }}">Login</a>
                     <!-- <a href="{{ url_for('register') }}">Register</a> -->
                 {% endif %}
             </div>
