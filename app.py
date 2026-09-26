@@ -2594,13 +2594,18 @@ def api_test_answer(session_id):
         marked[answer_key] = bool(data.get("mark_for_review"))
 
     next_question = data.get("next_question")
-    if next_question is not None:
-        test_session.current_question = int(next_question)
+    time_expired = (
+        test_session.section_start_time is not None
+        and _remaining_time_for_session(test_session, start_timer=False) <= 0
+    )
+    if next_question is not None or time_expired:
         section_questions = get_questions_for_section(
             test_session.current_section,
             test_session.practice_test_id,
             answers=answers,
         )
+        # Once the section clock runs out, any save submits the section.
+        test_session.current_question = len(section_questions) if time_expired else int(next_question)
         if test_session.current_question >= len(section_questions):
             if test_session.current_section < len(SECTIONS) - 1:
                 test_session.current_question = 0
