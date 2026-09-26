@@ -60,10 +60,12 @@ def upgrade():
             ['access_grant_id'], ['id'], referent_schema=SCHEMA,
         )
 
-    # Don't lock out students who were already practicing
+    # Don't lock out students who were already practicing. The NULLs need casts:
+    # under SELECT DISTINCT, Postgres types a bare NULL as text.
     op.execute(f"""
         INSERT INTO {PREFIX}test_access_grants (user_id, practice_test_id, max_attempts, source, note, created_at)
-        SELECT DISTINCT user_id, NULL, NULL, 'migration', 'Existing student when access control launched', CURRENT_TIMESTAMP
+        SELECT DISTINCT user_id, CAST(NULL AS VARCHAR(100)), CAST(NULL AS INTEGER),
+               'migration', 'Existing student when access control launched', CURRENT_TIMESTAMP
         FROM {PREFIX}test_sessions
     """)
 
