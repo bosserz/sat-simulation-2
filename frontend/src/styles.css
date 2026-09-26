@@ -102,6 +102,32 @@ label {
     @apply border border-slate-300 p-2;
   }
 
+  .sat-content p + p,
+  .sat-content ul {
+    @apply mt-3;
+  }
+
+  .sat-content ul {
+    @apply list-disc pl-6;
+  }
+
+  /* Blank markup in question data: "______" plus a screen-reader-only label */
+  .sat-content .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .sat-content .sat-figure {
+    @apply mx-auto my-4 block h-auto w-full max-w-md;
+  }
+
   .answer-option {
     @apply flex min-h-12 cursor-pointer items-start gap-3 rounded-md border border-slate-300 bg-white p-3 transition hover:border-slate-500;
   }

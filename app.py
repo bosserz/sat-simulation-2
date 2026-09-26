@@ -210,6 +210,18 @@ _BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 with open(os.path.join(_BASE_DIR, 'database', 'questions.json'), 'r') as f:
     ALL_QUESTIONS = json.load(f)
 
+# Load adaptive mock tests (built by import_adaptive_mock.py). Module 2 questions
+# carry a `variant` ("medium"/"hard"); ADAPTIVE_ROUTING holds the module 1
+# correct-answer threshold for the hard variant, per section type.
+ADAPTIVE_ROUTING = {}
+_MOCK_TESTS_DIR = os.path.join(_BASE_DIR, 'database', 'mock_tests')
+for _fname in sorted(os.listdir(_MOCK_TESTS_DIR)) if os.path.isdir(_MOCK_TESTS_DIR) else []:
+    if _fname.endswith('.json'):
+        with open(os.path.join(_MOCK_TESTS_DIR, _fname), 'r') as f:
+            _mock = json.load(f)
+        ALL_QUESTIONS[_mock['name']] = _mock['questions']
+        ADAPTIVE_ROUTING[_mock['name']] = _mock['routing']
+
 # Load drill questions separately (skill_questions + drill_sets)
 with open(os.path.join(_BASE_DIR, 'database', 'drill_questions.json'), 'r') as f:
     _drill_data = json.load(f)
@@ -305,6 +317,25 @@ def _get_adaptive_module1_accuracy(section_idx, practice_test_questions, answers
 
     return correct / total if total else None
 
+
+def _module2_variant(section_idx, practice_test_id, answers):
+    """For an adaptive mock test, pick the module 2 variant ("hard" or "medium")
+    from the number of module 1 questions answered correctly."""
+    section = SECTIONS[section_idx]
+    routing = ADAPTIVE_ROUTING.get(practice_test_id, {}).get(section['type'])
+    if not routing or section['module'] != 2:
+        return None
+    module1_idx = next(
+        i for i, s in enumerate(SECTIONS) if s['type'] == section['type'] and s['module'] == 1
+    )
+    module1_questions = get_questions_for_section(module1_idx, practice_test_id)
+    correct = sum(
+        1 for qid, q in enumerate(module1_questions)
+        if is_correct_answer(q, answers.get(f"{module1_idx}_{qid}"))
+    )
+    return 'hard' if correct >= routing['threshold'] else 'medium'
+
+
 # Filter questions for a given section and practice test
 def get_questions_for_section(section_idx, practice_test_id, answers=None):
     section = SECTIONS[section_idx]
@@ -313,6 +344,10 @@ def get_questions_for_section(section_idx, practice_test_id, answers=None):
         q for q in practice_test_questions
         if q['type'] == section['type'] and q['module'] == section['module']
     ]
+
+    variant = _module2_variant(section_idx, practice_test_id, answers or {})
+    if variant:
+        return [q for q in section_questions if q.get('variant') == variant]
 
     # Only adaptive-test set uses branch-by-performance logic.
     if practice_test_id == ADAPTIVE_TEST_NAME:
@@ -886,6 +921,10 @@ from typing import Any, Union, Iterable, Dict
 
 LEVEL_POINTS = {"Easy": 9, "Medium": 10, "Hard": 12}
 
+# In adaptive mock tests, a student routed to the medium module 2 can earn at
+# most this share of module 2's 400 points, capping the section at 650.
+MEDIUM_ROUTE_MODULE2_WEIGHT = 0.625
+
 def _normalize_numeric(val: Any) -> Decimal | None:
     """Return Decimal rounded to 4 dp (half up) from string/number like '1/3' or '0.3333'.
     Returns None if not parseable."""
@@ -949,7 +988,7 @@ def _match_answer(q: Dict, user_ans: Any) -> bool:
                 return True
         return False
     
-def build_domain_chart_data(sections, questions, section_answers) -> Dict[str, Dict[str, list]]:
+def build_domain_chart_data(sections, section_questions, section_answers) -> Dict[str, Dict[str, list]]:
     """
     Returns structure ready for Chart.js with *no* frontend math:
     {
@@ -964,14 +1003,6 @@ def build_domain_chart_data(sections, questions, section_answers) -> Dict[str, D
       'math': { ... }
     }
     """
-    # Pre-index questions by (type,module) preserving order
-    by_tm: Dict[tuple, list] = {}
-    for s in sections:
-        key = (s["type"].lower(), s.get("module"))
-        if key not in by_tm:
-            by_tm[key] = [q for q in questions
-                          if (q.get("type","").lower() == key[0]) and (q.get("module") == key[1])]
-
     # Accumulators per section-type per domain
     tallies = {
         "verbal": defaultdict(lambda: {"correct": 0, "total": 0}),
@@ -981,8 +1012,7 @@ def build_domain_chart_data(sections, questions, section_answers) -> Dict[str, D
     # Iterate sections in given order so answers align (section_answers[i][qid])
     for i, s in enumerate(sections):
         stype = s["type"].lower()
-        smod = s.get("module")
-        qs = by_tm.get((stype, smod), [])
+        qs = section_questions[i] if i < len(section_questions) else []
         ans_list = section_answers[i] if i < len(section_answers) else []
 
         for qid, q in enumerate(qs):
@@ -1015,32 +1045,25 @@ def build_domain_chart_data(sections, questions, section_answers) -> Dict[str, D
         }
     return out
 
-def compute_section_scores(sections, questions, section_answers, module_multipliers=None):
+def compute_section_scores(sections, section_questions, section_answers, module_multipliers=None):
     """
     Returns dict with raw/max per module, scaled per your caps, and rounded section/total.
     sections: list of dicts; each has type ('verbal'/'math') and module (1/2) in the same order as section_answers
-    questions: flat list of question dicts
+    section_questions: list aligned to sections: the questions served in each section
     section_answers: list aligned to sections: section_answers[i][qid]['answer']
     module_multipliers: {'verbal': {1:1.0,2:1.0}, 'math': {1:1.0,2:1.0}} (optional)
     """
     mm = module_multipliers or {}
     out = {
-        "verbal": {"m1_raw": 0.0, "m1_max": 0.0, "m2_raw": 0.0, "m2_max": 0.0},
-        "math":   {"m1_raw": 0.0, "m1_max": 0.0, "m2_raw": 0.0, "m2_max": 0.0},
+        "verbal": {"m1_raw": 0.0, "m1_max": 0.0, "m2_raw": 0.0, "m2_max": 0.0, "m2_weight": 1.0},
+        "math":   {"m1_raw": 0.0, "m1_max": 0.0, "m2_raw": 0.0, "m2_max": 0.0, "m2_weight": 1.0},
     }
-
-    # Index questions by (type,module) to preserve order
-    by_tm: Dict[tuple, list] = {}
-    for s in sections:
-        key = (s["type"].lower(), s.get("module"))
-        if key not in by_tm:
-            by_tm[key] = [q for q in questions
-                          if (q.get("type","").lower() == key[0]) and (q.get("module") == key[1])]
 
     for i, s in enumerate(sections):
         stype = s["type"].lower()
-        smod = s.get("module")
-        qs = by_tm.get((stype, smod), [])
+        qs = section_questions[i] if i < len(section_questions) else []
+        if qs and qs[0].get("variant") == "medium":
+            out[stype]["m2_weight"] = MEDIUM_ROUTE_MODULE2_WEIGHT
         answers_i = section_answers[i] if i < len(section_answers) else []
 
         # pick multipliers map: prefer per-section, else flat
@@ -1063,9 +1086,10 @@ def compute_section_scores(sections, questions, section_answers, module_multipli
 
     def _scaled(d):
         m1 = 0 if d["m1_max"] == 0 else 200 * (d["m1_raw"] / d["m1_max"])
-        m2 = 0 if d["m2_max"] == 0 else 400 * (d["m2_raw"] / d["m2_max"])
+        m2_cap = 400 * d["m2_weight"]
+        m2 = 0 if d["m2_max"] == 0 else m2_cap * (d["m2_raw"] / d["m2_max"])
         m1 = min(m1, 200)
-        m2 = min(m2, 400)
+        m2 = min(m2, m2_cap)
         s = 200 + m1 + m2
         return max(200, min(800, round(s)))
 
@@ -1204,12 +1228,12 @@ def _build_improvement_analysis(section_reviews, domain_chart_data):
 def _build_test_report_context(test_session):
     """Build comprehensive report payload for a completed test session."""
     practice_test_id = test_session.practice_test_id
-    test_questions = ALL_QUESTIONS.get(practice_test_id, [])
     answers = json.loads(test_session.answers or '{}')
     marked = json.loads(test_session.marked_for_review or '{}')
 
     section_scores = {}
     section_answers = []
+    served_questions = []
     section_reviews = []
 
     for section_idx in range(len(SECTIONS)):
@@ -1246,6 +1270,7 @@ def _build_test_report_context(test_session):
 
         section_scores[section_idx] = section_score
         section_answers.append(answer_list)
+        served_questions.append(section_questions)
         section_reviews.append({
             'section_idx': section_idx,
             'section': SECTIONS[section_idx],
@@ -1259,8 +1284,8 @@ def _build_test_report_context(test_session):
         'math':   {1: 0.79, 2: 1.345},
     }
 
-    scores = compute_section_scores(SECTIONS, test_questions, section_answers, module_multipliers)
-    domain_chart_data = build_domain_chart_data(SECTIONS, test_questions, section_answers)
+    scores = compute_section_scores(SECTIONS, served_questions, section_answers, module_multipliers)
+    domain_chart_data = build_domain_chart_data(SECTIONS, served_questions, section_answers)
     improvement_analysis = _build_improvement_analysis(section_reviews, domain_chart_data)
 
     return {
@@ -1295,12 +1320,14 @@ def results(session_id):
     # Calculate section scores
     section_scores = {}
     section_answers = {}
+    served_questions = []
     for section_idx in range(len(SECTIONS)):
         section_questions = get_questions_for_section(
             section_idx,
             practice_test_id,
             answers=answers
         )
+        served_questions.append(section_questions)
         section_score = 0
         section_ans = {}
         for qid in range(len(section_questions)):
@@ -1325,9 +1352,9 @@ def results(session_id):
 
 
     # domain_stats = build_domain_stats(SECTIONS, ALL_QUESTIONS, section_answers, practice_test_id)
-    domain_chart_data = build_domain_chart_data(SECTIONS, ALL_QUESTIONS[practice_test_id], section_answers)
+    domain_chart_data = build_domain_chart_data(SECTIONS, served_questions, section_answers)
 
-    scores = compute_section_scores(SECTIONS, ALL_QUESTIONS[practice_test_id], section_answers, module_multipliers)
+    scores = compute_section_scores(SECTIONS, served_questions, section_answers, module_multipliers)
     
     return render_template(
         'mock_results.html',
@@ -1825,6 +1852,7 @@ def admin_user_detail(user_id):
         if ts.score is not None:
             answers = json.loads(ts.answers or '{}')
             section_answers = []
+            served_questions = []
             for section_idx in range(len(SECTIONS)):
                 qs = get_questions_for_section(
                     section_idx,
@@ -1836,12 +1864,13 @@ def admin_user_detail(user_id):
                     key = f"{section_idx}_{qid}"
                     ans_list.append({'answer': answers.get(key)})
                 section_answers.append(ans_list)
+                served_questions.append(qs)
             module_multipliers = {
                 'verbal': {1: 1.0, 2: 1.66},
                 'math':   {1: 0.79, 2: 1.345},
             }
             try:
-                scores = compute_section_scores(SECTIONS, ALL_QUESTIONS.get(ts.practice_test_id, []), section_answers, module_multipliers)
+                scores = compute_section_scores(SECTIONS, served_questions, section_answers, module_multipliers)
             except Exception:
                 scores = None
         session_data.append({'session': ts, 'scores': scores})
@@ -2347,12 +2376,14 @@ def _admin_user_session_rows(user):
         if ts.score is not None:
             answers = json.loads(ts.answers or "{}")
             section_answers = []
+            served_questions = []
             for section_idx in range(len(SECTIONS)):
                 qs = get_questions_for_section(section_idx, ts.practice_test_id, answers=answers)
                 ans_list = []
                 for qid in range(len(qs)):
                     ans_list.append({"answer": answers.get(f"{section_idx}_{qid}")})
                 section_answers.append(ans_list)
+                served_questions.append(qs)
             module_multipliers = {
                 "verbal": {1: 1.0, 2: 1.66},
                 "math": {1: 0.79, 2: 1.345},
@@ -2360,7 +2391,7 @@ def _admin_user_session_rows(user):
             try:
                 scores = compute_section_scores(
                     SECTIONS,
-                    ALL_QUESTIONS.get(ts.practice_test_id, []),
+                    served_questions,
                     section_answers,
                     module_multipliers,
                 )
