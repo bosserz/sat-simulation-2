@@ -1,9 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, send_file
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, send_file, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
-from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy import MetaData, text
 import json
 import os
 import html
+import urllib.error
+import urllib.request
 from io import BytesIO
 from datetime import datetime, timedelta
 from flask_migrate import Migrate
@@ -13,16 +15,31 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 
+IS_PRODUCTION = os.environ.get("FLASK_ENV") == "production"
+
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-change-in-production')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sat_practice.db'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+if not app.config['SECRET_KEY']:
+    if IS_PRODUCTION:
+        raise RuntimeError("SECRET_KEY must be set in production")
+    app.config['SECRET_KEY'] = 'dev-secret-local-only'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)  # Session lasts 1 day
-app.config['SESSION_COOKIE_SECURE'] = False  # Set to True in production with HTTPS
+app.config['SESSION_COOKIE_SECURE'] = IS_PRODUCTION  # HTTPS-only cookie in production
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
-# Admin access: comma-separated usernames in env var, or hardcode here
-ADMIN_USERNAMES = set(
-    u.strip() for u in os.environ.get("ADMIN_USERNAMES", "admin").split(",") if u.strip()
+# Supabase Auth (shared with the online course platform). The backend verifies
+# access tokens by calling Supabase's /auth/v1/user endpoint.
+SUPABASE_URL = (os.environ.get("SUPABASE_URL") or "").rstrip("/")
+SUPABASE_ANON_KEY = os.environ.get("SUPABASE_ANON_KEY") or ""
+
+# Admin access is managed by the course platform's `admins` table (one `email`
+# column). ADMIN_EMAILS (comma-separated) adds extra admins, e.g. for local
+# SQLite dev where that table doesn't exist.
+ADMINS_TABLE = os.environ.get("ADMINS_TABLE", "public.admins")
+ADMIN_EMAILS = set(
+    e.strip().lower() for e in os.environ.get("ADMIN_EMAILS", "").split(",") if e.strip()
 )
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
@@ -35,26 +52,33 @@ if DATABASE_URL.startswith("postgres://"):
 elif DATABASE_URL.startswith("postgresql://") and not DATABASE_URL.startswith("postgresql+"):
     DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+psycopg2://", 1)
 
-# Set SQLAlchemy configuration
-app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL or "sqlite:///sat_practice.db"
-# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
 
-if DATABASE_URL and "postgresql" in DATABASE_URL:
+# On Postgres (Supabase), all tables live in their own schema so they don't
+# collide with the course platform's tables and aren't exposed through
+# Supabase's Data API (which only serves the `public` schema by default).
+# SQLite has no schemas, so local dev uses the default.
+IS_POSTGRES = "postgresql" in DATABASE_URL
+DB_SCHEMA = os.environ.get("DB_SCHEMA", "sat") if IS_POSTGRES else None
+app.config["DB_SCHEMA"] = DB_SCHEMA
+
+if IS_POSTGRES:
     app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
-        "connect_args": {"sslmode": "require"},
+        "connect_args": {"sslmode": os.environ.get("DB_SSLMODE", "require")},
         "pool_pre_ping": True,   # discard stale connections before use
-        "pool_recycle": 280,     # recycle before Render's 5-min idle timeout
+        "pool_recycle": 280,     # recycle idle connections before the pooler drops them
     }
 
-db = SQLAlchemy(app)
+db = SQLAlchemy(app, metadata=MetaData(schema=DB_SCHEMA))
 migrate = Migrate(app, db)
 # Models
 class User(db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
-    password = db.Column(db.String(120), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=True)  # legacy; accounts now live in Supabase Auth
+    email = db.Column(db.String(255), unique=True, nullable=False)
+    supabase_user_id = db.Column(db.String(36), unique=True, nullable=True, index=True)
 
 class TestSession(db.Model):
     __tablename__ = "test_sessions"
@@ -498,48 +522,18 @@ def select_test():
 #     return render_template('select_test.html', practice_tests=practice_tests)
 
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        email = request.form['email']
-        
-        if User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first():
-            flash('Username or email already exists.', 'error')
-            return redirect(url_for('register'))
-        
-        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-        new_user = User(username=username, password=hashed_password, email=email)
-        db.session.add(new_user)
-        db.session.commit()
-        flash('Registration successful! Please log in.', 'success')
-        return redirect(url_for('login'))
-    
-    return render_template('register.html')
-
 @app.route('/request_account', methods=['GET'])
 def request_account():
     
     return render_template('request_account.html')
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET'])
 def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        user = User.query.filter_by(username=username).first()
-        
-        if user and check_password_hash(user.password, password):
-            session['user_id'] = user.id
-            session['username'] = user.username
-            session.permanent = True  # Make session permanent
-            return redirect(url_for('dashboard'))
-        else:
-            flash('Invalid username or password.')
-            return redirect(url_for('login'))
-    
-    return render_template('login.html')
+    # Sign-in happens in the React app via Supabase Auth; this GET is normally
+    # intercepted by serve_react_pages_when_built().
+    if os.path.exists(REACT_INDEX):
+        return send_from_directory(REACT_DIST_DIR, "index.html")
+    return "Frontend build not found. Run `npm run build` in frontend/.", 503
 
 @app.route('/logout')
 def logout():
@@ -1617,7 +1611,7 @@ app.jinja_env.globals.update(
     is_correct_answer=is_correct_answer,
     correct_answer_display=correct_answer_display,
     normalize_numeric=_new_normalize_numeric,
-    admin_usernames=ADMIN_USERNAMES,
+    is_admin=lambda: _is_admin(),
 )
 
 
@@ -1758,8 +1752,29 @@ def clear_highlights_for_question():
 
 
 
+def _user_is_admin(user):
+    email = ((user.email if user else "") or "").strip().lower()
+    if not email:
+        return False
+    if email in ADMIN_EMAILS:
+        return True
+    if not IS_POSTGRES or not ADMINS_TABLE:
+        return False
+    try:
+        row = db.session.execute(
+            text(f"SELECT 1 FROM {ADMINS_TABLE} WHERE lower(email) = :email LIMIT 1"),
+            {"email": email},
+        ).first()
+    except (OperationalError, ProgrammingError):
+        db.session.rollback()
+        app.logger.exception("Could not read admins table %s", ADMINS_TABLE)
+        return False
+    return row is not None
+
+
 def _is_admin():
-    return session.get('username') in ADMIN_USERNAMES
+    user_id = session.get('user_id')
+    return bool(user_id) and _user_is_admin(User.query.get(user_id))
 
 
 @app.route('/admin')
@@ -2147,8 +2162,789 @@ def api_drill_dashboard():
     })
 
 
+# ===================== REACT API + STATIC BUILD SERVING =====================
+
+REACT_DIST_DIR = os.path.join(_BASE_DIR, "frontend", "dist")
+REACT_INDEX = os.path.join(REACT_DIST_DIR, "index.html")
+
+
+def _json_error(message, status=400):
+    return jsonify({"error": message}), status
+
+
+def _require_api_user():
+    user_id = session.get("user_id")
+    if not user_id:
+        return None
+    return User.query.get(user_id)
+
+
+def _api_user_payload(user):
+    if not user:
+        return None
+    return {
+        "id": user.id,
+        "username": user.username,
+        "email": user.email,
+        "is_admin": _user_is_admin(user),
+    }
+
+
+def _iso(value):
+    return value.isoformat() if value else None
+
+
+def _test_session_payload(test_session):
+    if not test_session:
+        return None
+    return {
+        "id": test_session.id,
+        "user_id": test_session.user_id,
+        "practice_test_id": test_session.practice_test_id,
+        "start_time": _iso(test_session.start_time),
+        "score": test_session.score,
+        "current_question": test_session.current_question,
+        "current_section": test_session.current_section,
+        "section_start_time": _iso(test_session.section_start_time),
+        "is_complete": test_session.score is not None,
+    }
+
+
+def _drill_session_payload(drill_session):
+    if not drill_session:
+        return None
+    return {
+        "id": drill_session.id,
+        "user_id": drill_session.user_id,
+        "drill_set_id": drill_session.drill_set_id,
+        "start_time": _iso(drill_session.start_time),
+        "end_time": _iso(drill_session.end_time),
+        "duration_seconds": drill_session.duration_seconds,
+        "correct_count": drill_session.correct_count,
+        "total_count": drill_session.total_count,
+        "accuracy_percent": drill_session.accuracy_percent,
+        "use_timer": drill_session.use_timer,
+        "is_complete": drill_session.end_time is not None,
+    }
+
+
+def _get_owned_test_session(session_id, allow_admin=False):
+    user = _require_api_user()
+    if not user:
+        return None, _json_error("Not authorized", 401)
+    test_session = TestSession.query.get(session_id)
+    if not test_session:
+        return None, _json_error("Session not found", 404)
+    if test_session.user_id != user.id and not (allow_admin and _is_admin()):
+        return None, _json_error("Unauthorized", 403)
+    return test_session, None
+
+
+def _get_owned_drill_session(session_id):
+    user = _require_api_user()
+    if not user:
+        return None, _json_error("Not authorized", 401)
+    drill_session = DrillSession.query.get(session_id)
+    if not drill_session:
+        return None, _json_error("Session not found", 404)
+    if drill_session.user_id != user.id:
+        return None, _json_error("Unauthorized", 403)
+    return drill_session, None
+
+
+# Fields that must not reach the browser while a test/drill is in progress
+_ANSWER_FIELDS = ("correct_answer", "explanation")
+
+
+def _without_answers(question):
+    if not question:
+        return question
+    return {k: v for k, v in question.items() if k not in _ANSWER_FIELDS}
+
+
+def _section_question_payload(test_session, start_timer=True):
+    answers = json.loads(test_session.answers or "{}")
+    marked = json.loads(test_session.marked_for_review or "{}")
+    section_questions = get_questions_for_section(
+        test_session.current_section,
+        test_session.practice_test_id,
+        answers=answers,
+    )
+    current_question = min(test_session.current_question or 0, max(len(section_questions) - 1, 0))
+    question = section_questions[current_question] if section_questions else None
+    answer_key = f"{test_session.current_section}_{current_question}"
+    return {
+        "test_session": _test_session_payload(test_session),
+        "sections": SECTIONS,
+        "section": SECTIONS[test_session.current_section],
+        "section_idx": test_session.current_section,
+        "question": _without_answers(question),
+        "qid": current_question,
+        "answer": answers.get(answer_key, ""),
+        "marked": marked.get(answer_key, False),
+        "answers": answers,
+        "marked_for_review": marked,
+        "total_questions": len(section_questions),
+        "section_name": SECTIONS[test_session.current_section]["name"],
+        "remaining_time": _remaining_time_for_session(test_session, start_timer=start_timer),
+    }
+
+
+def _remaining_time_for_session(test_session, start_timer=True):
+    section_duration = SECTIONS[test_session.current_section]["duration"]
+    if test_session.section_start_time:
+        elapsed = (datetime.utcnow() - test_session.section_start_time).total_seconds()
+    elif not start_timer:
+        elapsed = 0
+    else:
+        test_session.section_start_time = datetime.utcnow()
+        db.session.commit()
+        elapsed = 0
+    return max(0, int(section_duration - elapsed))
+
+
+def _complete_test_session(test_session, answers, marked):
+    score = 0
+    for section_idx in range(len(SECTIONS)):
+        section_questions = get_questions_for_section(
+            section_idx,
+            test_session.practice_test_id,
+            answers=answers,
+        )
+        for qid, question in enumerate(section_questions):
+            answer_key = f"{section_idx}_{qid}"
+            if is_correct_answer(question, answers.get(answer_key)):
+                score += 1
+    test_session.score = score
+    test_session.answers = json.dumps(answers)
+    test_session.marked_for_review = json.dumps(marked)
+    db.session.commit()
+
+
+def _report_payload(test_session):
+    report_data = _build_test_report_context(test_session)
+    owner = User.query.get(test_session.user_id)
+    return {
+        "test_session": _test_session_payload(test_session),
+        "test_owner": _api_user_payload(owner),
+        "practice_test_id": report_data["practice_test_id"],
+        "raw_score": report_data["raw_score"],
+        "section_scores": report_data["section_scores"],
+        "section_reviews": report_data["section_reviews"],
+        "domain_chart_data": report_data["domain_chart_data"],
+        "improvement_analysis": report_data["improvement_analysis"],
+        "verbal_score": report_data["verbal_score"],
+        "math_score": report_data["math_score"],
+        "total_score": report_data["total_score"],
+    }
+
+
+def _admin_user_session_rows(user):
+    rows = []
+    test_sessions = TestSession.query.filter_by(user_id=user.id).order_by(TestSession.start_time.desc()).all()
+    for ts in test_sessions:
+        scores = None
+        if ts.score is not None:
+            answers = json.loads(ts.answers or "{}")
+            section_answers = []
+            for section_idx in range(len(SECTIONS)):
+                qs = get_questions_for_section(section_idx, ts.practice_test_id, answers=answers)
+                ans_list = []
+                for qid in range(len(qs)):
+                    ans_list.append({"answer": answers.get(f"{section_idx}_{qid}")})
+                section_answers.append(ans_list)
+            module_multipliers = {
+                "verbal": {1: 1.0, 2: 1.66},
+                "math": {1: 0.79, 2: 1.345},
+            }
+            try:
+                scores = compute_section_scores(
+                    SECTIONS,
+                    ALL_QUESTIONS.get(ts.practice_test_id, []),
+                    section_answers,
+                    module_multipliers,
+                )
+            except Exception:
+                scores = None
+        rows.append({"session": _test_session_payload(ts), "scores": scores})
+    return rows
+
+
+@app.route("/api/me")
+def api_me():
+    user = _require_api_user()
+    return jsonify({"authenticated": bool(user), "user": _api_user_payload(user)})
+
+
+def _fetch_supabase_user(access_token):
+    """Validate a Supabase access token and return the Supabase user, or None."""
+    req = urllib.request.Request(
+        f"{SUPABASE_URL}/auth/v1/user",
+        headers={
+            "apikey": SUPABASE_ANON_KEY,
+            "Authorization": f"Bearer {access_token}",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        if e.code in (401, 403):
+            return None
+        raise
+
+
+def _unique_username(base):
+    base = (base or "student").strip()[:70] or "student"
+    candidate, n = base, 2
+    while User.query.filter_by(username=candidate).first():
+        candidate = f"{base}-{n}"
+        n += 1
+    return candidate
+
+
+def _link_supabase_user(sb_user):
+    """Find or create the local profile for a Supabase Auth user.
+
+    Returns (user, error_message).
+    """
+    sb_id = sb_user.get("id")
+    email = (sb_user.get("email") or "").strip().lower()
+    email_confirmed = bool(sb_user.get("email_confirmed_at"))
+    if not sb_id or not email:
+        return None, "Your account has no email address"
+
+    user = User.query.filter_by(supabase_user_id=sb_id).first()
+    email_owner = User.query.filter(db.func.lower(User.email) == email).first()
+
+    if not user and email_owner:
+        # Existing SAT account from before Supabase: link it by email, but only
+        # once Supabase has confirmed the student owns that address.
+        if email_owner.supabase_user_id:
+            return None, "This email is already linked to a different account"
+        if not email_confirmed:
+            return None, "Please confirm your email address before signing in"
+        email_owner.supabase_user_id = sb_id
+        user = email_owner
+    elif not user:
+        meta = sb_user.get("user_metadata") or {}
+        user = User(
+            username=_unique_username(
+                meta.get("username") or meta.get("full_name") or meta.get("name") or email.split("@")[0]
+            ),
+            email=email,
+            supabase_user_id=sb_id,
+        )
+        db.session.add(user)
+    elif user.email.lower() != email and not email_owner:
+        # Email was changed on the course platform
+        user.email = email
+
+    db.session.commit()
+    return user, None
+
+
+@app.route("/api/auth/supabase", methods=["POST"])
+def api_auth_supabase():
+    """Exchange a Supabase access token for a Flask session cookie."""
+    if not SUPABASE_URL or not SUPABASE_ANON_KEY:
+        return _json_error("Supabase Auth is not configured on the server", 500)
+
+    data = request.get_json(silent=True) or {}
+    access_token = (data.get("access_token") or "").strip()
+    if not access_token:
+        return _json_error("access_token is required", 400)
+
+    try:
+        sb_user = _fetch_supabase_user(access_token)
+    except Exception:
+        app.logger.exception("Supabase token verification failed")
+        return _json_error("Could not reach the authentication server", 502)
+    if not sb_user:
+        return _json_error("Invalid or expired session", 401)
+
+    user, error = _link_supabase_user(sb_user)
+    if error:
+        return _json_error(error, 403)
+
+    session.clear()
+    session["user_id"] = user.id
+    session["username"] = user.username
+    session.permanent = True
+    return jsonify({"ok": True, "user": _api_user_payload(user)})
+
+
+@app.route("/api/auth/logout", methods=["POST"])
+def api_auth_logout():
+    session.pop("user_id", None)
+    session.pop("username", None)
+    session.pop("test_session_id", None)
+    session.pop("practice_test_id", None)
+    session.pop("drill_session_id", None)
+    return jsonify({"ok": True})
+
+
+@app.route("/api/tests")
+def api_tests():
+    user = _require_api_user()
+    if not user:
+        return _json_error("Not authorized", 401)
+
+    active_session = TestSession.query.filter_by(
+        user_id=user.id,
+        score=None,
+    ).order_by(TestSession.start_time.desc()).first()
+    test_sessions = TestSession.query.filter_by(user_id=user.id).order_by(TestSession.start_time.desc()).all()
+    return jsonify({
+        "practice_tests": list(ALL_QUESTIONS.keys()),
+        "active_session": _test_session_payload(active_session),
+        "test_sessions": [_test_session_payload(ts) for ts in test_sessions],
+    })
+
+
+@app.route("/api/tests/start", methods=["POST"])
+def api_tests_start():
+    user = _require_api_user()
+    if not user:
+        return _json_error("Not authorized", 401)
+
+    data = request.get_json(silent=True) or {}
+    practice_test_id = data.get("practice_test_id")
+    if practice_test_id not in ALL_QUESTIONS:
+        return _json_error("Invalid practice test selected", 400)
+
+    incomplete_session = TestSession.query.filter_by(user_id=user.id, score=None).first()
+    if incomplete_session:
+        return jsonify({
+            "error": "Please complete your ongoing test before starting a new one.",
+            "active_session": _test_session_payload(incomplete_session),
+        }), 409
+
+    test_session = TestSession(
+        user_id=user.id,
+        practice_test_id=practice_test_id,
+        start_time=datetime.utcnow(),
+        section_start_time=datetime.utcnow(),
+        answers=json.dumps({}),
+        marked_for_review=json.dumps({}),
+        current_section=0,
+        current_question=0,
+    )
+    db.session.add(test_session)
+    db.session.commit()
+
+    session["test_session_id"] = test_session.id
+    session["practice_test_id"] = practice_test_id
+    session["new_test"] = False
+    return jsonify({"ok": True, "test_session": _test_session_payload(test_session)})
+
+
+@app.route("/api/tests/resume", methods=["POST"])
+def api_tests_resume():
+    user = _require_api_user()
+    if not user:
+        return _json_error("Not authorized", 401)
+
+    data = request.get_json(silent=True) or {}
+    test_session = TestSession.query.get(data.get("session_id"))
+    if not test_session or test_session.user_id != user.id or test_session.score is not None:
+        return _json_error("Invalid or completed test session", 400)
+
+    session["test_session_id"] = test_session.id
+    session["practice_test_id"] = test_session.practice_test_id
+    session["new_test"] = False
+    return jsonify({"ok": True, "test_session": _test_session_payload(test_session)})
+
+
+@app.route("/api/tests/<int:session_id>/state")
+def api_test_state(session_id):
+    test_session, error = _get_owned_test_session(session_id)
+    if error:
+        return error
+    if test_session.score is not None:
+        return jsonify({
+            "status": "test_complete",
+            "test_session": _test_session_payload(test_session),
+            "next_route": f"/mock_results/{test_session.id}",
+        })
+
+    session["test_session_id"] = test_session.id
+    session["practice_test_id"] = test_session.practice_test_id
+    start_timer = (request.args.get("start_timer") or "true").lower() != "false"
+    return jsonify({"status": "in_progress", **_section_question_payload(test_session, start_timer=start_timer)})
+
+
+@app.route("/api/tests/<int:session_id>/answer", methods=["POST"])
+def api_test_answer(session_id):
+    test_session, error = _get_owned_test_session(session_id)
+    if error:
+        return error
+    if test_session.score is not None:
+        return _json_error("This test is already complete", 400)
+
+    data = request.get_json(silent=True) or {}
+    answers = json.loads(test_session.answers or "{}")
+    marked = json.loads(test_session.marked_for_review or "{}")
+    current_question = data.get("current_question", test_session.current_question)
+    answer_key = f"{test_session.current_section}_{current_question}"
+
+    if data.get("answer") is not None:
+        answers[answer_key] = data.get("answer")
+    if data.get("mark_for_review") is not None:
+        marked[answer_key] = bool(data.get("mark_for_review"))
+
+    next_question = data.get("next_question")
+    if next_question is not None:
+        test_session.current_question = int(next_question)
+        section_questions = get_questions_for_section(
+            test_session.current_section,
+            test_session.practice_test_id,
+            answers=answers,
+        )
+        if test_session.current_question >= len(section_questions):
+            if test_session.current_section < len(SECTIONS) - 1:
+                test_session.current_question = 0
+                test_session.current_section += 1
+                test_session.section_start_time = None
+                test_session.answers = json.dumps(answers)
+                test_session.marked_for_review = json.dumps(marked)
+                db.session.commit()
+                return jsonify({
+                    "status": "section_complete",
+                    "test_session": _test_session_payload(test_session),
+                    "next_section": SECTIONS[test_session.current_section],
+                    "next_route": "/break",
+                })
+
+            _complete_test_session(test_session, answers, marked)
+            return jsonify({
+                "status": "test_complete",
+                "test_session": _test_session_payload(test_session),
+                "next_route": f"/mock_results/{test_session.id}",
+            })
+
+    test_session.answers = json.dumps(answers)
+    test_session.marked_for_review = json.dumps(marked)
+    db.session.commit()
+    return jsonify({"status": "in_progress", **_section_question_payload(test_session)})
+
+
+@app.route("/api/tests/<int:session_id>/remaining-time")
+def api_test_remaining_time(session_id):
+    test_session, error = _get_owned_test_session(session_id)
+    if error:
+        return error
+    return jsonify({"remaining_time": _remaining_time_for_session(test_session)})
+
+
+@app.route("/api/tests/<int:session_id>/summary")
+def api_test_summary(session_id):
+    test_session, error = _get_owned_test_session(session_id, allow_admin=True)
+    if error:
+        return error
+    if test_session.score is None:
+        return _json_error("This test is still in progress", 400)
+    report = _report_payload(test_session)
+    return jsonify({
+        "test_session": report["test_session"],
+        "raw_score": report["raw_score"],
+        "verbal_score": report["verbal_score"],
+        "math_score": report["math_score"],
+        "total_score": report["total_score"],
+        "domain_chart_data": report["domain_chart_data"],
+    })
+
+
+@app.route("/api/tests/<int:session_id>/report")
+def api_test_report(session_id):
+    test_session, error = _get_owned_test_session(session_id, allow_admin=True)
+    if error:
+        return error
+    if test_session.score is None:
+        return _json_error("This test is still in progress", 400)
+    return jsonify(_report_payload(test_session))
+
+
+@app.route("/api/tests/<int:session_id>/report/pdf")
+def api_test_report_pdf(session_id):
+    return comprehensive_report_pdf(session_id)
+
+
+@app.route("/api/drills/topics")
+def api_drill_topics():
+    if not _require_api_user():
+        return _json_error("Not authorized", 401)
+    return jsonify({"topics_by_section": get_drill_topics()})
+
+
+@app.route("/api/drills/topics/<path:topic_name>")
+def api_drill_topic(topic_name):
+    user = _require_api_user()
+    if not user:
+        return _json_error("Not authorized", 401)
+
+    drill_sets = get_drill_sets_for_topic(topic_name)
+    if not drill_sets:
+        return _json_error("Drill topic not found", 404)
+
+    sets_with_history = []
+    for drill_set in drill_sets:
+        history = DrillSession.query.filter_by(
+            user_id=user.id,
+            drill_set_id=drill_set.id,
+        ).order_by(DrillSession.start_time.desc()).all()
+        sets_with_history.append({
+            "drill_set": drill_set.to_dict(),
+            "attempts": len(history),
+            "best_score": max([h.accuracy_percent for h in history]) if history else None,
+            "latest_score": history[0].accuracy_percent if history else None,
+            "latest_date": _iso(history[0].start_time) if history else None,
+        })
+
+    topic_data = DRILL_SETS_DATA.get(topic_name, {})
+    return jsonify({
+        "topic_name": topic_name,
+        "description": topic_data.get("description", ""),
+        "sets_with_history": sets_with_history,
+    })
+
+
+@app.route("/api/drills/<int:drill_set_id>/start", methods=["POST"])
+def api_drill_start(drill_set_id):
+    user = _require_api_user()
+    if not user:
+        return _json_error("Not authorized", 401)
+
+    data = request.get_json(silent=True) or {}
+    drill_set = DrillSet.query.get(drill_set_id)
+    if not drill_set:
+        return _json_error("Drill set not found", 404)
+
+    drill_session = DrillSession(
+        user_id=user.id,
+        drill_set_id=drill_set_id,
+        answers=json.dumps({}),
+        use_timer=bool(data.get("use_timer", False)),
+    )
+    db.session.add(drill_session)
+    db.session.commit()
+    session["drill_session_id"] = drill_session.id
+    return jsonify({"ok": True, "drill_session": _drill_session_payload(drill_session)})
+
+
+def _drill_state_payload(drill_session):
+    drill_set = drill_session.drill_set
+    question_ids = json.loads(drill_set.question_ids)
+    questions = get_skill_questions(question_ids)
+    return {
+        "drill_session": _drill_session_payload(drill_session),
+        "drill_set": drill_set.to_dict(),
+        "questions": [_without_answers(q) for q in questions],
+        "answers": json.loads(drill_session.answers or "{}"),
+        "total_questions": len(questions),
+    }
+
+
+@app.route("/api/drills/sessions/<int:session_id>/state")
+def api_drill_session_state(session_id):
+    drill_session, error = _get_owned_drill_session(session_id)
+    if error:
+        return error
+    session["drill_session_id"] = drill_session.id
+    return jsonify(_drill_state_payload(drill_session))
+
+
+@app.route("/api/drills/sessions/<int:session_id>/answer", methods=["POST"])
+def api_drill_session_answer(session_id):
+    drill_session, error = _get_owned_drill_session(session_id)
+    if error:
+        return error
+    if drill_session.end_time is not None:
+        return _json_error("This drill is already complete", 400)
+
+    data = request.get_json(silent=True) or {}
+    answers = json.loads(drill_session.answers or "{}")
+    question_id = data.get("question_id")
+    answer = data.get("answer")
+    if question_id is not None and answer is not None:
+        answers[str(question_id)] = answer
+
+    drill_set = drill_session.drill_set
+    questions = get_skill_questions(json.loads(drill_set.question_ids))
+    next_question = data.get("next_question")
+    if next_question is not None and int(next_question) >= len(questions):
+        correct_count = 0
+        for q in questions:
+            if is_correct_answer(q, answers.get(str(q["question_id"]))):
+                correct_count += 1
+        accuracy = (correct_count / len(questions) * 100) if questions else 0
+        drill_session.answers = json.dumps(answers)
+        drill_session.end_time = datetime.utcnow()
+        drill_session.duration_seconds = int((datetime.utcnow() - drill_session.start_time).total_seconds())
+        drill_session.correct_count = correct_count
+        drill_session.total_count = len(questions)
+        drill_session.accuracy_percent = accuracy
+
+        progress = DrillSetProgress.query.filter_by(
+            user_id=drill_session.user_id,
+            topic_name=drill_set.topic_name,
+        ).first()
+        if not progress:
+            progress = DrillSetProgress(
+                user_id=drill_session.user_id,
+                topic_name=drill_set.topic_name,
+                total_attempts=0,
+                completed_sets=0,
+            )
+            db.session.add(progress)
+        progress.total_attempts += 1
+        progress.best_score = max(progress.best_score or 0, accuracy)
+        progress.last_attempt_date = datetime.utcnow()
+        completed_set_ids = db.session.query(DrillSession.drill_set_id).join(DrillSet).filter(
+            DrillSession.user_id == drill_session.user_id,
+            DrillSet.topic_name == drill_set.topic_name,
+            DrillSession.end_time.isnot(None),
+        ).distinct().subquery()
+        progress.completed_sets = db.session.query(completed_set_ids).count()
+        db.session.commit()
+        return jsonify({
+            "status": "drill_complete",
+            "drill_session": _drill_session_payload(drill_session),
+            "next_route": f"/drill_results/{drill_session.id}",
+        })
+
+    drill_session.answers = json.dumps(answers)
+    db.session.commit()
+    return jsonify({"status": "in_progress", **_drill_state_payload(drill_session)})
+
+
+@app.route("/api/drills/sessions/<int:session_id>/results")
+def api_drill_session_results(session_id):
+    drill_session, error = _get_owned_drill_session(session_id)
+    if error:
+        return error
+    if drill_session.end_time is None:
+        return _json_error("This drill has not been completed yet", 400)
+
+    drill_set = drill_session.drill_set
+    questions = get_skill_questions(json.loads(drill_set.question_ids))
+    answers = json.loads(drill_session.answers or "{}")
+    question_results = []
+    difficulty_breakdown = {}
+    for q in questions:
+        q_id = q["question_id"]
+        user_answer = answers.get(str(q_id))
+        is_correct = is_correct_answer(q, user_answer)
+        question_results.append({
+            "question": q,
+            "user_answer": user_answer,
+            "is_correct": is_correct,
+            "correct_answer": q.get("correct_answer"),
+        })
+        q_level = q.get("level", "Medium")
+        difficulty_breakdown.setdefault(q_level, {"correct": 0, "total": 0})
+        difficulty_breakdown[q_level]["total"] += 1
+        if is_correct:
+            difficulty_breakdown[q_level]["correct"] += 1
+
+    previous_sessions = DrillSession.query.filter_by(
+        user_id=drill_session.user_id,
+        drill_set_id=drill_set.id,
+    ).order_by(DrillSession.start_time.desc()).limit(10).all()
+    return jsonify({
+        "drill_session": _drill_session_payload(drill_session),
+        "drill_set": drill_set.to_dict(),
+        "question_results": question_results,
+        "difficulty_breakdown": difficulty_breakdown,
+        "previous_sessions": [_drill_session_payload(ds) for ds in previous_sessions],
+    })
+
+
+@app.route("/api/admin/users")
+def api_admin_users():
+    if not _require_api_user():
+        return _json_error("Not authorized", 401)
+    if not _is_admin():
+        return _json_error("Access denied", 403)
+
+    rows = []
+    users = User.query.order_by(User.username).all()
+    for user in users:
+        sessions_all = TestSession.query.filter_by(user_id=user.id).order_by(TestSession.start_time.desc()).all()
+        completed = [s for s in sessions_all if s.score is not None]
+        in_progress = [s for s in sessions_all if s.score is None]
+        rows.append({
+            "user": _api_user_payload(user),
+            "total": len(sessions_all),
+            "completed": len(completed),
+            "in_progress": len(in_progress),
+            "latest": _test_session_payload(sessions_all[0] if sessions_all else None),
+        })
+    return jsonify({"user_stats": rows})
+
+
+@app.route("/api/admin/users/<int:user_id>")
+def api_admin_user_detail(user_id):
+    if not _require_api_user():
+        return _json_error("Not authorized", 401)
+    if not _is_admin():
+        return _json_error("Access denied", 403)
+
+    user = User.query.get(user_id)
+    if not user:
+        return _json_error("User not found", 404)
+    return jsonify({"user": _api_user_payload(user), "session_data": _admin_user_session_rows(user)})
+
+
+@app.route("/assets/<path:filename>")
+def react_assets(filename):
+    assets_dir = os.path.join(REACT_DIST_DIR, "assets")
+    if not os.path.exists(assets_dir):
+        return _json_error("React build assets not found", 404)
+    return send_from_directory(assets_dir, filename)
+
+
+@app.before_request
+def serve_react_pages_when_built():
+    if request.method != "GET" or not os.path.exists(REACT_INDEX):
+        return None
+    path = request.path
+    if (
+        path.startswith("/api/")
+        or path.startswith("/static/")
+        or path.startswith("/assets/")
+        or path.endswith("/pdf")
+    ):
+        return None
+
+    exact_paths = {
+        "/",
+        "/login",
+        "/register",
+        "/request_account",
+        "/dashboard",
+        "/select_test",
+        "/practice",
+        "/break",
+        "/drill_select",
+        "/admin",
+    }
+    dynamic_prefixes = (
+        "/mock_results/",
+        "/report/",
+        "/drill_topic/",
+        "/drill/",
+        "/drill_results/",
+        "/admin/user/",
+    )
+
+    if path in exact_paths or any(path.startswith(prefix) for prefix in dynamic_prefixes):
+        return send_from_directory(REACT_DIST_DIR, "index.html")
+    return None
+
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
         initialize_drill_sets()
-    app.run(debug=True)
+    app.run(debug=not IS_PRODUCTION)

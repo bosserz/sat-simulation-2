@@ -2,25 +2,43 @@ services:
   - type: web
     name: sat-simulation
     env: python
+    # Closest Render region to the Supabase project (ap-northeast-2, Seoul)
+    region: singapore
     buildCommand: |
       pip install -r requirements.txt
-    startCommand: |
-      flask db upgrade
-      flask init-drills
-      gunicorn app:app
+      cd frontend && npm ci && npm run build
+    startCommand: flask db upgrade && flask init-drills && gunicorn app:app --workers 2 --timeout 120
     envVars:
       - key: FLASK_APP
         value: app
       - key: FLASK_ENV
         value: production
+      - key: PYTHON_VERSION
+        value: "3.10.6"
+      - key: NODE_VERSION
+        value: "20"
       - key: SECRET_KEY
         generateValue: true
+      # Shared Supabase database. Use the Supavisor pooler connection string
+      # (Project Settings -> Database -> Connection pooling); the direct
+      # db.<ref>.supabase.co host is IPv6-only and unreachable from Render.
       - key: DATABASE_URL
-        fromDatabase:
-          name: sat-simulation-db
-          property: connectionString
-
-databases:
-  - name: sat-simulation-db
-    databaseName: sat_simulation
-    user: sat_user
+        sync: false
+      # Schema holding this app's tables inside the shared database
+      - key: DB_SCHEMA
+        value: sat
+      # Supabase Auth (same project as the online course platform)
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      # Baked into the React build, so they must be set before building
+      - key: VITE_SUPABASE_URL
+        sync: false
+      - key: VITE_SUPABASE_ANON_KEY
+        sync: false
+      - key: VITE_COURSE_PLATFORM_URL
+        sync: false
+      # Admins come from the course platform's public.admins table
+      - key: ADMINS_TABLE
+        value: public.admins
