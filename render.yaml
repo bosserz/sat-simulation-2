@@ -14,7 +14,7 @@ services:
       - key: FLASK_ENV
         value: production
       - key: PYTHON_VERSION
-        value: "3.10.6"
+        value: "3.12"
       - key: NODE_VERSION
         value: "20"
       - key: SECRET_KEY
