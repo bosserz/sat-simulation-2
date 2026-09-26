@@ -6,6 +6,7 @@ import { HtmlContent } from "../components/HtmlContent";
 import { Loading } from "../components/Loading";
 import { Timer } from "../components/Timer";
 import { imageUrl } from "../lib/format";
+import { readSelection, type HighlightSelection, type TextHighlight } from "../lib/highlights";
 import type { TestState } from "../types/api";
 
 export function PracticePage() {
@@ -18,7 +19,10 @@ export function PracticePage() {
   const [showFormula, setShowFormula] = useState(false);
   const [error, setError] = useState("");
   const sessionId = Number(params.get("session"));
-  const selectionRef = useRef<{ target: "passage" | "question"; start_offset: number; end_offset: number; selected_text: string } | null>(null);
+  const [highlights, setHighlights] = useState<TextHighlight[]>([]);
+  const passageRef = useRef<HTMLDivElement>(null);
+  const questionRef = useRef<HTMLDivElement>(null);
+  const selectionRef = useRef<HighlightSelection | null>(null);
 
   useEffect(() => {
     if (sessionId) {
@@ -28,6 +32,39 @@ export function PracticePage() {
       }).catch((err) => setError(err.message));
     }
   }, [sessionId]);
+
+  const sectionIdx = state?.section_idx;
+  const questionIdx = state?.qid;
+
+  const loadHighlights = useCallback(async () => {
+    if (sectionIdx == null || questionIdx == null) return;
+    try {
+      const payload = await api.highlights(sectionIdx, questionIdx);
+      setHighlights(payload.highlights as TextHighlight[]);
+    } catch {
+      setHighlights([]);
+    }
+  }, [sectionIdx, questionIdx]);
+
+  useEffect(() => {
+    selectionRef.current = null;
+    setHighlights([]);
+    loadHighlights();
+  }, [loadHighlights]);
+
+  // Cache the latest valid selection so tapping the Highlight button (which can clear
+  // the selection on touch devices) still has something to save.
+  useEffect(() => {
+    function onSelectionChange() {
+      const current = readSelection({ passage: passageRef.current, question: questionRef.current });
+      if (current) selectionRef.current = current;
+    }
+    document.addEventListener("selectionchange", onSelectionChange);
+    return () => document.removeEventListener("selectionchange", onSelectionChange);
+  }, []);
+
+  const passageHighlights = useMemo(() => highlights.filter((h) => h.target === "passage"), [highlights]);
+  const questionHighlights = useMemo(() => highlights.filter((h) => h.target === "question"), [highlights]);
 
   const q = state?.question;
   const isMath = state?.section?.type === "math";
@@ -53,17 +90,25 @@ export function PracticePage() {
 
   const questionNumbers = useMemo(() => Array.from({ length: state?.total_questions || 0 }, (_, i) => i), [state?.total_questions]);
 
-  function captureSelection(target: "passage" | "question") {
-    const selected = window.getSelection();
-    if (!selected || selected.rangeCount === 0 || selected.isCollapsed) return;
-    const text = selected.toString().trim();
-    if (!text) return;
-    selectionRef.current = { target, start_offset: 0, end_offset: text.length, selected_text: text };
+  async function highlightSelection() {
+    const selection = readSelection({ passage: passageRef.current, question: questionRef.current }) || selectionRef.current;
+    if (sectionIdx == null || questionIdx == null || !selection) return;
+    try {
+      await api.createHighlight({ section_idx: sectionIdx, question_idx: questionIdx, ...selection });
+      selectionRef.current = null;
+      window.getSelection()?.removeAllRanges();
+      await loadHighlights();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Could not save highlight.");
+    }
   }
 
-  async function highlightSelection() {
-    if (!state || state.section_idx == null || state.qid == null || !selectionRef.current) return;
-    await api.createHighlight({ section_idx: state.section_idx, question_idx: state.qid, ...selectionRef.current });
+  async function removeHighlight(id: number) {
+    try {
+      await api.deleteHighlight(id);
+    } finally {
+      await loadHighlights();
+    }
   }
 
   if (!sessionId) return <p className="empty-text">No test session selected.</p>;
@@ -81,20 +126,20 @@ export function PracticePage() {
         <div className="rounded-md bg-white px-3 py-2 shadow-sm">Time Remaining: <Timer seconds={state.remaining_time || 0} onElapsed={() => save(state.total_questions)} /></div>
       </div>
 
-      <section className="practice-panel" onMouseUp={() => captureSelection("passage")}>
-        {q.passage ? <HtmlContent className="sat-content" html={q.passage} /> : <p className="text-slate-500">No passage for this question.</p>}
+      <section className="practice-panel">
+        {q.passage ? <HtmlContent ref={passageRef} className="sat-content" html={q.passage} highlights={passageHighlights} onHighlightClick={removeHighlight} /> : <p className="text-slate-500">No passage for this question.</p>}
         {q.image && <img className="mt-4 max-w-full rounded-md" src={imageUrl(q.image)} alt="" />}
       </section>
 
-      <section className="practice-panel" onMouseUp={() => captureSelection("question")}>
+      <section className="practice-panel">
         <div className="mb-4 flex flex-wrap gap-2">
           <button className="tool-button" onClick={() => save(undefined, !state.marked)}><Flag size={16} />{state.marked ? "Unmark" : "Mark"}</button>
-          <button className="tool-button" onClick={highlightSelection}><Highlighter size={16} />Highlight</button>
+          <button className="tool-button" onMouseDown={(event) => event.preventDefault()} onClick={highlightSelection}><Highlighter size={16} />Highlight</button>
           {isMath && <button className="tool-button" onClick={() => setShowDesmos(true)}><Calculator size={16} />Desmos</button>}
           {isMath && <button className="tool-button" onClick={() => setShowFormula(true)}><FileText size={16} />Formula</button>}
         </div>
 
-        <HtmlContent className="sat-content mb-4 font-semibold" html={q.question || q.text} />
+        <HtmlContent ref={questionRef} className="sat-content mb-4 font-semibold" html={q.question || q.text} highlights={questionHighlights} onHighlightClick={removeHighlight} />
         {q.question_image && <img className="mb-4 max-w-full rounded-md" src={imageUrl(q.question_image)} alt="" />}
         {q.equation && <HtmlContent className="sat-content mb-4" html={q.equation} />}
 
@@ -127,7 +172,7 @@ export function PracticePage() {
               {questionNumbers.map((idx) => {
                 const key = `${state.section_idx}_${idx}`;
                 const className = markedKeys[key] ? "review" : answeredKeys[key] ? "answered" : "empty";
-                return <button key={idx} className={`status-cell ${className}`} onClick={() => save(idx)}>{idx + 1}</button>;
+                return <button key={idx} className={`status-cell ${className}`} onClick={() => { setShowStatus(false); save(idx); }}>{idx + 1}</button>;
               })}
             </div>
           </div>
