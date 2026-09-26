@@ -7,7 +7,7 @@ import html
 import urllib.error
 import urllib.request
 from io import BytesIO
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from flask_migrate import Migrate
 from sqlalchemy.exc import OperationalError, ProgrammingError
 from reportlab.lib.pagesizes import A4
@@ -92,6 +92,38 @@ class TestSession(db.Model):
     current_section = db.Column(db.Integer, default=0)  # 0 to 3 for the 4 sections
     marked_for_review = db.Column(db.Text, nullable=True)  # JSON string of marked questions
     section_start_time = db.Column(db.DateTime, nullable=True)
+    # The grant this attempt was charged to; NULL for free tests and admins
+    access_grant_id = db.Column(db.Integer, db.ForeignKey('test_access_grants.id'), nullable=True, index=True)
+
+
+class MockTestSetting(db.Model):
+    """Per-test access settings. Tests without a row are locked (need a grant)."""
+    __tablename__ = "mock_test_settings"
+
+    practice_test_id = db.Column(db.String(100), primary_key=True)
+    is_free = db.Column(db.Boolean, nullable=False, default=False)
+    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+class TestAccessGrant(db.Model):
+    """Lets a user start a mock test. Each started TestSession uses one attempt.
+
+    practice_test_id NULL = every mock test; max_attempts NULL = unlimited.
+    `source` records where the grant came from ('admin', 'migration', and
+    later 'purchase').
+    """
+    __tablename__ = "test_access_grants"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
+    practice_test_id = db.Column(db.String(100), nullable=True)
+    max_attempts = db.Column(db.Integer, nullable=True)
+    source = db.Column(db.String(20), nullable=False, default='admin')
+    note = db.Column(db.String(255), nullable=True)
+    granted_by_user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    expires_at = db.Column(db.DateTime, nullable=True)
+    revoked_at = db.Column(db.DateTime, nullable=True)
 
 
 class TextHighlight(db.Model):
@@ -508,6 +540,9 @@ def select_test():
         if practice_test_id not in ALL_QUESTIONS:
             flash('Invalid practice test selected.')
             return redirect(url_for('select_test'))
+        if not _grant_for_new_attempt(User.query.get(session['user_id']), practice_test_id)[0]:
+            flash("You don't have access to this test.")
+            return redirect(url_for('select_test'))
         
         session['new_test'] = True
         session['practice_test_id'] = practice_test_id
@@ -660,9 +695,15 @@ def practice():
         test_session = TestSession.query.filter_by(user_id=session['user_id']).order_by(TestSession.start_time.desc()).first()
 
     if not test_session or test_session.score is not None or test_session.practice_test_id != practice_test_id:
+        allowed, grant = _grant_for_new_attempt(User.query.get(session['user_id']), practice_test_id)
+        if not allowed:
+            db.session.rollback()
+            flash("You don't have access to this test.")
+            return redirect(url_for('select_test'))
         test_session = TestSession(
             user_id=session['user_id'],
             practice_test_id=practice_test_id,
+            access_grant_id=grant.id if grant else None,
             start_time=datetime.utcnow(),
             section_start_time=datetime.utcnow(),
             answers=json.dumps({}),
@@ -1804,6 +1845,114 @@ def _is_admin():
     return bool(user_id) and _user_is_admin(User.query.get(user_id))
 
 
+# --- Mock test access ---------------------------------------------------------
+# Admins and free tests need no grant. Everyone else needs an active grant
+# covering the test with attempts left; each started TestSession uses one.
+
+def _free_test_ids():
+    return {s.practice_test_id for s in MockTestSetting.query.filter_by(is_free=True)}
+
+
+def _active_grants(user_id=None, practice_test_id=None, lock=False):
+    """Unrevoked, unexpired grants, optionally for one user and one test."""
+    query = TestAccessGrant.query.filter(
+        TestAccessGrant.revoked_at.is_(None),
+        db.or_(TestAccessGrant.expires_at.is_(None), TestAccessGrant.expires_at > datetime.utcnow()),
+    )
+    if user_id is not None:
+        query = query.filter(TestAccessGrant.user_id == user_id)
+    if practice_test_id is not None:
+        query = query.filter(db.or_(
+            TestAccessGrant.practice_test_id.is_(None),
+            TestAccessGrant.practice_test_id == practice_test_id,
+        ))
+    if lock:
+        # Two simultaneous starts must not both spend the last attempt
+        query = query.with_for_update()
+    return query.all()
+
+
+def _grant_attempts_used(grant_ids):
+    if not grant_ids:
+        return {}
+    rows = db.session.query(TestSession.access_grant_id, db.func.count(TestSession.id)).filter(
+        TestSession.access_grant_id.in_(grant_ids)
+    ).group_by(TestSession.access_grant_id).all()
+    return dict(rows)
+
+
+def _attempts_left(grant, used):
+    """None means unlimited."""
+    if grant.max_attempts is None:
+        return None
+    return max(0, grant.max_attempts - used.get(grant.id, 0))
+
+
+def _pick_grant(grants, used):
+    """The grant a new attempt is charged to: unlimited grants first, so limited
+    (e.g. purchased) attempts are kept, then whichever expires soonest."""
+    usable = [g for g in grants if _attempts_left(g, used) != 0]
+    usable.sort(key=lambda g: (g.max_attempts is not None, g.expires_at or datetime.max, g.created_at))
+    return usable[0] if usable else None
+
+
+def _grant_for_new_attempt(user, practice_test_id):
+    """Return (allowed, grant). grant is None when the attempt costs nothing."""
+    if _user_is_admin(user) or practice_test_id in _free_test_ids():
+        return True, None
+    grants = _active_grants(user.id, practice_test_id, lock=True)
+    grant = _pick_grant(grants, _grant_attempts_used([g.id for g in grants]))
+    return grant is not None, grant
+
+
+def _test_catalog(user):
+    """Every mock test with whether this user can start it."""
+    free = _free_test_ids()
+    is_admin = _user_is_admin(user)
+    grants = [] if is_admin else _active_grants(user.id)
+    used = _grant_attempts_used([g.id for g in grants])
+    catalog = []
+    for test_id in ALL_QUESTIONS:
+        if is_admin or test_id in free:
+            has_access, attempts_left = True, None
+        else:
+            lefts = [_attempts_left(g, used) for g in grants if g.practice_test_id in (None, test_id)]
+            has_access = any(left != 0 for left in lefts)
+            attempts_left = sum(lefts) if has_access and None not in lefts else None
+        catalog.append({
+            "id": test_id,
+            "is_free": test_id in free,
+            "has_access": has_access,
+            "attempts_left": attempts_left,
+        })
+    return catalog
+
+
+def _grant_payload(grant, used):
+    attempts_left = _attempts_left(grant, used)
+    if grant.revoked_at:
+        status = "revoked"
+    elif grant.expires_at and grant.expires_at <= datetime.utcnow():
+        status = "expired"
+    elif attempts_left == 0:
+        status = "used_up"
+    else:
+        status = "active"
+    return {
+        "id": grant.id,
+        "practice_test_id": grant.practice_test_id,
+        "max_attempts": grant.max_attempts,
+        "attempts_used": used.get(grant.id, 0),
+        "attempts_left": attempts_left,
+        "source": grant.source,
+        "note": grant.note,
+        "created_at": _iso(grant.created_at),
+        "expires_at": _iso(grant.expires_at),
+        "revoked_at": _iso(grant.revoked_at),
+        "status": status,
+    }
+
+
 @app.route('/admin')
 def admin():
     if 'user_id' not in session:
@@ -2527,7 +2676,7 @@ def api_tests():
     ).order_by(TestSession.start_time.desc()).first()
     test_sessions = TestSession.query.filter_by(user_id=user.id).order_by(TestSession.start_time.desc()).all()
     return jsonify({
-        "practice_tests": list(ALL_QUESTIONS.keys()),
+        "practice_tests": _test_catalog(user),
         "active_session": _test_session_payload(active_session),
         "test_sessions": [_test_session_payload(ts) for ts in test_sessions],
     })
@@ -2551,9 +2700,15 @@ def api_tests_start():
             "active_session": _test_session_payload(incomplete_session),
         }), 409
 
+    allowed, grant = _grant_for_new_attempt(user, practice_test_id)
+    if not allowed:
+        db.session.rollback()
+        return _json_error("You don't have access to this test. Ask your teacher to unlock it.", 403)
+
     test_session = TestSession(
         user_id=user.id,
         practice_test_id=practice_test_id,
+        access_grant_id=grant.id if grant else None,
         start_time=datetime.utcnow(),
         section_start_time=datetime.utcnow(),
         answers=json.dumps({}),
@@ -2896,12 +3051,35 @@ def api_drill_session_results(session_id):
     })
 
 
+def _require_admin_api():
+    """Return (admin_user, error_response)."""
+    user = _require_api_user()
+    if not user:
+        return None, _json_error("Not authorized", 401)
+    if not _user_is_admin(user):
+        return None, _json_error("Access denied", 403)
+    return user, None
+
+
+def _parse_expiry(value):
+    """ISO timestamp from the browser -> naive UTC datetime, or None."""
+    if not value:
+        return None
+    parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    if parsed.tzinfo:
+        parsed = parsed.astimezone(timezone.utc).replace(tzinfo=None)
+    return parsed
+
+
 @app.route("/api/admin/users")
 def api_admin_users():
-    if not _require_api_user():
-        return _json_error("Not authorized", 401)
-    if not _is_admin():
-        return _json_error("Access denied", 403)
+    _, error = _require_admin_api()
+    if error:
+        return error
+
+    active_grants = {}
+    for grant in _active_grants():
+        active_grants.setdefault(grant.user_id, []).append(grant)
 
     rows = []
     users = User.query.order_by(User.username).all()
@@ -2909,27 +3087,123 @@ def api_admin_users():
         sessions_all = TestSession.query.filter_by(user_id=user.id).order_by(TestSession.start_time.desc()).all()
         completed = [s for s in sessions_all if s.score is not None]
         in_progress = [s for s in sessions_all if s.score is None]
+        grants = active_grants.get(user.id, [])
         rows.append({
             "user": _api_user_payload(user),
             "total": len(sessions_all),
             "completed": len(completed),
             "in_progress": len(in_progress),
             "latest": _test_session_payload(sessions_all[0] if sessions_all else None),
+            "access": {
+                "all_tests": any(g.practice_test_id is None for g in grants),
+                "tests": sorted({g.practice_test_id for g in grants if g.practice_test_id}),
+            },
         })
     return jsonify({"user_stats": rows})
 
 
 @app.route("/api/admin/users/<int:user_id>")
 def api_admin_user_detail(user_id):
-    if not _require_api_user():
-        return _json_error("Not authorized", 401)
-    if not _is_admin():
-        return _json_error("Access denied", 403)
+    _, error = _require_admin_api()
+    if error:
+        return error
 
     user = User.query.get(user_id)
     if not user:
         return _json_error("User not found", 404)
-    return jsonify({"user": _api_user_payload(user), "session_data": _admin_user_session_rows(user)})
+    grants = TestAccessGrant.query.filter_by(user_id=user.id).order_by(TestAccessGrant.created_at.desc()).all()
+    used = _grant_attempts_used([g.id for g in grants])
+    return jsonify({
+        "user": _api_user_payload(user),
+        "session_data": _admin_user_session_rows(user),
+        "grants": [_grant_payload(g, used) for g in grants],
+        "practice_tests": list(ALL_QUESTIONS.keys()),
+    })
+
+
+@app.route("/api/admin/users/<int:user_id>/grants", methods=["POST"])
+def api_admin_create_grant(user_id):
+    admin, error = _require_admin_api()
+    if error:
+        return error
+    user = User.query.get(user_id)
+    if not user:
+        return _json_error("User not found", 404)
+
+    data = request.get_json(silent=True) or {}
+    practice_test_id = data.get("practice_test_id") or None
+    if practice_test_id is not None and practice_test_id not in ALL_QUESTIONS:
+        return _json_error("Unknown practice test", 400)
+
+    max_attempts = data.get("max_attempts")
+    if max_attempts is not None:
+        if isinstance(max_attempts, bool) or not isinstance(max_attempts, int) or max_attempts < 1:
+            return _json_error("Attempts must be a whole number of at least 1, or empty for unlimited", 400)
+
+    try:
+        expires_at = _parse_expiry(data.get("expires_at"))
+    except ValueError:
+        return _json_error("Invalid expiry date", 400)
+    if expires_at and expires_at <= datetime.utcnow():
+        return _json_error("Expiry date must be in the future", 400)
+
+    grant = TestAccessGrant(
+        user_id=user.id,
+        practice_test_id=practice_test_id,
+        max_attempts=max_attempts,
+        source="admin",
+        note=(data.get("note") or "").strip()[:255] or None,
+        granted_by_user_id=admin.id,
+        expires_at=expires_at,
+    )
+    db.session.add(grant)
+    db.session.commit()
+    return jsonify({"ok": True, "grant": _grant_payload(grant, {})}), 201
+
+
+@app.route("/api/admin/grants/<int:grant_id>/revoke", methods=["POST"])
+def api_admin_revoke_grant(grant_id):
+    _, error = _require_admin_api()
+    if error:
+        return error
+    grant = TestAccessGrant.query.get(grant_id)
+    if not grant:
+        return _json_error("Grant not found", 404)
+    # Tests already started on this grant can still be finished
+    if not grant.revoked_at:
+        grant.revoked_at = datetime.utcnow()
+        db.session.commit()
+    return jsonify({"ok": True, "grant": _grant_payload(grant, _grant_attempts_used([grant.id]))})
+
+
+@app.route("/api/admin/tests")
+def api_admin_tests():
+    _, error = _require_admin_api()
+    if error:
+        return error
+    free = _free_test_ids()
+    return jsonify({"tests": [{"id": test_id, "is_free": test_id in free} for test_id in ALL_QUESTIONS]})
+
+
+@app.route("/api/admin/tests/settings", methods=["PUT"])
+def api_admin_update_test_settings():
+    _, error = _require_admin_api()
+    if error:
+        return error
+    data = request.get_json(silent=True) or {}
+    practice_test_id = data.get("practice_test_id")
+    if practice_test_id not in ALL_QUESTIONS:
+        return _json_error("Unknown practice test", 400)
+    if not isinstance(data.get("is_free"), bool):
+        return _json_error("is_free must be true or false", 400)
+
+    setting = MockTestSetting.query.get(practice_test_id)
+    if not setting:
+        setting = MockTestSetting(practice_test_id=practice_test_id)
+        db.session.add(setting)
+    setting.is_free = data["is_free"]
+    db.session.commit()
+    return jsonify({"ok": True, "test": {"id": practice_test_id, "is_free": setting.is_free}})
 
 
 @app.route("/assets/<path:filename>")
@@ -2964,6 +3238,7 @@ def serve_react_pages_when_built():
         "/break",
         "/drill_select",
         "/admin",
+        "/admin/tests",
     }
     dynamic_prefixes = (
         "/mock_results/",

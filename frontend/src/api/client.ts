@@ -1,4 +1,4 @@
-import type { DrillState, ReportPayload, TestState } from "../types/api";
+import type { AccessGrant, DrillState, MockTestAccess, NewAccessGrant, ReportPayload, TestState } from "../types/api";
 
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   const response = await fetch(path, {
@@ -31,7 +31,7 @@ export const api = {
   }),
   logout: () => request<{ ok: true }>("/api/auth/logout", { method: "POST" }),
   tests: () => request<{
-    practice_tests: string[];
+    practice_tests: MockTestAccess[];
     active_session: import("../types/api").TestSession | null;
     test_sessions: import("../types/api").TestSession[];
   }>("/api/tests"),
@@ -74,5 +74,20 @@ export const api = {
   }),
   drillResults: (sessionId: number) => request<Record<string, unknown>>(`/api/drills/sessions/${sessionId}/results`),
   adminUsers: () => request<{ user_stats: Array<Record<string, unknown>> }>("/api/admin/users"),
-  adminUser: (userId: number) => request<{ user: import("../types/api").ApiUser; session_data: Array<Record<string, unknown>> }>(`/api/admin/users/${userId}`)
+  adminUser: (userId: number) => request<{
+    user: import("../types/api").ApiUser;
+    session_data: Array<Record<string, unknown>>;
+    grants: AccessGrant[];
+    practice_tests: string[];
+  }>(`/api/admin/users/${userId}`),
+  createGrant: (userId: number, grant: NewAccessGrant) => request<{ ok: true; grant: AccessGrant }>(`/api/admin/users/${userId}/grants`, {
+    method: "POST",
+    body: JSON.stringify(grant)
+  }),
+  revokeGrant: (grantId: number) => request<{ ok: true; grant: AccessGrant }>(`/api/admin/grants/${grantId}/revoke`, { method: "POST" }),
+  adminTests: () => request<{ tests: Array<{ id: string; is_free: boolean }> }>("/api/admin/tests"),
+  setTestFree: (practice_test_id: string, is_free: boolean) => request<{ ok: true; test: { id: string; is_free: boolean } }>("/api/admin/tests/settings", {
+    method: "PUT",
+    body: JSON.stringify({ practice_test_id, is_free })
+  })
 };

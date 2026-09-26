@@ -5,6 +5,34 @@ export type ApiUser = {
   is_admin: boolean;
 };
 
+export type MockTestAccess = {
+  id: string;
+  is_free: boolean;
+  has_access: boolean;
+  attempts_left: number | null; // null = unlimited
+};
+
+export type AccessGrant = {
+  id: number;
+  practice_test_id: string | null; // null = all mock tests
+  max_attempts: number | null; // null = unlimited
+  attempts_used: number;
+  attempts_left: number | null;
+  source: "admin" | "migration" | "purchase";
+  note: string | null;
+  created_at: string;
+  expires_at: string | null;
+  revoked_at: string | null;
+  status: "active" | "used_up" | "expired" | "revoked";
+};
+
+export type NewAccessGrant = {
+  practice_test_id: string | null;
+  max_attempts: number | null;
+  expires_at: string | null;
+  note: string;
+};
+
 export type TestSession = {
   id: number;
   user_id: number;

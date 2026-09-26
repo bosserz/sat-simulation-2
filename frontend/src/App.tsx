@@ -4,6 +4,7 @@ import { api } from "./api/client";
 import { supabase } from "./lib/supabase";
 import { Layout } from "./components/Layout";
 import { Loading } from "./components/Loading";
+import { AdminTestsPage } from "./pages/AdminTestsPage";
 import { AdminUserDetailPage } from "./pages/AdminUserDetailPage";
 import { AdminUsersPage } from "./pages/AdminUsersPage";
 import { BreakPage } from "./pages/BreakPage";
@@ -74,6 +75,7 @@ export default function App() {
         <Route path="/drill/:sessionId" element={<RequireAuth user={user}><DrillSessionPage /></RequireAuth>} />
         <Route path="/drill_results/:sessionId" element={<RequireAuth user={user}><DrillResultsPage /></RequireAuth>} />
         <Route path="/admin" element={<RequireAdmin user={user}><AdminUsersPage /></RequireAdmin>} />
+        <Route path="/admin/tests" element={<RequireAdmin user={user}><AdminTestsPage /></RequireAdmin>} />
         <Route path="/admin/user/:userId" element={<RequireAdmin user={user}><AdminUserDetailPage /></RequireAdmin>} />
         <Route path="*" element={<Navigate to={user ? "/dashboard" : "/"} replace />} />
       </Route>
