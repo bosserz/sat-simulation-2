@@ -84,7 +84,7 @@ class TestSession(db.Model):
     __tablename__ = "test_sessions"
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    practice_test_id = db.Column(db.String(10), nullable=False)  # ID of the practice test (e.g., 'test1', 'test2')
+    practice_test_id = db.Column(db.String(100), nullable=False)  # Test name, a key of ALL_QUESTIONS
     start_time = db.Column(db.DateTime, nullable=False)
     score = db.Column(db.Integer, nullable=True)
     answers = db.Column(db.Text, nullable=True)  # JSON string of answers
