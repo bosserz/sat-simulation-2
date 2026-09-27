@@ -1060,7 +1060,7 @@ def build_domain_chart_data(sections, section_questions, section_answers) -> Dic
             dom = q.get("domain", "Other")
             tallies[stype][dom]["total"] += 1
             user_ans = ans_list[qid].get("answer") if qid < len(ans_list) else None
-            if _match_answer(q, user_ans):
+            if is_correct_answer(q, user_ans):
                 tallies[stype][dom]["correct"] += 1
 
     # Convert to arrays (sorted by domain name) with percentages precomputed
