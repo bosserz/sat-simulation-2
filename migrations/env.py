@@ -45,6 +45,36 @@ target_db = current_app.extensions['migrate'].db
 # ... etc.
 
 
+# Tables live in their own schema (e.g. `sat`) on the shared Supabase database.
+# None on SQLite (local dev).
+DB_SCHEMA = current_app.config.get("DB_SCHEMA")
+
+
+def include_object(object, name, type_, reflected, compare_to):
+    # Never let autogenerate touch tables outside this app's schema (the course
+    # platform's tables, Supabase's auth/storage schemas, ...).
+    if DB_SCHEMA and type_ == "table":
+        return object.schema == DB_SCHEMA
+    return True
+
+
+def include_name(name, type_, parent_names):
+    if DB_SCHEMA and type_ == "schema":
+        return name == DB_SCHEMA
+    return True
+
+
+def schema_args():
+    if not DB_SCHEMA:
+        return {}
+    return {
+        "version_table_schema": DB_SCHEMA,
+        "include_schemas": True,
+        "include_object": include_object,
+        "include_name": include_name,
+    }
+
+
 def get_metadata():
     if hasattr(target_db, 'metadatas'):
         return target_db.metadatas[None]
@@ -65,7 +95,8 @@ def run_migrations_offline():
     """
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
-        url=url, target_metadata=get_metadata(), literal_binds=True
+        url=url, target_metadata=get_metadata(), literal_binds=True,
+        **schema_args()
     )
 
     with context.begin_transaction():
@@ -97,9 +128,16 @@ def run_migrations_online():
     connectable = get_engine()
 
     with connectable.connect() as connection:
+        if DB_SCHEMA:
+            # The alembic_version table lives in this schema, so it must exist
+            # before Alembic looks for it.
+            connection.exec_driver_sql(f'CREATE SCHEMA IF NOT EXISTS "{DB_SCHEMA}"')
+            connection.commit()
+
         context.configure(
             connection=connection,
             target_metadata=get_metadata(),
+            **schema_args(),
             **conf_args
         )
 

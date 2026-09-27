@@ -24,13 +24,12 @@
                 {% if session.username %}
                     <span>Hello, {{ session.username }}</span>
                     <a href="{{ url_for('dashboard') }}">Dashboard</a>
-                    {% if session.username in admin_usernames %}
+                    {% if is_admin() %}
                     <a href="{{ url_for('admin') }}">Admin</a>
                     {% endif %}
                     <a href="{{ url_for('logout') }}">Logout</a>
                 {% else %}
                     <a href="{{ url_for('login') }}">Login</a>
-                    <!-- <a href="{{ url_for('register') }}">Register</a> -->
                 {% endif %}
             </div>
         </div>
